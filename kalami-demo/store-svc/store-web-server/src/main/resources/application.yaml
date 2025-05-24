@@ -1,0 +1,26 @@
+server:
+  port: 28082
+
+spring:
+  application:
+    name: store-service
+  cloud:
+    discovery:
+      client:
+        simple:
+          instances:
+            userService:
+              - instance-id: 1
+                host: localhost
+                port: 28081
+
+logging:
+  level:
+    web: debug
+    com.apzda.kalami: trace
+    com.apzda.kalami.security: trace
+
+kalami:
+  security:
+    excludes:
+      - /_/**

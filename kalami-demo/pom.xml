@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.apzda.kalami</groupId>
+        <artifactId>kalami-spring-boot-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../kalami-spring-boot-parent</relativePath>
+    </parent>
+    <groupId>com.apzda.kalami.demo</groupId>
+    <artifactId>kalami-demo</artifactId>
+    <packaging>pom</packaging>
+
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+    <modules>
+        <module>store-svc</module>
+        <module>order-svc</module>
+        <module>user-svc</module>
+        <module>api-gateway</module>
+        <module>api-server</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- user service -->
+            <dependency>
+                <groupId>com.apzda.kalami.demo.user</groupId>
+                <artifactId>user-service</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.kalami.demo.user</groupId>
+                <artifactId>user-client</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.kalami.demo.user</groupId>
+                <artifactId>user-infra</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <!-- store service -->
+            <dependency>
+                <groupId>com.apzda.kalami.demo.store</groupId>
+                <artifactId>store-service</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.kalami.demo.store</groupId>
+                <artifactId>store-client</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
