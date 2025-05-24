@@ -1,0 +1,53 @@
+server:
+  port: 28081
+  forward-headers-strategy: framework
+spring:
+  application:
+    name: user-service
+  data:
+    redis:
+      host: localhost
+      database: 1
+  cloud:
+    discovery:
+      client:
+        simple:
+          instances:
+            storeService:
+              - instance-id: 1
+                host: localhost
+                port: 28082
+
+kalami:
+  server:
+    undertow:
+      thread-local-cache-size: 4
+
+  cloud:
+    feign:
+      service:
+        store:
+          name: storeService
+  security:
+    jwt-key: 123456789
+    excludes:
+      - /_/**
+      - /login
+    feign-enabled: true
+    checker:
+      - path: /userSvc/user/**
+        checkers:
+          - name: HasRole
+            args:
+              roles:
+                - USER
+                - USERx
+      - path: /userSvc/user/names
+        checkers:
+          - name: MFA
+
+logging:
+  level:
+    web: debug
+    com.apzda.kalami: trace
+    com.apzda.kalami.security: trace

@@ -1,0 +1,17 @@
+server:
+  port: 28080
+
+spring:
+  application:
+    name: api-server
+
+kalami:
+  security:
+    jwt-key: 123456789
+    excludes:
+      - /login
+logging:
+  level:
+    web: debug
+    com.apzda.kalami: debug
+    com.apzda.kalami.security: trace

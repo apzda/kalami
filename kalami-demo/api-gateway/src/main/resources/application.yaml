@@ -1,0 +1,31 @@
+logging:
+  level:
+    web: debug
+    com.apzda.kalami: debug
+    com.apzda.kalami.security: trace
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: 1
+          uri: lb://userSvc
+          predicates:
+            - Path=/userSvc/**,/login
+    discovery:
+      client:
+        simple:
+          instances:
+            userSvc:
+              - instance-id: 1
+                host: localhost
+                port: 28081
+            storeSvc:
+              - instance-id: 1
+                host: localhost
+                port: 28082
+
+kalami:
+  security:
+    excludes:
+      - /login
