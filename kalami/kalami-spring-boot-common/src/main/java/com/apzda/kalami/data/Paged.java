@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@ package com.apzda.kalami.data;
 
 import jakarta.annotation.Nonnull;
 import lombok.Data;
-import lombok.experimental.Accessors;
 import lombok.val;
 import org.springframework.data.domain.Page;
 
@@ -34,8 +33,7 @@ import java.util.function.Function;
  * @version 1.0.0
  */
 @Data
-@Accessors(chain = true)
-public class Paged<T> {
+public class Paged<T> implements PageResult<T> {
 
     /**
      * 当前页码
@@ -77,6 +75,7 @@ public class Paged<T> {
         records = page.getContent();
     }
 
+    @Nonnull
     public List<T> getRecords() {
         if (records == null) {
             return Collections.emptyList();

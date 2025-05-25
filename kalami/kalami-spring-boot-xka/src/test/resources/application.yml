@@ -1,0 +1,34 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb1
+    driver-class-name: org.h2.Driver
+
+  data:
+    web:
+      pageable:
+        page-parameter: pageNumber
+        size-parameter: pageSize
+      sort:
+        sort-parameter: pageSorts
+
+
+mybatis-plus:
+  global-config:
+    banner: false
+
+
+kalami:
+  config:
+  security:
+    excludes: /**
+  boot:
+    dictionary:
+      not-deleted-value: 0
+      enabled: true
+
+
+
+logging:
+  level:
+    com.apzda: debug
+    com.baomidou: debug

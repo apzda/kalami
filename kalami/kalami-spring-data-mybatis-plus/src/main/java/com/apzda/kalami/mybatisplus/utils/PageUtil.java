@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 package com.apzda.kalami.mybatisplus.utils;
 
 import com.apzda.kalami.data.Paged;
+import com.apzda.kalami.utils.StringUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -58,7 +59,7 @@ public abstract class PageUtil {
 
     @Nonnull
     public static <T, E> Paged<T> from(@Nonnull IPage<E> page, @Nonnull List<E> records,
-            @Nonnull Function<? super List<E>, ? extends List<T>> converter) {
+                                       @Nonnull Function<? super List<E>, ? extends List<T>> converter) {
         val result = new Paged<T>();
         result.setCurrent(page.getCurrent());
         result.setPages(page.getPages());
@@ -78,7 +79,7 @@ public abstract class PageUtil {
             val field = sortable.getProperty();
             val direction = sortable.getDirection();
             val orderItem = new OrderItem();
-            orderItem.setColumn(field);
+            orderItem.setColumn(StringUtil.toUnderscore(field));
             orderItem.setAsc(direction == Sort.Direction.ASC);
 
             page.addOrder(orderItem);

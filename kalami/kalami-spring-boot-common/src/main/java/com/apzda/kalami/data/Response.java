@@ -126,6 +126,10 @@ public class Response<T> implements Serializable {
         this.type = MessageType.fromString(errType);
     }
 
+    public void setErrType(MessageType errType) {
+        this.type = errType;
+    }
+
     public Response<T> withHttpCode(int httpCode) {
         this.httpCode = httpCode;
         return this;

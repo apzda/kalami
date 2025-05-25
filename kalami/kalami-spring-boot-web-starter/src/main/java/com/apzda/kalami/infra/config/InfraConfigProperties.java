@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,10 +32,22 @@ import java.time.temporal.ChronoUnit;
 @ConfigurationProperties(prefix = "kalami.config")
 public class InfraConfigProperties {
 
+    private static final String DEFAULT_PAGE_PARAMETER = "pageNumber";
+
+    private static final String DEFAULT_SIZE_PARAMETER = "pageSize";
+
+    private static final String DEFAULT_SORT_PARAMETER = "pageSorts";
+
     @DurationUnit(ChronoUnit.HOURS)
     private Duration tempExpireTime = Duration.ofHours(168);
 
     private final ModemConfig modem = new ModemConfig();
+
+    private String pageParameter = DEFAULT_PAGE_PARAMETER;
+
+    private String sizeParameter = DEFAULT_SIZE_PARAMETER;
+
+    private String sortParameter = DEFAULT_SORT_PARAMETER;
 
     @Data
     public static final class ModemConfig {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,12 +21,12 @@ import com.apzda.kalami.http.modem.Modem;
 import com.apzda.kalami.infra.config.InfraConfigProperties;
 import com.apzda.kalami.web.advice.KalamiControllerAdvice;
 import com.apzda.kalami.web.converter.EncryptedMessageConverter;
+import com.apzda.kalami.web.converter.modem.DefaultBase64EncodedModem;
 import com.apzda.kalami.web.error.KalamiErrorController;
 import com.apzda.kalami.web.error.KalamiErrorViewResolver;
-import com.apzda.kalami.web.converter.modem.DefaultBase64EncodedModem;
+import com.apzda.kalami.web.resolver.PagerResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Nonnull;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -40,7 +40,9 @@ import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.util.Lazy;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -52,10 +54,17 @@ import java.util.List;
  */
 @Slf4j
 @Configuration(proxyBeanMethods = false)
-@RequiredArgsConstructor
+
 class KalamiWebMvcConfigure implements WebMvcConfigurer {
 
-    private final EncryptedMessageConverter encryptedMessageConverter;
+    private final Lazy<EncryptedMessageConverter> encryptedMessageConverter;
+
+    private final Lazy<PagerResolver> pagerResolver;
+
+    KalamiWebMvcConfigure(ApplicationContext context) {
+        this.encryptedMessageConverter = Lazy.of(() -> context.getBean(EncryptedMessageConverter.class));
+        this.pagerResolver = Lazy.of(() -> context.getBean(PagerResolver.class));
+    }
 
     @Bean
     @ConditionalOnMissingBean
@@ -70,13 +79,23 @@ class KalamiWebMvcConfigure implements WebMvcConfigurer {
 
     @Override
     public void configureMessageConverters(@Nonnull List<HttpMessageConverter<?>> converters) {
-        converters.add(0, encryptedMessageConverter);
+        converters.add(0, encryptedMessageConverter.get());
+    }
+
+    @Override
+    public void addArgumentResolvers(@Nonnull List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(0, pagerResolver.get());
     }
 
     @Bean
     @ConditionalOnMissingBean(value = ErrorAttributes.class, search = SearchStrategy.CURRENT)
     public DefaultErrorAttributes errorAttributes() {
         return new DefaultErrorAttributes();
+    }
+
+    @Bean
+    PagerResolver pageRequestResolver(InfraConfigProperties properties) {
+        return new PagerResolver(properties);
     }
 
     @Bean
