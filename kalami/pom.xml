@@ -43,7 +43,7 @@
 
         <!-- third libraries -->
         <spring-boot.version>3.4.5</spring-boot.version>
-        <spring-cloud.version>2024.0.1</spring-cloud.version>
+        <spring-cloud.version>2025.0.0</spring-cloud.version>
         <jasypt.version>3.0.5</jasypt.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <mybatis-spring.version>3.0.4</mybatis-spring.version>
