@@ -73,7 +73,7 @@
         <maven-surefire-report-plugin.version>3.5.3</maven-surefire-report-plugin.version>
         <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
         <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
-        <spring-javaformat.version>0.0.45</spring-javaformat.version>
+        <spring-javaformat.version>0.0.46</spring-javaformat.version>
     </properties>
 
     <dependencyManagement>
