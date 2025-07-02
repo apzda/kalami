@@ -14,11 +14,6 @@
     <packaging>pom</packaging>
     <name>Kalami Demo</name>
 
-    <properties>
-        <maven.deploy.skip>true</maven.deploy.skip>
-        <maven.install.skip>true</maven.install.skip>
-    </properties>
-
     <modules>
         <module>store-svc</module>
         <module>order-svc</module>
