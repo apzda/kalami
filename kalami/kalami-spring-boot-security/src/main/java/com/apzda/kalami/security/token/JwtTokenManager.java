@@ -25,6 +25,7 @@ import cn.hutool.jwt.JWTUtil;
 import cn.hutool.jwt.signers.JWTSigner;
 import com.apzda.kalami.security.authentication.JwtTokenAuthentication;
 import com.apzda.kalami.security.config.SecurityConfigProperties;
+import com.apzda.kalami.security.error.AuthenticationError;
 import com.apzda.kalami.security.exception.TokenException;
 import com.apzda.kalami.security.user.MetaUserDetailsService;
 import com.apzda.kalami.security.utils.SecurityUtils;
@@ -38,6 +39,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Duration;
 import java.util.Objects;
 
 /**
@@ -81,13 +83,14 @@ public class JwtTokenManager implements TokenManager {
         }
 
         if (verified) {
+            AuthenticationError exception = null;
             val jwt = JWTUtil.parseToken(accessToken);
             jwt.setSigner(jwtSigner);
             val jwtLeeway = properties.getJwtLeeway();
 
             if (!jwt.validate(jwtLeeway.toSeconds())) {
                 log.trace("accessToken is expired: {}", accessToken);
-                throw TokenException.EXPIRED;
+                exception = TokenException.EXPIRED;
             }
 
             val token = DefaultToken.builder()
@@ -96,7 +99,7 @@ public class JwtTokenManager implements TokenManager {
                 .build();
 
             if (jwt.getPayload(PAYLOAD_RUNAS) != null) {
-                token.setRunAs((String) jwt.getPayload(PAYLOAD_RUNAS));
+                token.setRunas((String) jwt.getPayload(PAYLOAD_RUNAS));
             }
 
             if (jwt.getPayload(PAYLOAD_FLAG) != null) {
@@ -106,20 +109,23 @@ public class JwtTokenManager implements TokenManager {
             val uid = token.getUid();
             val userBuilder = User.withUsername(uid)
                 .password("")
-                .accountLocked(token.getLocked())
-                .accountExpired(token.getExpired())
-                .credentialsExpired(token.getCredentialsExpired())
-                .disabled(token.getDisabled());
+                .accountLocked(Boolean.TRUE.equals(token.getLocked()))
+                .accountExpired(Boolean.TRUE.equals(token.getExpired()))
+                .credentialsExpired(Boolean.TRUE.equals(token.getCredentialsExpired()))
+                .disabled(Boolean.TRUE.equals(token.getDisabled()));
 
             val userDetails = metaUserDetailsService.create(userBuilder.build());
             val authentication = JwtTokenAuthentication.authenticated(userDetails, "");
 
-            // 此处不验证该accessToken是否被收回。请在网关层判断!
             token.setAccessToken(accessToken);
             authentication.setJwtToken(token);
             verify(authentication);
 
             log.trace("Authentication is restored from accessToken: {}", accessToken);
+            if (exception != null) {
+                authentication.setAuthenticated(false);
+                throw exception.withAuthentication(authentication);
+            }
             return authentication;
         }
         else {
@@ -141,6 +147,10 @@ public class JwtTokenManager implements TokenManager {
 
         if (oldToken != null) {
             jwtToken = oldToken;
+            val cs = customizers.orderedStream().toList();
+            for (val c : cs) {
+                jwtToken = c.refresh(authentication, jwtToken);
+            }
         }
         else {
             val cs = customizers.orderedStream().toList();
@@ -151,13 +161,21 @@ public class JwtTokenManager implements TokenManager {
 
         val principal = authentication.getPrincipal();
         if (principal instanceof UserDetails ud) {
-            jwtToken.setLocked(!ud.isAccountNonLocked());
-            jwtToken.setCredentialsExpired(!ud.isCredentialsNonExpired());
-            jwtToken.setDisabled(!ud.isEnabled());
-            jwtToken.setExpired(!ud.isAccountNonExpired());
+            if (jwtToken.getLocked() == null || !ud.isAccountNonLocked()) {
+                jwtToken.setLocked(!ud.isAccountNonLocked());
+            }
+            if (jwtToken.getCredentialsExpired() == null || !ud.isCredentialsNonExpired()) {
+                jwtToken.setCredentialsExpired(!ud.isCredentialsNonExpired());
+            }
+            if (jwtToken.getDisabled() == null || !ud.isEnabled()) {
+                jwtToken.setDisabled(!ud.isEnabled());
+            }
+            if (jwtToken.getExpired() == null || !ud.isAccountNonExpired()) {
+                jwtToken.setExpired(!ud.isAccountNonExpired());
+            }
         }
 
-        jwtToken.setAccessToken(createAccessToken(jwtToken));
+        jwtToken.setAccessToken(createAccessToken(jwtToken, authentication));
         jwtToken.setRefreshToken(createRefreshToken(jwtToken, authentication));
 
         return jwtToken;
@@ -237,22 +255,32 @@ public class JwtTokenManager implements TokenManager {
         throw TokenException.INVALID_TOKEN;
     }
 
-    private String createAccessToken(@Nonnull JwtToken jwtToken) {
+    @Nonnull
+    private String createAccessToken(@Nonnull JwtToken jwtToken, @Nonnull Authentication authentication) {
         val token = JWT.create();
+        Duration duration = properties.getAccessTokenTimeout();
 
-        if (StringUtils.isNotBlank(jwtToken.getRunAs())) {
-            token.setPayload(PAYLOAD_RUNAS, jwtToken.getRunAs());
+        if (StringUtils.isNotBlank(jwtToken.getRunas())) {
+            token.setPayload(PAYLOAD_RUNAS, jwtToken.getRunas());
         }
 
         val flag = jwtToken.getFlag();
         if (!"0".equals(flag)) {
             token.setPayload(PAYLOAD_FLAG, flag);
         }
+        if (authentication instanceof JwtTokenAuthentication auth) {
+            val details = auth.getAuthDetails();
+            if (details != null) {
+                val app = details.getApp();
+                if (app != null && properties.getApp().get(app) != null) {
+                    duration = properties.getApp().get(app).getAccessTokenTimeout();
+                }
+            }
+        }
         // 是用户ID
         token.setSubject(jwtToken.getUid());
         token.setSigner(jwtSigner);
-        val accessExpireAt = DateUtil.date()
-            .offset(DateField.MINUTE, (int) properties.getAccessTokenTimeout().toMinutes());
+        val accessExpireAt = DateUtil.date().offset(DateField.MINUTE, (int) duration.toMinutes());
         token.setExpiresAt(accessExpireAt);
 
         return token.sign();
@@ -270,7 +298,16 @@ public class JwtTokenManager implements TokenManager {
         val principal = authentication.getPrincipal();
         if (principal instanceof UserDetails userDetails) {
             val password = userDetails.getPassword();
-            val expire = properties.getRefreshTokenTimeout();
+            Duration expire = properties.getRefreshTokenTimeout();
+            if (authentication instanceof JwtTokenAuthentication auth) {
+                val details = auth.getAuthDetails();
+                if (details != null) {
+                    val app = details.getApp();
+                    if (app != null && properties.getApp().get(app) != null) {
+                        expire = properties.getApp().get(app).getRefreshTokenTimeout();
+                    }
+                }
+            }
             val accessExpireAt = DateUtil.date().offset(DateField.MINUTE, (int) expire.toMinutes());
             val token = JWT.create();
             val refreshToken = MD5.create().digestHex(accessToken + password);
@@ -279,12 +316,12 @@ public class JwtTokenManager implements TokenManager {
                 token.setPayload(PAYLOAD_UID, jwtToken.getUid());
             }
 
-            if (StringUtils.isNotBlank(jwtToken.getRunAs())) {
-                token.setPayload(PAYLOAD_RUNAS, jwtToken.getRunAs());
+            if (StringUtils.isNotBlank(jwtToken.getRunas())) {
+                token.setPayload(PAYLOAD_RUNAS, jwtToken.getRunas());
             }
 
             val flag = jwtToken.getFlag();
-            if ("0".equals(flag)) {
+            if (!"0".equals(flag)) {
                 token.setPayload(PAYLOAD_FLAG, flag);
             }
 

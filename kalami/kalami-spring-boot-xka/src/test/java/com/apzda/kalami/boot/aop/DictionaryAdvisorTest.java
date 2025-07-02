@@ -110,7 +110,7 @@ class DictionaryAdvisorTest {
 
             verify(dictItemMapper, times(2)).getDictLabel(any(), any(), any(), any());
             verify(dictItemMapper, times(1)).getDictLabel(any(), any(), any(), any(), any());
-            verify(upper, times(3)).transform(any());
+            verify(upper, times(3)).transform(any(), anyBoolean());
         }
     }
 

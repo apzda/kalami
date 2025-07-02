@@ -29,10 +29,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author ninggf (windywany@gmail.com)
@@ -72,7 +69,7 @@ public class SecurityConfigProperties {
 
     private String logoutUrl;
 
-    private Map<String, CorsConfig> cors = new LinkedHashMap<>();
+    private Map<String, CorsConfig> cors = new HashMap<>();
 
     private List<String> excludes = new ArrayList<>();
 
@@ -85,6 +82,8 @@ public class SecurityConfigProperties {
 
     @DurationUnit(ChronoUnit.DAYS)
     private Duration refreshTokenTimeout = Duration.ofDays(365);
+
+    private Map<String, TokenConfig> app = new LinkedHashMap<>();
 
     public String getTokenName() {
         return StringUtils.defaultIfBlank(tokenName, "Authorization");
@@ -176,6 +175,28 @@ public class SecurityConfigProperties {
         private boolean enabled = true;
 
         private Map<String, Object> args = new LinkedHashMap<>();
+
+    }
+
+    @Data
+    public static class TokenConfig {
+
+        /**
+         * 访问令牌过期时间
+         */
+        @DurationUnit(ChronoUnit.MINUTES)
+        private Duration accessTokenTimeout = Duration.ofMinutes(5);
+
+        /**
+         * 刷新令牌过期时间
+         */
+        @DurationUnit(ChronoUnit.DAYS)
+        private Duration refreshTokenTimeout = Duration.ofDays(180);
+
+        /**
+         * 是否强制多因素认证
+         */
+        private boolean mfaEnabled = false;
 
     }
 

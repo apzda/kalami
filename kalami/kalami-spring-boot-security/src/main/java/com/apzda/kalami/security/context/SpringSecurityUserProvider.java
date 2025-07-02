@@ -45,7 +45,7 @@ public class SpringSecurityUserProvider extends CurrentUserProvider {
 
         val authentication = context.getAuthentication();
 
-        if (authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null) {
             log.trace("Current user: authentication is null or not authenticated");
             return null;
         }
@@ -75,7 +75,7 @@ public class SpringSecurityUserProvider extends CurrentUserProvider {
             val jwtToken = token.getJwtToken();
 
             if (jwtToken != null) {
-                builder.runAs(jwtToken.getRunAs());
+                builder.runAs(jwtToken.getRunas());
             }
         }
 

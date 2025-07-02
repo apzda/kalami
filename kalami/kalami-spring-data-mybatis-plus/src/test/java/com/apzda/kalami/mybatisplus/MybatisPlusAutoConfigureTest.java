@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +16,14 @@
  */
 package com.apzda.kalami.mybatisplus;
 
-import com.apzda.kalami.mybatisplus.autoconfig.MyBatisPlusAutoConfiguration;
+import com.apzda.kalami.mybatisplus.autoconfig.KalamiMyBatisPlusAutoConfiguration;
 import com.apzda.kalami.mybatisplus.config.KalamiMybatisPlusConfigProperties;
 import com.apzda.kalami.mybatisplus.entity.Role;
 import com.apzda.kalami.mybatisplus.entity.User;
 import com.apzda.kalami.mybatisplus.mapper.RoleMapper;
 import com.apzda.kalami.mybatisplus.mapper.UserMapper;
 import com.apzda.kalami.mybatisplus.service.impl.UserService;
-import com.apzda.kalami.user.TenantManager;
+import com.apzda.kalami.tenant.TenantManager;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -56,7 +56,7 @@ import static org.mockito.Mockito.when;
 @MybatisPlusTest
 @ContextConfiguration(classes = TestApp.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ImportAutoConfiguration({ MyBatisPlusAutoConfiguration.class })
+@ImportAutoConfiguration({ KalamiMyBatisPlusAutoConfiguration.class })
 @Sql(value = "classpath:/init.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @Sql(value = "classpath:/tear.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 @TestPropertySource(properties = { "kalami.mybatis-plus.disable-tenant-plugin=false",
@@ -71,7 +71,7 @@ class MybatisPlusAutoConfigureTest {
     private ApplicationContext context;
 
     @Autowired
-    private TenantManager<String> tenantManager;
+    private TenantManager tenantManager;
 
     @Resource(type = UserMapper.class)
     private UserMapper userMapper;

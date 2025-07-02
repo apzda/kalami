@@ -18,6 +18,7 @@
 package com.apzda.kalami.security.authentication;
 
 import com.apzda.kalami.security.utils.SecurityUtils;
+import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -43,7 +44,7 @@ public class DefaultAuthenticationProvider implements AuthenticationProvider {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(@Nonnull Authentication authentication) throws AuthenticationException {
         val credentials = authentication.getCredentials();
         val username = authentication.getPrincipal();
         val userDetails = userDetailsService.loadUserByUsername((String) username);

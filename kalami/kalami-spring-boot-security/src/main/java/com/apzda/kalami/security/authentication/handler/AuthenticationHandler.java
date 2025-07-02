@@ -48,8 +48,9 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
-import org.springframework.security.web.session.InvalidSessionStrategy;
 
 import java.io.IOException;
 
@@ -60,8 +61,9 @@ import static com.apzda.kalami.security.utils.SecurityUtils.CONTEXT_ATTR_EXCEPTI
  * @since 2025/05/18
  * @version 1.0.0
  */
-public interface AuthenticationHandler extends AuthenticationFailureHandler, AuthenticationSuccessHandler,
-        AccessDeniedHandler, AuthenticationEntryPoint, SessionAuthenticationStrategy, InvalidSessionStrategy {
+public interface AuthenticationHandler
+        extends AuthenticationFailureHandler, AuthenticationSuccessHandler, AccessDeniedHandler, LogoutHandler,
+        SessionAuthenticationStrategy, AuthenticationEntryPoint, LogoutSuccessHandler {
 
     Logger logger = LoggerFactory.getLogger(AuthenticationHandler.class);
 
@@ -84,7 +86,7 @@ public interface AuthenticationHandler extends AuthenticationFailureHandler, Aut
     }
 
     @Override
-    default void commence(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response,
+    default void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws IOException, ServletException {
         val exception = request.getAttribute(CONTEXT_ATTR_EXCEPTION);
         if (exception != null) {
@@ -93,13 +95,6 @@ public interface AuthenticationHandler extends AuthenticationFailureHandler, Aut
         else {
             onUnauthorized(request, response, authException);
         }
-    }
-
-    @Override
-    default void onInvalidSessionDetected(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-        logger.trace("InvalidSessionDetected");
-        onUnauthorized(request, response, new InvalidSessionException("Invalid Session"));
     }
 
     default void handleAuthenticationException(@Nonnull HttpServletRequest request,
@@ -134,6 +129,13 @@ public interface AuthenticationHandler extends AuthenticationFailureHandler, Aut
                 }
                 return;
             }
+            else if (errCode == 200) {
+                val loginUrl = getLoginUrl();
+                if (StringUtils.isNotBlank(loginUrl)) {
+                    response.sendRedirect(loginUrl); // status is 302
+                    return;
+                }
+            }
         }
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE + ";charset=utf-8");
@@ -143,24 +145,27 @@ public interface AuthenticationHandler extends AuthenticationFailureHandler, Aut
         try (val writer = response.getWriter()) {
             writer.write(jsonStr);
         }
+        finally {
+            response.flushBuffer();
+        }
     }
 
     @Nonnull
     static Response<?> getAuthenticationError(@Nonnull Exception exception) {
         if (exception instanceof UsernameNotFoundException) {
-            return Response.error(ServiceError.USER_PWD_INCORRECT);
+            return Response.error(ServiceError.USER_PWD_INCORRECT).withErrMsg(exception.getMessage());
         }
         else if (exception instanceof AuthenticationError authenticationError) {
             return Response.error(authenticationError.getError());
         }
         else if (exception instanceof AccountStatusException statusException) {
-            return handleAccountStatusException(statusException);
+            return handleAccountStatusException(statusException).withErrMsg(statusException.getMessage());
         }
         else if (exception instanceof BizException gsvcException) {
             return Response.error(gsvcException.getError());
         }
         else {
-            return Response.error(ServiceError.UNAUTHORIZED);
+            return Response.error(ServiceError.UNAUTHORIZED).withErrMsg(exception.getMessage());
         }
     }
 
@@ -179,8 +184,9 @@ public interface AuthenticationHandler extends AuthenticationFailureHandler, Aut
         else if (exception instanceof UnRealAuthenticatedException) {
             error = ServiceError.ACCOUNT_UN_AUTHENTICATED;
         }
-        else if (exception instanceof InvalidSessionException)
-            error = ServiceError.UNAUTHORIZED;
+        else if (exception instanceof InvalidSessionException) {
+            error = ServiceError.TOKEN_INVALID;
+        }
         else {
             error = ServiceError.ACCOUNT_DISABLED;
         }

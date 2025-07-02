@@ -64,6 +64,10 @@ public class Paged<T> implements PageResult<T> {
     }
 
     public Paged(@Nonnull List<T> records) {
+        this.current = 1;
+        this.size = records.size();
+        this.total = records.size();
+        this.pages = 1;
         this.records = records;
     }
 
@@ -93,6 +97,16 @@ public class Paged<T> implements PageResult<T> {
         paged.pages = page.getTotalPages();
 
         return paged;
+    }
+
+    @Nonnull
+    public static <T> Paged<T> of(@Nonnull List<T> records) {
+        return new Paged<>(records);
+    }
+
+    @Nonnull
+    public static <T> Paged<T> empty() {
+        return new Paged<>(List.of());
     }
 
 }

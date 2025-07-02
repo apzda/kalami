@@ -104,7 +104,7 @@
         <profile>
             <id>dev</id>
             <modules>
-                <module>kalami-demo</module>
+                <module>demo</module>
             </modules>
         </profile>
         <!-- release -->

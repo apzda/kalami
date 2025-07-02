@@ -19,9 +19,9 @@ package com.apzda.kalami.boot.vo;
 import com.apzda.kalami.boot.enums.TestStatus;
 import com.apzda.kalami.boot.enums.TestStatus2;
 import com.apzda.kalami.boot.enums.TestStatus3;
-import com.apzda.kalami.boot.sanitize.PhoneNumberSanitizer;
 import com.apzda.kalami.boot.transformer.TestTransformer;
 import com.apzda.kalami.dictionary.Dict;
+import com.apzda.kalami.sanitizer.PhoneNumberSanitizer;
 import com.apzda.kalami.sanitizer.Sanitized;
 import lombok.Data;
 

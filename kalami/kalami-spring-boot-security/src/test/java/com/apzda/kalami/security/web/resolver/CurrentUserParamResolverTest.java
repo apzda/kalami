@@ -20,17 +20,20 @@ package com.apzda.kalami.security.web.resolver;
 import com.apzda.kalami.security.authorization.AsteriskPermissionEvaluator;
 import com.apzda.kalami.security.authorization.AuthorizationLogicCustomizer;
 import com.apzda.kalami.security.authorization.PermissionChecker;
+import com.apzda.kalami.security.autoconfig.KalamiSecurityAutoConfiguration;
 import com.apzda.kalami.security.config.SecurityConfigProperties;
 import com.apzda.kalami.security.context.SpringSecurityUserProvider;
 import com.apzda.kalami.security.web.dto.CardDto;
 import com.apzda.kalami.security.web.dto.StaffDto;
+import com.apzda.kalami.tenant.TenantManager;
 import com.apzda.kalami.user.CurrentUserProvider;
-import com.apzda.kalami.user.TenantManager;
+import com.apzda.kalami.web.autoconfig.KalamiWebAutoConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Bean;
@@ -61,6 +64,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @WebMvcTest(controllers = TestController.class)
 @ContextConfiguration(classes = CurrentUserParamResolverTest.WebMvcConfigure.class)
+@ImportAutoConfiguration({ KalamiSecurityAutoConfiguration.class, KalamiWebAutoConfiguration.class })
 @Import({ CurrentUserParamResolverTest.WebMvcConfigure.class, TestController.class })
 @ActiveProfiles("test")
 class CurrentUserParamResolverTest {
@@ -83,8 +87,8 @@ class CurrentUserParamResolverTest {
     @Test
     void ok1() throws Exception {
         mvc.perform(get("/test/ok").accept(MediaType.TEXT_HTML_VALUE))
-            .andExpect(status().is(302))
-            .andExpect(header().exists("Location"));
+            .andExpect(status().is(401))
+            .andExpect(header().exists("WWW-Authenticate"));
     }
 
     @Test
@@ -213,8 +217,8 @@ class CurrentUserParamResolverTest {
         }
 
         @Bean
-        TenantManager<String> tenantManager() {
-            return new TenantManager<>() {
+        TenantManager tenantManager() {
+            return new TenantManager() {
                 @Override
                 @NonNull
                 protected String[] getTenantIds() {

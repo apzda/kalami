@@ -35,7 +35,7 @@ class JwtTokenTest {
         JwtToken token = DefaultToken.builder().uid("123").build();
         token.setMfa(2);
         token.setCredentialsExpired(true);
-        token.setActivated(true);
+        token.setDeactivated(true);
         token.setDisabled(true);
         val flag = token.getFlag();
 
@@ -44,8 +44,8 @@ class JwtTokenTest {
 
         assertThat(token1.getMfa()).isEqualTo(2);
         assertThat(token1.getCredentialsExpired()).isTrue();
-        assertThat(token1.getActivated()).isTrue();
-        assertThat(token1.getBound()).isFalse();
+        assertThat(token1.getDeactivated()).isTrue();
+        assertThat(token1.getUnbound()).isFalse();
         assertThat(token1.getLocked()).isFalse();
         assertThat(token1.getDisabled()).isTrue();
     }

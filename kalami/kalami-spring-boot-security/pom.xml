@@ -14,11 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.apzda.cloud</groupId>
-            <artifactId>kalami-spring-boot-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
+            <artifactId>kalami-spring-boot-security-core</artifactId>
         </dependency>
         <dependency>
             <groupId>io.micrometer</groupId>

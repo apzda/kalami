@@ -33,6 +33,22 @@ public interface AuthenticationDetails {
 
     String getUserAgent();
 
+    Long getExpiredAt();
+
+    void setExpiredAt(Long expiredAt);
+
+    String getAccessToken();
+
+    void setAccessToken(String accessToken);
+
+    String getRefreshToken();
+
+    void setRefreshToken(String refreshToken);
+
+    String getSpm();
+
+    void setSpm(String spm);
+
     Map<String, String> getMeta();
 
     String getRemoteAddress();

@@ -27,7 +27,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
  **/
 @SpringBootApplication(proxyBeanMethods = false)
 @EnableConfigurationProperties(XkaBootConfigProperties.class)
-@EnableKalamiXka
 public class TestApp {
 
 }

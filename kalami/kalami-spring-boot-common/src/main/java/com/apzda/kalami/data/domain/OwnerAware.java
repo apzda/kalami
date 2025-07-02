@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,12 +16,14 @@
  */
 package com.apzda.kalami.data.domain;
 
+import java.io.Serializable;
+
 /**
  * @author ninggf (windywany@gmail.com)
  * @since 2025/05/16
  * @version 1.0.0
  */
-public interface OwnerAware<ID> {
+public interface OwnerAware<ID extends Serializable> {
 
     ID getCreatedBy();
 

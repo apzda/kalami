@@ -38,7 +38,7 @@ import java.util.Optional;
  * @version 1.0.0
  */
 @Slf4j
-public class FeignErrorResponseException extends ErrorResponseException implements INoStackLog {
+class FeignErrorResponseException extends ErrorResponseException implements INoStackLog {
 
     public FeignErrorResponseException(HttpStatusCode status, Throwable cause) {
         super(getRealHttpStatus(status, cause), from(status, cause), cause);
@@ -48,8 +48,7 @@ public class FeignErrorResponseException extends ErrorResponseException implemen
     static ProblemDetail from(HttpStatusCode status, @Nonnull Throwable exception) {
         val problemDetail = ProblemDetail.forStatusAndDetail(getRealHttpStatus(status, exception),
                 exception.getMessage());
-        val builder = new StringBuilder(exception.getMessage());
-        builder.append("\n");
+        val builder = new StringBuilder(exception.getMessage()).append("\n");
 
         val httpCode = problemDetail.getStatus();
         if (exception instanceof FeignException feignException) {
@@ -67,6 +66,7 @@ public class FeignErrorResponseException extends ErrorResponseException implemen
                         problemDetail.setDetail(I18n.t("feign.service.503", new Object[] { svcName }));
                     }
                 }
+
                 if (httpCode != 401 && httpCode != 403) {
                     val charset = Optional.ofNullable(request.charset()).orElse(StandardCharsets.UTF_8);
                     val body = StringUtil.convert(request.body(), charset, StandardCharsets.UTF_8);
@@ -78,10 +78,9 @@ public class FeignErrorResponseException extends ErrorResponseException implemen
                     filtered.remove("Authorization");
 
                     builder.append(String.format("""
-                            【接  口】%s %s
                             【请求头】%s
                             【请求体】%s
-                            """, request.httpMethod().name(), url, filtered, body));
+                            """, filtered, body));
                 }
             }
             if (httpCode != 401 && httpCode != 403) {

@@ -17,7 +17,11 @@
 package com.apzda.kalami.data.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -29,21 +33,28 @@ import java.util.List;
  * @version 1.0.0
  */
 @Data
+@Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuditLog implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -8214741335677509857L;
 
-    private long timestamp;
+    String id;
 
-    private String userId;
+    @NotNull
+    @Min(0)
+    Long timestamp;
+
+    @NotBlank
+    String userId;
+
+    @NotBlank
+    String activity;
 
     private String tenantId;
 
     private Boolean template;
-
-    private String activity;
 
     private String target;
 

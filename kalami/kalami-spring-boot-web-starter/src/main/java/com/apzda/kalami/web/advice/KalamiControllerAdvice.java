@@ -237,7 +237,6 @@ public class KalamiControllerAdvice {
         else if (e instanceof BizException bizException) {
             val error = bizException.getError();
             if (error != null) {
-                status = HttpStatusCode.valueOf(error.httpCode());
                 if (error.headers() != null) {
                     headers = error.headers();
                 }
@@ -258,18 +257,7 @@ public class KalamiControllerAdvice {
             };
         }
 
-        if (status.is2xxSuccessful() || status.is3xxRedirection()) {
-            if (rClass.isAssignableFrom(ServerResponse.class)) {
-                HttpHeaders finalHeaders = headers;
-                return (R) ServerResponse.status(status).contentType(mediaType).headers(headers1 -> {
-                    headers1.putAll(finalHeaders);
-                }).build();
-            }
-            else {
-                return (R) ResponseEntity.status(status).contentType(mediaType).headers(headers).build();
-            }
-        }
-        else if (status == HttpStatus.UNAUTHORIZED) {
+        if (status == HttpStatus.UNAUTHORIZED) {
             val url = MediaTypeUtil.getUrl(loginUrl, mediaTypes);
 
             if (StringUtils.isNotBlank(url)) {
@@ -361,7 +349,12 @@ public class KalamiControllerAdvice {
         @Nonnull
         static ResponseWrapper status(int status) {
             val wrapper = new ResponseWrapper();
-            wrapper.status = HttpStatusCode.valueOf(status);
+            try {
+                wrapper.status = HttpStatusCode.valueOf(status);
+            }
+            catch (Exception e) {
+                wrapper.status = HttpStatus.INTERNAL_SERVER_ERROR;
+            }
             return wrapper;
         }
 

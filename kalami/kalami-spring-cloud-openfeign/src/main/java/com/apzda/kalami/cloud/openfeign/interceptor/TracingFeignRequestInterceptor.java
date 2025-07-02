@@ -16,9 +16,10 @@
  */
 package com.apzda.kalami.cloud.openfeign.interceptor;
 
-import com.apzda.kalami.web.context.KalamiContextHolder;
+import com.apzda.kalami.context.KalamiContextHolder;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -28,12 +29,14 @@ import org.springframework.util.StringUtils;
  * @since 2025/05/16
  * @version 1.0.0
  */
+@Slf4j
 public class TracingFeignRequestInterceptor implements RequestInterceptor {
 
     private final boolean feignEnabled;
 
     public TracingFeignRequestInterceptor(boolean feignEnabled) {
         this.feignEnabled = feignEnabled;
+
     }
 
     @Override

@@ -38,6 +38,7 @@ import com.fasterxml.jackson.databind.util.StdDateFormat;
 import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.util.StopWatch;
 
 import java.beans.PropertyDescriptor;
@@ -101,7 +102,7 @@ public class QueryGenerator {
     private static final String ORDER_TYPE_ASC = "ASC";
 
     /** mysql 模糊查询之特殊字符下划线 （_、\） */
-    public static final String LIKE_MYSQL_SPECIAL_STRS = "_,%";
+    public static final String LIKE_MYSQL_SPECIAL_STR = "_,%";
 
     /** 日期格式化yyyy-MM-dd */
     public static final String YYYY_MM_DD = "yyyy-MM-dd";
@@ -140,7 +141,8 @@ public class QueryGenerator {
      * @param parameterMap request.getParameterMap()
      * @return QueryWrapper实例
      */
-    public static <T> QueryWrapper<T> initQueryWrapper(T searchObj, Map<String, String[]> parameterMap) {
+    @Nonnull
+    public static <T> QueryWrapper<T> initQueryWrapper(@Nonnull T searchObj, Map<String, String[]> parameterMap) {
         val stopWatch = new StopWatch(StrUtil.format("查询条件构造器({})计时器", searchObj.getClass()));
         stopWatch.start();
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
@@ -153,7 +155,8 @@ public class QueryGenerator {
     /**
      * 组装Mybatis Plus 查询条件
      */
-    private static void install(QueryWrapper<?> queryWrapper, Object searchObj, Map<String, String[]> parameterMap) {
+    private static void install(QueryWrapper<?> queryWrapper, @Nonnull Object searchObj,
+            Map<String, String[]> parameterMap) {
         val clazz = searchObj.getClass();
 
         // 区间条件组装 模糊查询 高级查询组装 简单排序
@@ -249,7 +252,7 @@ public class QueryGenerator {
     }
 
     private static void doMultiFieldsOrder(QueryWrapper<?> queryWrapper, Map<String, String[]> parameterMap,
-            Map<String, String> fieldColumnMap, Class<?> clazz) {
+            @Nonnull Map<String, String> fieldColumnMap, Class<?> clazz) {
         Set<String> allFields = fieldColumnMap.keySet();
         String column = null, order = null;
         if (parameterMap != null && parameterMap.containsKey(ORDER_COLUMN)) {
@@ -307,7 +310,7 @@ public class QueryGenerator {
     /**
      * 多字段排序 判断所传字段是否存在
      */
-    private static boolean allColumnExist(String columnStr, Set<String> allFields) {
+    private static boolean allColumnExist(@Nonnull String columnStr, Set<String> allFields) {
         boolean exist = true;
         if (columnStr.contains(COMMA)) {
             String[] arr = columnStr.split(COMMA);
@@ -426,7 +429,7 @@ public class QueryGenerator {
     /**
      * 根据所传的值 转化成对应的比较方式 支持><= like in !
      */
-    public static QueryRuleEnum convert2Rule(Object value) {
+    private static QueryRuleEnum convert2Rule(Object value) {
         if (value == null) {
             return QueryRuleEnum.EQ;
         }
@@ -555,7 +558,12 @@ public class QueryGenerator {
     /**
      * 根据类型转换给定的值
      */
+    @Nonnull
     private static Object parseByType(String value, String type, QueryRuleEnum rule) throws ParseException {
+        if (org.apache.commons.lang3.StringUtils.isEmpty(type)) {
+            return value;
+        }
+
         return switch (type) {
             case "class java.lang.Integer" -> Integer.parseInt(value);
             case "class java.math.BigDecimal" -> new BigDecimal(value);
@@ -571,8 +579,11 @@ public class QueryGenerator {
     /**
      * 获取日期类型的值
      */
-    private static Date getDateQueryByRule(String value, QueryRuleEnum rule) throws ParseException {
+    private static Date getDateQueryByRule(@Nonnull String value, QueryRuleEnum rule) throws ParseException {
         Date date = null;
+        if (org.apache.commons.lang3.StringUtils.isBlank(value)) {
+            return date;
+        }
         int length = 10;
         if (value.length() == length) {
             if (rule == QueryRuleEnum.GE) {
@@ -583,7 +594,6 @@ public class QueryGenerator {
                 // 比较小于
                 date = getTime().parse(value + " 23:59:59");
             }
-            // TODO 日期类型比较特殊 可能oracle下不一定好使
         }
         if (date == null) {
             date = getTime().parse(value);
@@ -664,6 +674,7 @@ public class QueryGenerator {
     /**
      * 去掉值前后单引号
      */
+    @Nonnull
     public static String trimSingleQuote(String ruleValue) {
         if (isEmpty(ruleValue)) {
             return "";
@@ -713,6 +724,7 @@ public class QueryGenerator {
     /**
      * 获取查询条件
      */
+    @Nonnull
     public static String getSingleQueryConditionSql(String field, String alias, Object value, boolean isString) {
         return getSingleQueryConditionSql(field, alias, value, isString, null);
     }
@@ -720,6 +732,7 @@ public class QueryGenerator {
     /**
      * 报表获取查询条件 支持多数据源
      */
+    @Nonnull
     public static String getSingleQueryConditionSql(String field, String alias, Object value, boolean isString,
             String dataBaseType) {
         if (value == null) {
@@ -739,8 +752,12 @@ public class QueryGenerator {
      * @param dataBaseType 数据库类型
      * @return 查询条件的值
      */
+    @Nonnull
     private static String getSingleSqlByRule(QueryRuleEnum rule, String field, Object value, boolean isString,
             String dataBaseType) {
+        if (rule == null) {
+            return field + " = " + getFieldConditionValue(value, isString, dataBaseType);
+        }
         return switch (rule) {
             case GT, GE, LT, LE, EQ -> field + rule.getValue() + getFieldConditionValue(value, isString, dataBaseType);
             case NE -> field + " <> " + getFieldConditionValue(value, isString, dataBaseType);
@@ -760,6 +777,7 @@ public class QueryGenerator {
      * @param isString string?
      * @return 查询条件的值
      */
+    @Nonnull
     private static String getSingleSqlByRule(QueryRuleEnum rule, String field, Object value, boolean isString) {
         return getSingleSqlByRule(rule, field, value, isString, null);
     }
@@ -771,7 +789,7 @@ public class QueryGenerator {
      * @param dataBaseType 数据库类型
      * @return 查询条件的值
      */
-    private static String getFieldConditionValue(Object value, boolean isString, String dataBaseType) {
+    private static String getFieldConditionValue(@Nonnull Object value, boolean isString, String dataBaseType) {
         String str = value.toString().trim();
         if (str.startsWith(SymbolConstant.EXCLAMATORY_MARK)) {
             str = str.substring(1);
@@ -811,7 +829,8 @@ public class QueryGenerator {
         }
     }
 
-    private static String getInConditionValue(Object value, boolean isString) {
+    @Nonnull
+    private static String getInConditionValue(@Nonnull Object value, boolean isString) {
         String[] temp = value.toString().split(",");
         if (temp.length == 0) {
             return "('')";
@@ -836,7 +855,8 @@ public class QueryGenerator {
     /**
      * 先根据值判断 走左模糊还是右模糊 最后如果值不带任何标识(*或者%)，则再根据ruleEnum判断
      */
-    private static String getLikeConditionValue(Object value, QueryRuleEnum ruleEnum) {
+    @Nonnull
+    private static String getLikeConditionValue(@Nonnull Object value, QueryRuleEnum ruleEnum) {
         String str = value.toString().trim();
         if (str.startsWith(SymbolConstant.ASTERISK) && str.endsWith(SymbolConstant.ASTERISK)) {
             if (DataBaseConstant.DB_TYPE_SQLSERVER.equals(getDbType())) {
@@ -930,6 +950,7 @@ public class QueryGenerator {
     /**
      * 获取class的 包括父类的
      */
+    @Nonnull
     private static List<Field> getClassFields(Class<?> clazz) {
         return BeanUtils.getAllFields(clazz);
     }
@@ -937,7 +958,8 @@ public class QueryGenerator {
     /**
      * 获取表字段名
      */
-    private static String getTableFieldName(Class<?> clazz, String name) {
+    @Nullable
+    private static String getTableFieldName(@Nonnull Class<?> clazz, String name) {
         try {
             // 如果字段加注解了@TableField(exist = false),不走DB查询
             Field field = null;
@@ -990,7 +1012,7 @@ public class QueryGenerator {
     private static String specialStrConvert(String value) {
         if (DataBaseConstant.DB_TYPE_MYSQL.equals(getDbType())
                 || DataBaseConstant.DB_TYPE_MARIADB.equals(getDbType())) {
-            String[] specialStr = QueryGenerator.LIKE_MYSQL_SPECIAL_STRS.split(",");
+            String[] specialStr = QueryGenerator.LIKE_MYSQL_SPECIAL_STR.split(",");
             for (String str : specialStr) {
                 if (value.contains(str)) {
                     value = value.replace(str, "\\" + str);

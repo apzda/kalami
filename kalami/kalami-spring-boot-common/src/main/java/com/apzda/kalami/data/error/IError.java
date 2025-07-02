@@ -35,7 +35,7 @@ public interface IError {
     int code();
 
     default int httpCode() {
-        return 200;
+        return 500;
     }
 
     default HttpHeaders headers() {

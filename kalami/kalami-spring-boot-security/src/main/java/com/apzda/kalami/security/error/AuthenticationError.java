@@ -22,6 +22,7 @@ import com.apzda.kalami.error.ServiceError;
 import com.apzda.kalami.exception.INoStackLog;
 import jakarta.annotation.Nonnull;
 import lombok.Getter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
 /**
@@ -33,6 +34,8 @@ import org.springframework.security.core.AuthenticationException;
 public class AuthenticationError extends AuthenticationException implements INoStackLog {
 
     protected final IError error;
+
+    private Authentication authentication;
 
     public AuthenticationError(@Nonnull IError error, Throwable cause) {
         super(error.message(), cause);
@@ -52,6 +55,11 @@ public class AuthenticationError extends AuthenticationException implements INoS
     @Override
     public String toString() {
         return "AuthenticationError{" + "error=" + error + '}';
+    }
+
+    public AuthenticationError withAuthentication(Authentication authentication) {
+        this.authentication = authentication;
+        return this;
     }
 
 }

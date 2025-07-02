@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,6 +37,10 @@ public class BizException extends RuntimeException {
 
     public BizException(String message) {
         this(new ServiceNotAvailableError(message), null, null);
+    }
+
+    public BizException(String message, Throwable cause) {
+        this(new ServiceNotAvailableError(message), cause);
     }
 
     public BizException(@Nonnull IError error, HttpHeaders headers, Throwable e) {

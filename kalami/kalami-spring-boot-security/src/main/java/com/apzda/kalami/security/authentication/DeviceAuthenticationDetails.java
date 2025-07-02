@@ -18,7 +18,9 @@ package com.apzda.kalami.security.authentication;
 
 import jakarta.annotation.Nonnull;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.http.HttpHeaders;
 
@@ -43,6 +45,18 @@ public class DeviceAuthenticationDetails implements AuthenticationDetails {
 
     private final String userAgent;
 
+    @Setter
+    private String accessToken;
+
+    @Setter
+    private String refreshToken;
+
+    @Setter
+    private String spm;
+
+    @Setter
+    private Long expiredAt;
+
     public DeviceAuthenticationDetails(@Nonnull HttpHeaders headers, String remoteAddress) {
         this.userAgent = headers.getFirst("User-Agent");
         this.app = StringUtils.defaultIfBlank(headers.getFirst("X-App"), "");
@@ -62,19 +76,53 @@ public class DeviceAuthenticationDetails implements AuthenticationDetails {
             .append("app", app)
             .append("device", device)
             .append("userAgent", userAgent)
+            .append("expiredAt", expiredAt)
             .append("meta", meta)
             .toString();
     }
 
     @Nonnull
     private Map<String, String> parseMeta(@Nonnull HttpHeaders headers) {
-        Map<String, String> meta = new HashMap<>();
+        Map<String, String> meta = new MetaData();
         headers.forEach((key, value) -> {
             if (key.toLowerCase().startsWith("x-m-")) {
-                meta.put(key, value.get(0));
+                meta.put(key.toLowerCase().substring(4), value.get(0));
             }
         });
         return meta;
+    }
+
+    public String getDevice() {
+        return StringUtils.defaultIfBlank(device, "pc");
+    }
+
+    static class MetaData extends HashMap<String, String> {
+
+        @Override
+        public String get(Object key) {
+            return super.get(((String) key).toLowerCase());
+        }
+
+        @Override
+        public String getOrDefault(Object key, @Nullable String defaultValue) {
+            return super.getOrDefault(((String) key).toLowerCase(), defaultValue);
+        }
+
+        @Override
+        public boolean containsKey(Object key) {
+            return super.containsKey(((String) key).toLowerCase());
+        }
+
+        @Override
+        public String remove(Object key) {
+            return super.remove(((String) key).toLowerCase());
+        }
+
+        @Override
+        public String toString() {
+            return super.toString();
+        }
+
     }
 
 }

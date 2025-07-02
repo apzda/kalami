@@ -34,12 +34,7 @@
         <dependency>
             <groupId>com.apzda.cloud</groupId>
             <artifactId>kalami-spring-boot-web-starter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-undertow</artifactId>
-                </exclusion>
-            </exclusions>
+            <optional>true</optional>
         </dependency>
         <!-- optional libraries -->
         <dependency>

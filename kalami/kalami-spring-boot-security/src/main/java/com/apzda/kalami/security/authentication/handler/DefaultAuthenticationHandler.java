@@ -21,7 +21,6 @@ import com.apzda.kalami.data.Response;
 import com.apzda.kalami.error.ServiceError;
 import com.apzda.kalami.security.authentication.JwtTokenAuthentication;
 import com.apzda.kalami.security.config.SecurityConfigProperties;
-import com.apzda.kalami.security.event.AuthenticationCompleteEvent;
 import com.apzda.kalami.security.token.JwtTokenCustomizer;
 import com.apzda.kalami.security.token.TokenManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,9 +34,6 @@ import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.lang.NonNull;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -52,7 +48,7 @@ import java.io.IOException;
  */
 @Slf4j
 @RequiredArgsConstructor
-public class DefaultAuthenticationHandler implements AuthenticationHandler, ApplicationEventPublisherAware {
+public class DefaultAuthenticationHandler implements AuthenticationHandler {
 
     private final SecurityConfigProperties properties;
 
@@ -71,13 +67,6 @@ public class DefaultAuthenticationHandler implements AuthenticationHandler, Appl
     @Value("${kalami.security.realm-name:}")
     private String realmName;
 
-    private ApplicationEventPublisher applicationEventPublisher;
-
-    @Override
-    public void setApplicationEventPublisher(@NonNull ApplicationEventPublisher applicationEventPublisher) {
-        this.applicationEventPublisher = applicationEventPublisher;
-    }
-
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
@@ -87,16 +76,19 @@ public class DefaultAuthenticationHandler implements AuthenticationHandler, Appl
 
         if (authentication instanceof JwtTokenAuthentication authenticationToken) {
             try {
-                val jwtToken = tokenManager.create(authentication);
+                var jwtToken = authenticationToken.getJwtToken();
+                if (jwtToken == null) {
+                    jwtToken = tokenManager.create(authentication);
+                    authenticationToken.setJwtToken(jwtToken);
+                }
+
                 val cookieCfg = properties.getCookie();
                 val cookieName = cookieCfg.getCookieName();
 
-                if (StringUtils.isNoneBlank(cookieName)) {
+                if (StringUtils.isNotBlank(cookieName)) {
                     response.addCookie(cookieCfg.createCookie(jwtToken));
                 }
 
-                authenticationToken.setJwtToken(jwtToken);
-                this.applicationEventPublisher.publishEvent(new AuthenticationCompleteEvent(authentication, jwtToken));
                 respond(request, response, Response.success(jwtToken));
             }
             catch (Exception e) {
@@ -146,11 +138,29 @@ public class DefaultAuthenticationHandler implements AuthenticationHandler, Appl
     @Override
     public void onAuthentication(Authentication authentication, HttpServletRequest request,
             HttpServletResponse response) throws SessionAuthenticationException {
-        // note: run before onAuthenticationSuccess
-        tokenManager.verify(authentication);
-        if (log.isTraceEnabled()) {
-            log.trace("Session is valid: {}", authentication);
+        log.trace("Session is valid: {}", authentication);
+    }
+
+    @Override
+    public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+        try {
+            if (log.isTraceEnabled()) {
+                log.trace("Logout: {}", authentication);
+            }
+            tokenManager.remove(authentication);
+            this.onLogoutSuccess(request, response, authentication);
         }
+        catch (Exception e) {
+            if (log.isTraceEnabled()) {
+                log.trace("Token Manager cannot remove authentication data: {}", authentication, e);
+            }
+        }
+    }
+
+    @Override
+    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+            throws IOException, ServletException {
+        respond(request, response, Response.error(ServiceError.UNAUTHORIZED));
     }
 
 }

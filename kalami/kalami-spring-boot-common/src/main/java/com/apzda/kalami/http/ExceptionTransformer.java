@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,6 @@
  */
 package com.apzda.kalami.http;
 
-import org.springframework.web.ErrorResponseException;
-
 /**
  * @author ninggf (windywany@gmail.com)
  * @since 2025/05/17
@@ -25,7 +23,7 @@ import org.springframework.web.ErrorResponseException;
  */
 public interface ExceptionTransformer {
 
-    ErrorResponseException transform(Throwable exception);
+    Exception transform(Throwable exception);
 
     boolean supports(Class<? extends Throwable> eClass);
 

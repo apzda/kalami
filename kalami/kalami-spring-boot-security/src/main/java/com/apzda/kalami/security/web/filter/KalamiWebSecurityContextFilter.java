@@ -17,11 +17,12 @@
 
 package com.apzda.kalami.security.web.filter;
 
+import com.apzda.kalami.context.KalamiContextHolder;
 import com.apzda.kalami.security.authentication.DeviceAuthenticationDetails;
 import com.apzda.kalami.security.config.SecurityConfigProperties;
+import com.apzda.kalami.security.error.AuthenticationError;
 import com.apzda.kalami.security.token.TokenManager;
 import com.apzda.kalami.security.utils.SecurityUtils;
-import com.apzda.kalami.web.context.KalamiContextHolder;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.FilterChain;
@@ -86,13 +87,27 @@ public class KalamiWebSecurityContextFilter extends OncePerRequestFilter {
                 }
             }
         }
+        catch (AuthenticationError error) {
+            request.setAttribute(CONTEXT_ATTR_EXCEPTION, error);
+            val authentication = error.getAuthentication();
+
+            if (authentication != null) {
+                if (authentication instanceof AbstractAuthenticationToken jwtAuthenticationToken) {
+                    val headers = KalamiContextHolder.headers();
+                    val remoteAddr = KalamiContextHolder.getRemoteAddr();
+                    jwtAuthenticationToken.setDetails(DeviceAuthenticationDetails.create(headers, remoteAddr));
+                }
+                context.setAuthentication(authentication);
+            }
+        }
         catch (AuthenticationException authenticationException) {
             request.setAttribute(CONTEXT_ATTR_EXCEPTION, authenticationException);
         }
         catch (Exception e) {
             log.error("Error happened while loading Context: {}", e.getMessage());
         }
-        // SecurityContextHolder.setContext(context);
+
+        securityContextHolderStrategy.setContext(context);
         request.setAttribute(CONTEXT_ATTR_NAME, context);
 
         if (log.isTraceEnabled()) {

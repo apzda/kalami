@@ -22,6 +22,10 @@ package com.apzda.kalami.dictionary;
  */
 public interface Transformer<T> {
 
-    Object transform(T value);
+    default Object transform(T value) {
+        return transform(value, false);
+    }
+
+    Object transform(T value, boolean all);
 
 }

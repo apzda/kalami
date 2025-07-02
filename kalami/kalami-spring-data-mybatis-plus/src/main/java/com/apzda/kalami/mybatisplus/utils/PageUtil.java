@@ -16,6 +16,7 @@
  */
 package com.apzda.kalami.mybatisplus.utils;
 
+import com.apzda.kalami.data.PageRequest;
 import com.apzda.kalami.data.Paged;
 import com.apzda.kalami.utils.StringUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -25,7 +26,9 @@ import jakarta.annotation.Nonnull;
 import lombok.val;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -58,8 +61,15 @@ public abstract class PageUtil {
     }
 
     @Nonnull
+    public static <T, E> Paged<T> from(@Nonnull IPage<E> page,
+            @Nonnull Function<? super List<E>, ? extends List<T>> converter) {
+
+        return from(page, page.getRecords(), converter);
+    }
+
+    @Nonnull
     public static <T, E> Paged<T> from(@Nonnull IPage<E> page, @Nonnull List<E> records,
-                                       @Nonnull Function<? super List<E>, ? extends List<T>> converter) {
+            @Nonnull Function<? super List<E>, ? extends List<T>> converter) {
         val result = new Paged<T>();
         result.setCurrent(page.getCurrent());
         result.setPages(page.getPages());
@@ -71,8 +81,17 @@ public abstract class PageUtil {
     }
 
     @Nonnull
-    public static <T> IPage<T> from(@Nonnull Pageable pageable) {
-        val page = new Page<T>(pageable.getPageNumber(), pageable.getPageSize());
+    public static <T> IPage<T> from(Pageable pageable) {
+        return from(pageable, true);
+    }
+
+    @Nonnull
+    public static <T> IPage<T> from(Pageable pageable, boolean searchCount) {
+        if (pageable == null) {
+            return new Page<>(1, 20, searchCount);
+        }
+        val pageNumber = pageable.getPageNumber();
+        val page = new Page<T>(pageNumber <= 0 ? 1 : pageNumber, pageable.getPageSize(), searchCount);
         val sort = pageable.getSort();
 
         sort.forEach(sortable -> {
@@ -85,7 +104,31 @@ public abstract class PageUtil {
             page.addOrder(orderItem);
         });
 
+        if (CollectionUtils.isEmpty(page.orders())) {
+            page.setOrders(new ArrayList<>());
+        }
         return page;
+    }
+
+    @Nonnull
+    public static <T> IPage<T> from(@Nonnull PageRequest request) {
+        return from(request, request.searchCount());
+    }
+
+    @Nonnull
+    public static <T> IPage<T> from(@Nonnull PageRequest request, boolean searchCount) {
+        if (request.getPageNumber() <= 0) {
+            request.setPageNumber(1);
+        }
+        if (request.getPageSize() <= 0) {
+            request.setPageSize(20);
+        }
+        return from(request.toPageable(), searchCount);
+    }
+
+    @Nonnull
+    public static <T> Paged<T> empty() {
+        return new Paged<>();
     }
 
 }

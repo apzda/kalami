@@ -16,6 +16,7 @@
  */
 package com.apzda.kalami.security.autoconfig;
 
+import com.apzda.kalami.security.authentication.AuthenticationUtil;
 import com.apzda.kalami.security.authentication.DefaultAuthenticationProvider;
 import com.apzda.kalami.security.authentication.filter.AbstractAuthenticatedFilter;
 import com.apzda.kalami.security.authentication.filter.AbstractProcessingFilter;
@@ -35,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.observation.ObservationRegistryCustomizer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -104,9 +106,21 @@ class KalamiWebSecurityConfiguration {
         return new KalamiWebSecurityConfigurerAdapter(context);
     }
 
+    /**
+     * 认证工具类
+     */
+    @Bean
+    static AuthenticationUtil authenticationUtil(AuthenticationManagerBuilder builder,
+            SecurityContextRepository securityContextRepository,
+            @Autowired(required = false) ApplicationEventPublisher eventPublisher, AuthenticationHandler handler) {
+        return new AuthenticationUtil(builder, securityContextRepository, eventPublisher, handler) {
+        };
+    }
+
     @Bean("defaultAuthenticationProvider")
     @ConditionalOnMissingBean(AuthenticationProvider.class)
     AuthenticationProvider defaultAuthenticationProvider(PasswordEncoder passwordEncoder) {
+        log.debug("Default authentication provider(no one can pass the authentication) used!!!");
         UserDetailsService userDetailsService = new InMemoryUserDetailsManager(List.of());
         return new DefaultAuthenticationProvider(userDetailsService, passwordEncoder);
     }

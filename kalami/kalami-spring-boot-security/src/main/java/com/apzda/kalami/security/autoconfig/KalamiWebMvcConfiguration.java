@@ -17,8 +17,8 @@
 
 package com.apzda.kalami.security.autoconfig;
 
-import com.apzda.kalami.security.config.SecurityConfigProperties;
 import com.apzda.kalami.security.authorization.checker.AuthorizationChecker;
+import com.apzda.kalami.security.config.SecurityConfigProperties;
 import com.apzda.kalami.security.web.interceptor.KalamiServletSecurityInterceptor;
 import com.apzda.kalami.security.web.resolver.CurrentUserParamResolver;
 import com.apzda.kalami.user.CurrentUser;

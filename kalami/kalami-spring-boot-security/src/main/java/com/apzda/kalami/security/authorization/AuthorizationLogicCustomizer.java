@@ -20,17 +20,21 @@ package com.apzda.kalami.security.authorization;
 import com.apzda.kalami.data.domain.OwnerAware;
 import com.apzda.kalami.data.domain.TenantAware;
 import com.apzda.kalami.security.utils.SecurityUtils;
+import com.apzda.kalami.tenant.TenantManager;
 import com.apzda.kalami.user.CurrentUserProvider;
-import com.apzda.kalami.user.TenantManager;
+import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -46,7 +50,11 @@ public class AuthorizationLogicCustomizer {
     private final PermissionEvaluator evaluator;
 
     public boolean isSa() {
-        return SecurityUtils.hasRole("admin");
+        return SecurityUtils.hasRole("sa");
+    }
+
+    public boolean is(String role) {
+        return SecurityUtils.hasRole(role);
     }
 
     public boolean iCan(String authority) {
@@ -59,24 +67,43 @@ public class AuthorizationLogicCustomizer {
         return isAuthed() && evaluator.hasPermission(authentication, object, authority);
     }
 
-    public boolean isMine(@Nullable OwnerAware<?> object) {
-        if (!isAuthed() || object == null || object.getCreatedBy() == null) {
+    public boolean has(String authority) {
+        if (StringUtils.isBlank(authority)) {
             return false;
         }
-        val me = CurrentUserProvider.getCurrentUser();
-        val uid = me.getUid();
-        val owner = object.getCreatedBy().toString();
-
-        return Objects.equals(uid, owner);
+        if (StringUtils.startsWith(authority, "!")) {
+            return isAuthed() && !SecurityUtils.hasAuthority(authority.substring(1));
+        }
+        return isAuthed() && SecurityUtils.hasAuthority(authority);
     }
 
-    public boolean isMine(@Nullable String owner) {
-        if (!isAuthed() || StringUtils.isBlank(owner)) {
+    public boolean sysUser() {
+        return has("!TENANT");
+    }
+
+    public boolean isMine(@Nullable Object owner) {
+        if (!isAuthed() || owner == null) {
             return false;
         }
-        val me = CurrentUserProvider.getCurrentUser();
-        val uid = me.getUid();
-        return Objects.equals(uid, owner);
+        if (owner instanceof String id) {
+            val me = CurrentUserProvider.getCurrentUser();
+            val uid = me.getUid();
+            return Objects.equals(uid, id);
+        }
+        else if (owner instanceof OwnerAware<?> ownerAware) {
+            val me = CurrentUserProvider.getCurrentUser();
+            val uid = me.getUid();
+            return Objects.equals(uid, ownerAware.getCreatedBy().toString());
+        }
+        else if (owner instanceof TenantAware<?> tenantAware) {
+            val tenantId = tenantAware.getTenantId();
+            return Arrays.stream(TenantManager.tenantIds())
+                .filter(Objects::nonNull)
+                .map(Object::toString)
+                .anyMatch((id) -> Objects.equals(id, tenantId));
+        }
+
+        return false;
     }
 
     public boolean isTenanted(@Nullable TenantAware<?> object) {
@@ -100,6 +127,28 @@ public class AuthorizationLogicCustomizer {
             .filter(Objects::nonNull)
             .map(Object::toString)
             .anyMatch((id) -> id.equals(tenantId));
+    }
+
+    public boolean subscribed(@Nonnull String service) {
+        if (!isAuthed()) {
+            return false;
+        }
+        val subscriptions = TenantManager.subscriptions();
+
+        if (CollectionUtils.isEmpty(subscriptions)) {
+            throw new AccessDeniedException("未订阅任何服务");
+        }
+        if (StringUtils.isBlank(service)) {
+            return true;
+        }
+        val subscription = subscriptions.get(service);
+        if (subscription == null) {
+            throw new AccessDeniedException(String.format("【%s】服务未订阅", service));
+        }
+        if (subscription.getExpireTime() != null && subscription.getExpireTime().isBefore(LocalDateTime.now())) {
+            throw new AccessDeniedException(String.format("【%s】服务订阅已过期", service));
+        }
+        return true;
     }
 
     public boolean isAuthed() {

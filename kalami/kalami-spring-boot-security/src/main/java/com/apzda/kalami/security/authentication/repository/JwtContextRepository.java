@@ -17,11 +17,12 @@
 
 package com.apzda.kalami.security.authentication.repository;
 
+import com.apzda.kalami.context.KalamiContextHolder;
 import com.apzda.kalami.security.authentication.DeviceAuthenticationDetails;
 import com.apzda.kalami.security.config.SecurityConfigProperties;
+import com.apzda.kalami.security.error.AuthenticationError;
 import com.apzda.kalami.security.token.TokenManager;
 import com.apzda.kalami.security.web.filter.KalamiWebSecurityContextFilter;
-import com.apzda.kalami.web.context.KalamiContextHolder;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletRequest;
@@ -81,17 +82,26 @@ public class JwtContextRepository implements SecurityContextRepository {
 
             if (authentication != null) {
                 context.setAuthentication(authentication);
-                log.trace("Context loaded from TokenManager: {}", tokenManager);
+                log.trace("Context loaded from TokenManager: {}", tokenManager.getClass().getName());
+            }
+        }
+        catch (AuthenticationError error) {
+            request.setAttribute(CONTEXT_ATTR_EXCEPTION, error);
+            val authentication = error.getAuthentication();
+            if (authentication != null) {
+                context.setAuthentication(authentication);
+                log.trace("Context loaded from TokenManager with an exception: {} - {}",
+                        tokenManager.getClass().getName(), error.getMessage());
             }
         }
         catch (AuthenticationException authenticationException) {
             request.setAttribute(CONTEXT_ATTR_EXCEPTION, authenticationException);
         }
         catch (Exception e) {
-            log.error("Error happened while loading Context: {}", e.getMessage());
+            log.error("Error happened while loading Context: {}", e.getMessage(), e);
         }
 
-        SecurityContextHolder.setContext(context);
+        securityContextHolderStrategy.setContext(context);
         request.setAttribute(CONTEXT_ATTR_NAME, context);
 
         if (log.isTraceEnabled()) {
@@ -123,10 +133,21 @@ public class JwtContextRepository implements SecurityContextRepository {
         val accessToken = KalamiWebSecurityContextFilter.getAccessTokenFromRequest(request, properties);
 
         if (StringUtils.isNotBlank(accessToken)) {
-            val authentication = tokenManager.restore(accessToken);
+            AuthenticationError exception = null;
+            Authentication authentication;
+            try {
+                authentication = tokenManager.restore(accessToken);
+            }
+            catch (AuthenticationError error) {
+                authentication = error.getAuthentication();
+                exception = error;
+            }
             if (authentication instanceof AbstractAuthenticationToken jwtAuthenticationToken) {
                 jwtAuthenticationToken.setDetails(DeviceAuthenticationDetails.create(KalamiContextHolder.headers(),
                         KalamiContextHolder.getRemoteIp()));
+            }
+            if (exception != null) {
+                throw exception.withAuthentication(authentication);
             }
             return authentication;
         }

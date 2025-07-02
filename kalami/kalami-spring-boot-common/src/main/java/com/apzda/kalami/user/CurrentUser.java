@@ -49,6 +49,8 @@ public class CurrentUser implements Serializable {
 
     private String remoteAddress;
 
+    private String spm;
+
     private Map<String, String> meta;
 
     private boolean authenticated;

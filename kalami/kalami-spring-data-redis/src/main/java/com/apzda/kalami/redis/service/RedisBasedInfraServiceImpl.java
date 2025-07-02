@@ -107,7 +107,7 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
                 idCache.getUnchecked(id + "@" + interval);
             }
             catch (Exception e) {
-                log.warn("Cannot set expired time of the key of counter '{}': {}", id, e.getMessage());
+                log.warn("Cannot set TTL of the key of counter '{}': {}", id, e.getMessage());
             }
         }
     }
@@ -137,7 +137,7 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
             }
         }
         catch (Exception e) {
-            log.error("Cannot load  TempData({}): {}", id, e.getMessage());
+            log.error("Cannot load TempData({}): {}", id, e.getMessage());
         }
         return Optional.empty();
     }
@@ -166,6 +166,10 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
 
     @Override
     public void expire(@NonNull String id, @NonNull Duration duration) {
+        if (duration.isZero() || duration.isNegative()) {
+            return;
+        }
+
         val key = "storage." + id;
         try {
             stringRedisTemplate.expire(key, duration);
@@ -177,7 +181,7 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
 
     @Override
     @NonNull
-    public Duration getDuration(@NonNull String id) {
+    public Duration getTtl(@NonNull String id) {
         val key = "storage." + id;
         try {
             val expire = stringRedisTemplate.getExpire(key, TimeUnit.SECONDS);

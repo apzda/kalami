@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@ package com.apzda.kalami.web.autoconfig;
 
 import com.apzda.kalami.infra.config.InfraConfigProperties;
 import com.apzda.kalami.infra.service.LocalInfraServiceImpl;
+import com.apzda.kalami.service.TempStorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -34,8 +34,7 @@ import org.springframework.context.annotation.Configuration;
 class KalamiInfraConfiguration {
 
     @Bean
-    @ConditionalOnMissingBean
-    @ConditionalOnMissingClass("org.springframework.data.redis.core.StringRedisTemplate")
+    @ConditionalOnMissingBean({ TempStorageService.class })
     LocalInfraServiceImpl kalamiInfraCounterService(InfraConfigProperties properties) {
         return new LocalInfraServiceImpl(properties.getTempExpireTime());
     }

@@ -16,10 +16,12 @@
  */
 package com.apzda.kalami.security.authentication;
 
+import com.apzda.kalami.context.KalamiContextHolder;
 import com.apzda.kalami.security.token.JwtToken;
 import com.apzda.kalami.security.user.MetaUserDetails;
 import com.apzda.kalami.security.utils.SecurityUtils;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -34,6 +36,7 @@ import java.io.ObjectInputStream;
 import java.io.Serial;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * @author ninggf (windywany@gmail.com)
@@ -67,11 +70,29 @@ public class JwtTokenAuthentication extends AbstractAuthenticationToken {
         super(authorities);
         this.principal = SecurityUtils.checkUserDetails(principal);
         this.credentials = credentials;
-        super.setAuthenticated(true); // must use super, as we override
 
         if (principal instanceof MetaUserDetails meta) {
             meta.setAuthentication(this);
         }
+        super.setAuthenticated(true); // must use super, as we override
+
+        if (this.getDetails() == null) {
+            KalamiContextHolder.getRequest().ifPresent(request -> {
+                this.setDetails(new DeviceAuthenticationDetailsSource().buildDetails(request));
+            });
+        }
+    }
+
+    JwtTokenAuthentication(UserDetails principal, Object credentials, AuthenticationDetails details) {
+        super(List.of());
+        this.principal = SecurityUtils.checkUserDetails(principal);
+        this.credentials = credentials;
+
+        if (principal instanceof MetaUserDetails meta) {
+            meta.setAuthentication(this);
+        }
+        super.setAuthenticated(true); // must use super, as we override
+        this.setDetails(details);
     }
 
     @Serial
@@ -95,6 +116,14 @@ public class JwtTokenAuthentication extends AbstractAuthenticationToken {
         return this.principal;
     }
 
+    @Nullable
+    public AuthenticationDetails getAuthDetails() {
+        if (getDetails() instanceof AuthenticationDetails authDetails) {
+            return authDetails;
+        }
+        return null;
+    }
+
     @Override
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
         Assert.isTrue(!isAuthenticated,
@@ -104,7 +133,7 @@ public class JwtTokenAuthentication extends AbstractAuthenticationToken {
 
     @Override
     public void eraseCredentials() {
-        super.eraseCredentials();
+        // super.eraseCredentials();
         this.credentials = null;
     }
 
@@ -116,6 +145,12 @@ public class JwtTokenAuthentication extends AbstractAuthenticationToken {
     @Nonnull
     public static JwtTokenAuthentication authenticated(UserDetails principal, Object credentials) {
         return new JwtTokenAuthentication(principal, credentials, Collections.emptyList());
+    }
+
+    @Nonnull
+    public static JwtTokenAuthentication authenticated(UserDetails principal, Object credentials,
+            AuthenticationDetails details) {
+        return new JwtTokenAuthentication(principal, credentials, details);
     }
 
     @Override

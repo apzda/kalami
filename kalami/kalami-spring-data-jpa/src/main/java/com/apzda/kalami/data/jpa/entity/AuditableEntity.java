@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@ import java.io.Serializable;
 @Setter
 @MappedSuperclass
 @EntityListeners({ AuditingEntityListener.class })
-public abstract class AuditableEntity<ID extends Serializable, U, T> implements IEntity<ID>, Auditable<U, T> {
+public abstract class AuditableEntity<ID extends Serializable, U extends Serializable, T extends Serializable>
+        implements IEntity<ID>, Auditable<U, T> {
 
 }

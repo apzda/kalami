@@ -27,6 +27,11 @@ import java.lang.annotation.*;
 @Documented
 public @interface Dict {
 
+    /**
+     * 1. {@link #table()}不为空时，对应表中代表label的字段,空或是"*"时会返回整行数据 <br/>
+     * 2. {@link #code()}不为空,{@link #table()}为空时，代表系统字曲表里的标签字段<br/>
+     * 3. {@linkplain #transformer()}不为空时，"*"表示应该返回整个对象.
+     */
     String value() default "";
 
     String code() default "";

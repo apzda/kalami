@@ -33,15 +33,25 @@ import java.util.ArrayList;
 
 public interface PageRequest {
 
-    int pageNumber();
+    int getPageNumber();
 
-    int pageSize();
+    void setPageNumber(int pageNumber);
 
-    String pageSorts();
+    int getPageSize();
+
+    default boolean searchCount() {
+        return true;
+    }
+
+    void setPageSize(int pageSize);
+
+    String getPageSorts();
+
+    void setPageSorts(String pageSorts);
 
     default Pageable toPageable() {
         Sort sort;
-        val sortFields = pageSorts();
+        val sortFields = getPageSorts();
         if (StringUtils.isNotBlank(sortFields)) {
             val orders = new ArrayList<Sort.Order>();
             for (String sortField : Splitter.on(",")
@@ -73,11 +83,11 @@ public interface PageRequest {
         }
 
         Pageable pageable;
-        if (pageNumber() < 0) {
+        if (getPageNumber() < 0) {
             pageable = Pageable.unpaged(sort);
         }
         else {
-            pageable = org.springframework.data.domain.PageRequest.of(pageNumber(), pageSize(), sort);
+            pageable = org.springframework.data.domain.PageRequest.of(getPageNumber(), getPageSize(), sort);
         }
 
         return pageable;

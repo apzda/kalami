@@ -49,6 +49,6 @@ public interface TempStorageService {
     void expire(@NonNull String id, Duration duration);
 
     @NonNull
-    Duration getDuration(@NonNull String id);
+    Duration getTtl(@NonNull String id);
 
 }

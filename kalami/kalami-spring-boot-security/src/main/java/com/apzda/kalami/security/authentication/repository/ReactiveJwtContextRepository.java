@@ -19,6 +19,7 @@ package com.apzda.kalami.security.authentication.repository;
 
 import com.apzda.kalami.security.authentication.DeviceAuthenticationDetails;
 import com.apzda.kalami.security.config.SecurityConfigProperties;
+import com.apzda.kalami.security.error.AuthenticationError;
 import com.apzda.kalami.security.token.TokenManager;
 import com.apzda.kalami.security.utils.SecurityUtils;
 import jakarta.annotation.Nonnull;
@@ -61,7 +62,7 @@ public class ReactiveJwtContextRepository implements ServerSecurityContextReposi
 
     @Override
     public Mono<Void> save(ServerWebExchange exchange, SecurityContext context) {
-        tokenManager.save(context.getAuthentication());
+        // tokenManager.save(context.getAuthentication());
         return Mono.empty();
     }
 
@@ -86,6 +87,26 @@ public class ReactiveJwtContextRepository implements ServerSecurityContextReposi
                 log.trace("Context loaded from TokenManager: {}", tokenManager);
             }
         }
+        catch (AuthenticationError error) {
+            request.getAttributes().put(CONTEXT_ATTR_EXCEPTION, error);
+            val authentication = error.getAuthentication();
+            if (authentication instanceof AbstractAuthenticationToken jwtAuthenticationToken) {
+                val headers = request.getHeaders();
+                var ip = "127.0.0.1";
+                if (Optional.ofNullable(request.getRemoteAddress()).isPresent()) {
+                    ip = request.getRemoteAddress().getAddress().getHostAddress();
+                }
+                jwtAuthenticationToken.setDetails(DeviceAuthenticationDetails.create(headers, ip));
+            }
+
+            if (authentication != null) {
+                context.setAuthentication(authentication);
+                if (log.isTraceEnabled()) {
+                    log.trace("Context loaded from TokenManager with an exception: {} - {}", tokenManager,
+                            error.getMessage());
+                }
+            }
+        }
         catch (AuthenticationException authenticationException) {
             request.getAttributes().put(CONTEXT_ATTR_EXCEPTION, authenticationException);
         }
@@ -93,7 +114,7 @@ public class ReactiveJwtContextRepository implements ServerSecurityContextReposi
             log.error("Error happened while loading Context: {}", e.getMessage());
         }
 
-        SecurityContextHolder.setContext(context);
+        securityContextHolderStrategy.setContext(context);
         request.getAttributes().put(CONTEXT_ATTR_NAME, context);
 
         if (log.isTraceEnabled()) {

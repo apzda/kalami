@@ -18,9 +18,9 @@
 package com.apzda.kalami.mybatisplus;
 
 import com.apzda.kalami.mybatisplus.config.KalamiMybatisPlusConfigProperties;
+import com.apzda.kalami.tenant.TenantManager;
 import com.apzda.kalami.user.CurrentUser;
 import com.apzda.kalami.user.CurrentUserProvider;
-import com.apzda.kalami.user.TenantManager;
 import jakarta.annotation.Nonnull;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -40,8 +40,8 @@ import org.springframework.context.annotation.Configuration;
 public class TestApp {
 
     @Bean
-    TenantManager<String> tenantManager(KalamiMybatisPlusConfigProperties properties) {
-        return new TenantManager<>() {
+    TenantManager tenantManager(KalamiMybatisPlusConfigProperties properties) {
+        return new TenantManager() {
             @Override
             @Nonnull
             protected String[] getTenantIds() {

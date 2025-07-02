@@ -58,6 +58,7 @@ import org.springframework.boot.autoconfigure.web.reactive.ReactiveWebServerFact
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.AuditorAware;
@@ -104,6 +105,7 @@ import org.springframework.web.ErrorResponseException;
 //@formatter:on
 @EnableConfigurationProperties({ SecurityConfigProperties.class })
 @RequiredArgsConstructor
+@ComponentScan({ "com.apzda.kalami.security.aop" })
 public class KalamiSecurityAutoConfiguration {
 
     private final SecurityConfigProperties properties;
@@ -130,7 +132,7 @@ public class KalamiSecurityAutoConfiguration {
     static ExceptionTransformer authExceptionTransformer() {
         return new ExceptionTransformer() {
             @Override
-            public ErrorResponseException transform(Throwable exception) {
+            public Exception transform(Throwable exception) {
                 if (exception instanceof AccessDeniedException) {
                     return new ErrorResponseException(HttpStatus.FORBIDDEN,
                             new NoStackBizException(ServiceError.FORBIDDEN, exception));
@@ -228,9 +230,10 @@ public class KalamiSecurityAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     JWTSigner jwtSignerNone() {
+        log.trace("NoneJWTSigner configured!");
         return new NoneJWTSigner() {
             public boolean verify(String headerBase64, String payloadBase64, String signBase64) {
-                return !StringUtils.isAnyBlank(headerBase64, payloadBase64, signBase64);
+                return !StringUtils.isAnyBlank(headerBase64, payloadBase64);
             }
         };
     }

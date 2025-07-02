@@ -18,6 +18,7 @@ package com.apzda.kalami.boot.autoconfig;
 
 import com.apzda.kalami.boot.config.XkaBootConfigProperties;
 import com.apzda.kalami.boot.utils.DataSourceUtils;
+import com.apzda.kalami.boot.utils.DictionaryUtils;
 import jakarta.annotation.Nonnull;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -25,6 +26,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Import;
 
 import javax.sql.DataSource;
 
@@ -34,11 +36,14 @@ import javax.sql.DataSource;
  */
 @AutoConfiguration(after = DataSourceAutoConfiguration.class)
 @EnableConfigurationProperties({ XkaBootConfigProperties.class })
+@Import(KalamiXkaConfiguration.class)
 public class KalamiXkaAutoConfiguration implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(@Nonnull ApplicationContext applicationContext) throws BeansException {
         DataSourceUtils.setDataSource(applicationContext.getBean(DataSource.class));
+        new DictionaryUtils(applicationContext) {
+        };
     }
 
 }

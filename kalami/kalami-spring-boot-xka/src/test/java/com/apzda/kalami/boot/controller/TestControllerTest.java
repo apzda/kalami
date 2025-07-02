@@ -19,7 +19,7 @@ package com.apzda.kalami.boot.controller;
 import com.apzda.kalami.boot.TestApp;
 import com.apzda.kalami.boot.autoconfig.KalamiXkaAutoConfiguration;
 import com.apzda.kalami.boot.entity.User;
-import com.apzda.kalami.mybatisplus.autoconfig.MyBatisPlusAutoConfiguration;
+import com.apzda.kalami.mybatisplus.autoconfig.KalamiMyBatisPlusAutoConfiguration;
 import com.apzda.kalami.security.autoconfig.KalamiSecurityAutoConfiguration;
 import com.apzda.kalami.web.autoconfig.KalamiWebAutoConfiguration;
 import com.baomidou.mybatisplus.test.autoconfigure.AutoConfigureMybatisPlus;
@@ -53,7 +53,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(TestController.class)
 @ContextConfiguration(classes = TestApp.class)
 @ImportAutoConfiguration({ KalamiWebAutoConfiguration.class, KalamiXkaAutoConfiguration.class,
-        MyBatisPlusAutoConfiguration.class, KalamiSecurityAutoConfiguration.class, AopAutoConfiguration.class })
+        KalamiMyBatisPlusAutoConfiguration.class, KalamiSecurityAutoConfiguration.class, AopAutoConfiguration.class })
 @AutoConfigureMockMvc
 @AutoConfigureMybatisPlus
 @Sql(value = "classpath:/schema.sql")

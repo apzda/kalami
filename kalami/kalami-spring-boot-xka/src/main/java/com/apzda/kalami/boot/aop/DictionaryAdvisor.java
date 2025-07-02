@@ -22,10 +22,11 @@ import com.apzda.kalami.boot.config.XkaBootConfigProperties;
 import com.apzda.kalami.boot.dict.DictItem;
 import com.apzda.kalami.boot.dict.TransformUtils;
 import com.apzda.kalami.boot.mapper.DictItemMapper;
-import com.apzda.kalami.boot.sanitize.SanitizeUtils;
 import com.apzda.kalami.data.Paged;
 import com.apzda.kalami.data.Response;
 import com.apzda.kalami.dictionary.Dict;
+import com.apzda.kalami.utils.SanitizeUtils;
+import com.apzda.kalami.utils.StringUtil;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -52,12 +53,10 @@ import org.springframework.util.CollectionUtils;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Method;
+import java.util.*;
 
-import static com.apzda.kalami.boot.sanitize.SanitizeUtils.sanitize;
+import static com.apzda.kalami.utils.SanitizeUtils.sanitize;
 
 /**
  * @author ninggf (windywany@gmail.com)
@@ -72,6 +71,8 @@ import static com.apzda.kalami.boot.sanitize.SanitizeUtils.sanitize;
 public class DictionaryAdvisor implements ApplicationContextAware {
 
     private final static ThreadLocal<Map<String, Map<String, Object>>> caches = new ThreadLocal<>();
+
+    private final static ThreadLocal<Map<Enum<?>, Object>> enumCaches = new ThreadLocal<>();
 
     private final XkaBootConfigProperties properties;
 
@@ -93,9 +94,8 @@ public class DictionaryAdvisor implements ApplicationContextAware {
 
         if (returnObj instanceof Response<?> response) {
             try {
-                val cache = new HashMap<String, Map<String, Object>>();
-                caches.set(cache);
-
+                caches.set(new HashMap<>());
+                enumCaches.set(new HashMap<>());
                 val data = response.getData();
                 val realReturn = new Response<>();
                 realReturn.setErrCode(response.getErrCode());
@@ -105,20 +105,20 @@ public class DictionaryAdvisor implements ApplicationContextAware {
                 realReturn.setHttpCode(response.getHttpCode());
 
                 if (data instanceof Collection<?> collection) {
-                    realReturn.setData(collection.stream().map(this::fillDictionary).toList());
+                    realReturn.setData(collection.stream().map(this::fill).toList());
                 }
                 else if (data instanceof IPage<?> page) {
                     val newPage = Page.of(page.getCurrent(), page.getSize(), page.getTotal(), page.searchCount());
-                    newPage.setRecords(page.getRecords().stream().map(this::fillDictionary).toList());
+                    newPage.setRecords(page.getRecords().stream().map(this::fill).toList());
                     realReturn.setData(newPage);
                 }
                 else if (data instanceof Paged<?> page) {
                     val newPage = Page.of(page.getCurrent(), page.getSize(), page.getTotal(), true);
-                    newPage.setRecords(page.getRecords().stream().map(this::fillDictionary).toList());
+                    newPage.setRecords(page.getRecords().stream().map(this::fill).toList());
                     realReturn.setData(newPage);
                 }
                 else if (data != null && !BeanUtils.isSimpleProperty(data.getClass())) {
-                    realReturn.setData(fillDictionary(data));
+                    realReturn.setData(fill(data));
                 }
 
                 if (realReturn.getData() != null) {
@@ -127,13 +127,15 @@ public class DictionaryAdvisor implements ApplicationContextAware {
             }
             finally {
                 caches.remove();
+                enumCaches.remove();
             }
         }
 
         return returnObj;
     }
 
-    public Object fillDictionary(@Nullable Object data) {
+    @Nullable
+    public Object fill(@Nullable Object data) {
         if (data == null) {
             return null;
         }
@@ -162,7 +164,7 @@ public class DictionaryAdvisor implements ApplicationContextAware {
                         continue;
                     }
                     map.put(name, value);
-                    fillDict(field, name, value, map);
+                    fillDict(field, method, name, value, map);
                 }
                 catch (IllegalAccessException | InvocationTargetException e) {
                     log.warn("Cannot get value of property [{}] from [{}]", name, data.getClass());
@@ -174,20 +176,26 @@ public class DictionaryAdvisor implements ApplicationContextAware {
     }
 
     @SuppressWarnings("unchecked")
-    private void fillDict(@Nonnull Field field, String name, Object value, @Nonnull HashMap<String, Object> map) {
-        val annotation = field.getAnnotation(Dict.class);
+    private void fillDict(Field field, @Nonnull Method method, String name, Object value,
+            @Nonnull HashMap<String, Object> map) {
+        Dict annotation = method.getAnnotation(Dict.class);
+        if (annotation == null && field != null) {
+            annotation = field.getAnnotation(Dict.class);
+        }
+
         if (annotation == null) {
             return;
         }
         val dictFieldName = name + StringUtils.defaultIfBlank(this.properties.getLabelSuffix(), "Text");
-
+        val label = annotation.value();
         val transformerClz = annotation.transformer();
+        val object = "*".equals(label);
         if (!transformerClz.isInterface()) {
             val cache = caches.get().computeIfAbsent("transformer." + transformerClz, (key) -> new HashMap<>());
             val dictVal = cache.computeIfAbsent(value.toString(), (key) -> {
                 val transformer = TransformUtils.getTransformer(transformerClz);
                 if (transformer != null) {
-                    return transformer.transform(value);
+                    return transformer.transform(value, object);
                 }
                 return null;
             });
@@ -205,15 +213,21 @@ public class DictionaryAdvisor implements ApplicationContextAware {
         }
         val realTable = table;
         val code = StringUtils.defaultIfBlank(annotation.code(), "id");
-        val label = annotation.value();
 
         if (EnumUtil.isEnum(value)) {
-            map.put(dictFieldName, getTextFromEnum((Enum<?>) value, label));
+            val dictText = enumCaches.get().computeIfAbsent((Enum<?>) value, (v) -> getTextFromEnum(v, label));
+            map.put(dictFieldName, dictText);
         }
         else if (StringUtils.isNotBlank(table)) {
             val cache = caches.get().computeIfAbsent(table + "." + code, (key) -> new HashMap<>());
-            val dictText = cache.computeIfAbsent(value.toString(),
-                    (key) -> getTextFromTable(realTable, code, key, label));
+            val dictText = cache.computeIfAbsent(value.toString(), (key) -> {
+                if ("*".equals(label) || StringUtils.isBlank(label)) {
+                    return getRowFromTable(realTable, code, key);
+                }
+                else {
+                    return getTextFromTable(realTable, code, key, label);
+                }
+            });
             map.put(dictFieldName, dictText);
         }
         else if (StringUtils.isNotBlank(code)) {
@@ -249,6 +263,20 @@ public class DictionaryAdvisor implements ApplicationContextAware {
 
     private String getTextFromTable(String table, String code, @Nonnull Object value, String label) {
         return dictItemMapper.getDictLabel(table, code, label, value.toString());
+    }
+
+    @Nonnull
+    private Map<String, Object> getRowFromTable(String table, String code, @Nonnull Object value) {
+        val row = dictItemMapper.getDictRow(table, code, value.toString());
+        if (CollectionUtils.isEmpty(row)) {
+            return Collections.emptyMap();
+        }
+
+        Map<String, Object> map = new HashMap<>(row.size());
+        row.forEach((k, v) -> {
+            map.put(StringUtil.toCamel(k), v);
+        });
+        return map;
     }
 
     private static Object getTextFromEnum(@Nonnull Enum<?> value, String label) {

@@ -16,6 +16,7 @@
  */
 package com.apzda.kalami.sanitizer;
 
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
@@ -50,7 +51,7 @@ public class RegexpSanitizer implements Sanitizer<String> {
         }
     }
 
-    private int getFlags(String s) {
+    private int getFlags(@Nonnull String s) {
         return Integer.parseInt(s.trim());
     }
 

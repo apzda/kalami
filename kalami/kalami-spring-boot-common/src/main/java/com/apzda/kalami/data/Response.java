@@ -22,6 +22,7 @@ import com.apzda.kalami.i18n.I18n;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -135,12 +136,51 @@ public class Response<T> implements Serializable {
         return this;
     }
 
+    public Response<T> withErrMsg(String message) {
+        if (StringUtils.isNotBlank(message)) {
+            setMessage(message);
+        }
+        return this;
+    }
+
+    public Response<T> withType(MessageType errType) {
+        this.type = errType;
+        return (Response<T>) this;
+    }
+
+    @JsonIgnore
+    public boolean isSuccess() {
+        if (data instanceof Boolean rst) {
+            return rst && errCode == 0;
+        }
+
+        return errCode == 0;
+    }
+
+    @Nonnull
+    public T orElse(@Nonnull T defaultValue) {
+        return data == null ? defaultValue : data;
+    }
+
+    @Nullable
+    public T get() {
+        return data;
+    }
+
     @Nonnull
     public static <T> Response<T> wrap(@Nonnull T data) {
         Assert.notNull(data, "data is null!");
         val resp = new Response<T>();
         BeanUtils.copyProperties(data, resp, "data", "type", "message");
         resp.setData(data);
+        return resp;
+    }
+
+    @Nonnull
+    public static <T> Response<T> wrap(@Nonnull Response<?> response) {
+        Assert.notNull(response, "response is null!");
+        val resp = new Response<T>();
+        BeanUtils.copyProperties(response, resp);
         return resp;
     }
 
@@ -159,6 +199,11 @@ public class Response<T> implements Serializable {
         resp.data = data;
         resp.httpCode = error.httpCode();
         return resp;
+    }
+
+    @Nonnull
+    public static <T> Response<T> error(String message) {
+        return error(700, message);
     }
 
     @Nonnull
@@ -200,6 +245,47 @@ public class Response<T> implements Serializable {
     @Nonnull
     public static <T> Response<T> ok(String message) {
         return success(null, message);
+    }
+
+    @Nonnull
+    public static <T> Response<T> ok() {
+        return success(null);
+    }
+
+    @Nonnull
+    public static <T> Response<T> empty() {
+        return success(null);
+    }
+
+    @Nonnull
+    public static <T> Response<T> of(T data) {
+        return success(data);
+    }
+
+    @Nonnull
+    public static <T> T orElse(Response<T> response, @Nonnull T defaultValue) {
+        if (response == null) {
+            return defaultValue;
+        }
+        if (response.data == null) {
+            return defaultValue;
+        }
+        return response.data;
+    }
+
+    @Nullable
+    public static <T> T get(Response<T> response) {
+        if (response == null) {
+            return null;
+        }
+        return response.data;
+    }
+
+    public static boolean isSuccess(Response<?> response) {
+        if (response == null) {
+            return false;
+        }
+        return response.isSuccess();
     }
 
 }

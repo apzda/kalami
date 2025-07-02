@@ -17,6 +17,7 @@
 package com.apzda.kalami.boot.transformer;
 
 import com.apzda.kalami.dictionary.Transformer;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author fengz (windywany@gmail.com)
@@ -26,7 +27,7 @@ import com.apzda.kalami.dictionary.Transformer;
 public class Upper implements Transformer<String> {
 
     @Override
-    public Object transform(String value) {
+    public Object transform(@Nonnull String value, boolean all) {
         return value.toUpperCase();
     }
 

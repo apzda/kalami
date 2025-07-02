@@ -12,5 +12,5 @@ mybatis-plus:
 
 logging:
   level:
-    com.apzda: debug
+    com.apzda: trace
     com.baomidou: debug

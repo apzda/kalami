@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  */
 package com.apzda.kalami.web.i18n;
 
-import com.apzda.kalami.web.context.KalamiContextHolder;
+import com.apzda.kalami.context.KalamiContextHolder;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.val;
 import org.apache.commons.lang3.LocaleUtils;

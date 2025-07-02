@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-public class TestEntity extends AuditableEntity<String, String, Long> implements TenantAware<Long> {
+public class TestEntity extends AuditableEntity<String, String, Long> implements TenantAware<String> {
 
     @Id
     @SnowflakeId(prefix = "1_")
@@ -45,6 +45,6 @@ public class TestEntity extends AuditableEntity<String, String, Long> implements
 
     private Long updatedDate;
 
-    private Long tenantId;
+    private String tenantId;
 
 }

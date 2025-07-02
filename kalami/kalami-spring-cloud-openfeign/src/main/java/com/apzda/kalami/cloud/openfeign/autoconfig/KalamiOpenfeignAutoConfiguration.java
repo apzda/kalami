@@ -17,9 +17,10 @@
 package com.apzda.kalami.cloud.openfeign.autoconfig;
 
 import com.apzda.kalami.cloud.openfeign.config.KalamiServiceProperties;
+import com.apzda.kalami.cloud.openfeign.exception.FeignExceptionTransformer;
 import com.apzda.kalami.cloud.openfeign.interceptor.TracingFeignRequestInterceptor;
-import com.apzda.kalami.cloud.openfeign.transfomer.FeignExceptionTransformer;
 import com.apzda.kalami.http.ExceptionTransformer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -41,8 +42,8 @@ public class KalamiOpenfeignAutoConfiguration {
     }
 
     @Bean
-    ExceptionTransformer feignExceptionTransformer() {
-        return new FeignExceptionTransformer();
+    ExceptionTransformer feignExceptionTransformer(ObjectMapper objectMapper) {
+        return new FeignExceptionTransformer(objectMapper);
     }
 
 }

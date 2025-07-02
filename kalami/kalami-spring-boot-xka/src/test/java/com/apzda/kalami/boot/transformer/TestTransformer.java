@@ -26,7 +26,7 @@ import com.apzda.kalami.dictionary.Transformer;
 public class TestTransformer implements Transformer<String> {
 
     @Override
-    public Object transform(String value) {
+    public Object transform(String value, boolean all) {
         return value + "-" + "test";
     }
 

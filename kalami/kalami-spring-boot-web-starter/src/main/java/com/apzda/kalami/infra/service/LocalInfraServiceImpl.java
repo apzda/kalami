@@ -148,7 +148,7 @@ public class LocalInfraServiceImpl implements CounterService, TempStorageService
 
     @Override
     @NonNull
-    public Duration getDuration(@NonNull String id) {
+    public Duration getTtl(@NonNull String id) {
         val key = "storage." + id;
         val ep = pointers.get(key);
         if (ep == null) {
@@ -183,6 +183,10 @@ public class LocalInfraServiceImpl implements CounterService, TempStorageService
     }
 
     private void setExpired(String id, @NonNull Duration expired) {
+        if (expired.isZero() || expired.isNegative()) {
+            return;
+        }
+
         val expiredTime = DateUtil.currentSeconds() + expired.toSeconds();
         synchronized (keys) {
             val ep = pointers.get(id);

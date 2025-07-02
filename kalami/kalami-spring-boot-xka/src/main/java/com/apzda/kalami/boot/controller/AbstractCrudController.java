@@ -17,12 +17,12 @@
 package com.apzda.kalami.boot.controller;
 
 import com.apzda.kalami.boot.query.QueryGenerator;
-import com.apzda.kalami.boot.validate.Group;
 import com.apzda.kalami.data.Paged;
 import com.apzda.kalami.data.Response;
 import com.apzda.kalami.data.domain.AuditLog;
 import com.apzda.kalami.data.domain.IEntity;
-import com.apzda.kalami.error.NotFoundError;
+import com.apzda.kalami.data.validation.Group;
+import com.apzda.kalami.error.ResourceNotFoundError;
 import com.apzda.kalami.event.AuditEvent;
 import com.apzda.kalami.exception.BizException;
 import com.apzda.kalami.i18n.I18n;
@@ -119,7 +119,7 @@ public abstract class AbstractCrudController<D extends Serializable, T extends I
     protected Response<T> findById(D id) {
         val entity = this.serviceImpl.getById(id);
         if (entity == null) {
-            new NotFoundError(this.resourceId, String.valueOf(id)).emit();
+            new ResourceNotFoundError(this.resourceId, String.valueOf(id)).emit();
         }
         return Response.success(entity);
     }
@@ -171,7 +171,7 @@ public abstract class AbstractCrudController<D extends Serializable, T extends I
             audit.setNewValue(entity);
             val o = serviceImpl.getById(id);
             if (o == null) {
-                throw new BizException(new NotFoundError(resourceId, String.valueOf(id)));
+                throw new BizException(new ResourceNotFoundError(resourceId, String.valueOf(id)));
             }
             audit.setOldValue(o);
             val altered = alter(o, entity);
@@ -208,7 +208,7 @@ public abstract class AbstractCrudController<D extends Serializable, T extends I
         try {
             val o = this.serviceImpl.getById(id);
             if (o == null) {
-                new NotFoundError(this.resourceId, String.valueOf(id)).emit();
+                new ResourceNotFoundError(this.resourceId, String.valueOf(id)).emit();
             }
             audit.setOldValue(o);
             if (this.serviceImpl.removeById(id)) {

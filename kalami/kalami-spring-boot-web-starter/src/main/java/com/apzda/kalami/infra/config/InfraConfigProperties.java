@@ -38,6 +38,10 @@ public class InfraConfigProperties {
 
     private static final String DEFAULT_SORT_PARAMETER = "pageSorts";
 
+    private static final String DEFAULT_QV_PARAMETER = "_qv";
+
+    private static final String DEFAULT_QF_PARAMETER = "_qf";
+
     @DurationUnit(ChronoUnit.HOURS)
     private Duration tempExpireTime = Duration.ofHours(168);
 
@@ -48,6 +52,10 @@ public class InfraConfigProperties {
     private String sizeParameter = DEFAULT_SIZE_PARAMETER;
 
     private String sortParameter = DEFAULT_SORT_PARAMETER;
+
+    private String qvParameter = DEFAULT_QV_PARAMETER;
+
+    private String qfParameter = DEFAULT_QF_PARAMETER;
 
     @Data
     public static final class ModemConfig {

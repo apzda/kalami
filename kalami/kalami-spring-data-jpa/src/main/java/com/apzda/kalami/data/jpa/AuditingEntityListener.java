@@ -20,14 +20,15 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.SystemClock;
 import com.apzda.kalami.data.domain.Auditable;
 import com.apzda.kalami.data.domain.TenantAware;
+import com.apzda.kalami.tenant.TenantManager;
 import com.apzda.kalami.user.CurrentUserProvider;
-import com.apzda.kalami.user.TenantManager;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.ResolvableType;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -51,7 +52,7 @@ public class AuditingEntityListener {
 
             val userIdClz = resolvableType.getGeneric(0).resolve();
 
-            Object uid;
+            Serializable uid;
             if (userIdClz == null) {
                 uid = null;
             }
@@ -76,7 +77,7 @@ public class AuditingEntityListener {
             }
             val timeType = resolvableType.getGeneric(1).resolve();
 
-            Object current;
+            Serializable current;
             if (timeType == null || Long.class.isAssignableFrom(timeType)) {
                 current = SystemClock.now();
             }
@@ -102,9 +103,28 @@ public class AuditingEntityListener {
             entity.setUpdatedDate(current);
         }
 
-        if (o instanceof TenantAware<?> tenantAware) {
-            if (Objects.isNull(tenantAware.getTenantId())) {
-                tenantAware.setTenantId(TenantManager.tenantId());
+        if (o instanceof TenantAware tenantAware) {
+            val tenantId = TenantManager.tenantId();
+            if (Objects.isNull(tenantAware.getTenantId()) && tenantId != null) {
+                val resolvableType = ResolvableType.forClass(TenantAware.class, o.getClass());
+                val aClass = resolvableType.getGeneric(0).resolve();
+                Serializable tid;
+                if (aClass == null) {
+                    tid = null;
+                }
+                else if (Long.class.isAssignableFrom(aClass)) {
+                    tid = Long.parseLong(tenantId);
+                }
+                else if (Integer.class.isAssignableFrom(aClass)) {
+                    tid = Integer.parseInt(tenantId);
+                }
+                else if (StringUtils.isNotBlank(tenantId)) {
+                    tid = tenantId;
+                }
+                else {
+                    tid = null;
+                }
+                tenantAware.setTenantId(tid);
             }
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,9 +20,9 @@ import com.apzda.kalami.data.domain.TenantAware;
 import com.apzda.kalami.data.jpa.entity.AuditableEntity;
 import com.apzda.kalami.data.jpa.entity.TestEntity;
 import com.apzda.kalami.data.jpa.repository.TestEntityRepository;
+import com.apzda.kalami.tenant.TenantManager;
 import com.apzda.kalami.user.CurrentUser;
 import com.apzda.kalami.user.CurrentUserProvider;
-import com.apzda.kalami.user.TenantManager;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Data;
@@ -59,7 +59,7 @@ class AuditingEntityListenerTest {
         val entity = new TestEntity();
         try (val ms = Mockito.mockStatic(CurrentUserProvider.class); val ts = Mockito.mockStatic(TenantManager.class)) {
             ms.when(CurrentUserProvider::getCurrentUser).thenReturn(CurrentUser.builder().uid("1").build());
-            ts.when(TenantManager::tenantId).thenReturn(2L);
+            ts.when(TenantManager::tenantId).thenReturn("2");
             // when
             listener.fillMetaData(entity);
 
@@ -68,7 +68,7 @@ class AuditingEntityListenerTest {
             assertThat(entity.getUpdatedBy()).isEqualTo("1");
             assertThat(entity.getUpdatedDate()).isNotNull();
             assertThat(entity.getCreatedDate()).isNotNull();
-            assertThat(entity.getTenantId()).isEqualTo(2L);
+            assertThat(entity.getTenantId()).isEqualTo("2");
         }
     }
 
@@ -79,7 +79,7 @@ class AuditingEntityListenerTest {
         val entity = new TestEntity2();
         try (val ms = Mockito.mockStatic(CurrentUserProvider.class); val ts = Mockito.mockStatic(TenantManager.class)) {
             ms.when(CurrentUserProvider::getCurrentUser).thenReturn(CurrentUser.builder().uid("1").build());
-            ms.when(TenantManager::tenantId).thenReturn("2L");
+            ms.when(TenantManager::tenantId).thenReturn("2");
             // when
             listener.fillMetaData(entity);
 
@@ -88,7 +88,7 @@ class AuditingEntityListenerTest {
             assertThat(entity.getUpdatedBy()).isEqualTo("1");
             assertThat(entity.getUpdatedDate()).isNotNull();
             assertThat(entity.getCreatedDate()).isNotNull();
-            assertThat(entity.getTenantId()).isEqualTo("2L");
+            assertThat(entity.getTenantId()).isEqualTo("2");
         }
     }
 
@@ -114,7 +114,7 @@ class AuditingEntityListenerTest {
         val entity = new TestEntity();
         try (val ms = Mockito.mockStatic(CurrentUserProvider.class); val ts = Mockito.mockStatic(TenantManager.class)) {
             ms.when(CurrentUserProvider::getCurrentUser).thenReturn(CurrentUser.builder().uid("1").build());
-            ms.when(TenantManager::tenantId).thenReturn(2L);
+            ms.when(TenantManager::tenantId).thenReturn("2");
             // when
             val e = testEntityRepository.save(entity);
 
@@ -124,7 +124,7 @@ class AuditingEntityListenerTest {
             assertThat(e.getUpdatedBy()).isEqualTo("1");
             assertThat(e.getUpdatedDate()).isNotNull();
             assertThat(e.getCreatedDate()).isNotNull();
-            assertThat(e.getTenantId()).isEqualTo(2L);
+            assertThat(e.getTenantId()).isEqualTo("2");
         }
     }
 

@@ -17,9 +17,9 @@
 
 package com.apzda.kalami.mq.rocket.limiter;
 
+import com.apzda.kalami.mq.mail.IMail;
 import com.apzda.kalami.mq.rocket.config.RocketMqConfigProperties;
 import com.apzda.kalami.mq.rocket.listener.ISendCallback;
-import com.apzda.kalami.mq.mail.IMail;
 import com.apzda.kalami.service.CounterService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Nonnull;

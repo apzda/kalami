@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@
 package com.apzda.kalami.web.autoconfig;
 
 import com.apzda.kalami.autoconfig.KalamiCommonAutoConfiguration;
+import com.apzda.kalami.context.KalamiContextHolder;
 import com.apzda.kalami.i18n.I18n;
 import com.apzda.kalami.infra.config.InfraConfigProperties;
 import com.apzda.kalami.web.config.KalamiServerProperties;
-import com.apzda.kalami.web.context.KalamiContextHolder;
 import com.apzda.kalami.web.filter.KalamiServletFilter;
 import com.apzda.kalami.web.i18n.LocaleResolverImpl;
 import lombok.RequiredArgsConstructor;

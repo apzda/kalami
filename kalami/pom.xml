@@ -20,15 +20,17 @@
     <modules>
         <module>kalami-spring-boot-parent</module>
         <module>kalami-spring-boot-security</module>
+        <module>kalami-spring-boot-security-core</module>
         <module>kalami-spring-boot-web-starter</module>
         <module>kalami-spring-boot-common</module>
         <module>kalami-spring-cloud-openfeign</module>
         <module>kalami-spring-data-mybatis-plus</module>
         <module>kalami-spring-data-jpa</module>
         <module>kalami-spring-data-redis</module>
+        <module>kalami-spring-boot-xka</module>
         <module>kalami-spring-boot-xxljob-starter</module>
         <module>kalami-spring-boot-rocketmq-starter</module>
-        <module>kalami-spring-boot-xka</module>
+        <module>kalami-spring-cloud-seata</module>
     </modules>
 
     <properties>
@@ -55,11 +57,12 @@
         <sentinel.version>1.8.8</sentinel.version>
         <druid.version>1.2.24</druid.version>
         <seata.version>2.3.0</seata.version>
-        <seata-cloud.version>2023.0.3.2</seata-cloud.version>
+        <seata-cloud.version>2023.0.3.3</seata-cloud.version>
         <rocketmq-client.version>5.0.7</rocketmq-client.version>
         <easyexcel.version>4.0.3</easyexcel.version>
         <commons-io.version>2.19.0</commons-io.version>
         <jasypt.version>3.0.5</jasypt.version>
+        <imageio.version>3.11.0</imageio.version>
         <!-- feature gates -->
         <ccSkip>true</ccSkip>
         <!-- plugins -->
@@ -100,7 +103,17 @@
             </dependency>
             <dependency>
                 <groupId>com.apzda.cloud</groupId>
+                <artifactId>kalami-spring-boot-security-core</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.cloud</groupId>
                 <artifactId>kalami-spring-cloud-openfeign</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.cloud</groupId>
+                <artifactId>kalami-spring-cloud-seata</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
@@ -276,15 +289,19 @@
                 <artifactId>shardingsphere-jdbc</artifactId>
                 <version>${shardingsphere.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers</artifactId>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>commons-compress</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <build>
         <pluginManagement>
@@ -456,79 +473,6 @@
             </plugins>
         </pluginManagement>
     </build>
-
-    <reporting>
-        <plugins>
-            <!-- site -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <configuration>
-                    <stagingDirectory>${project.build.directory}/staging</stagingDirectory>
-                    <attach>false</attach>
-                    <generateProjectInfo>true</generateProjectInfo>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-            </plugin>
-            <!-- javadoc -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <nohelp>true</nohelp>
-                    <maxmemory>4G</maxmemory>
-                    <fixTags>all</fixTags>
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <id>aggregate</id>
-                        <inherited>false</inherited>
-                        <reports>
-                            <report>aggregate-no-fork</report>
-                        </reports>
-                    </reportSet>
-                    <reportSet>
-                        <reports>
-                            <report>javadoc-no-fork</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-            <!-- surefire-report -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-                <configuration>
-                    <linkXRef>true</linkXRef>
-                </configuration>
-            </plugin>
-            <!-- jxr -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jxr-plugin</artifactId>
-                <configuration>
-                    <linkJavadoc>true</linkJavadoc>
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>jxr-no-fork</report>
-                        </reports>
-                    </reportSet>
-                    <reportSet>
-                        <id>aggregate</id>
-                        <inherited>false</inherited>
-                        <reports>
-                            <report>aggregate</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-        </plugins>
-    </reporting>
 
     <profiles>
         <!-- delombok -->

@@ -25,6 +25,7 @@ import com.apzda.kalami.web.converter.modem.DefaultBase64EncodedModem;
 import com.apzda.kalami.web.error.KalamiErrorController;
 import com.apzda.kalami.web.error.KalamiErrorViewResolver;
 import com.apzda.kalami.web.resolver.PagerResolver;
+import com.apzda.kalami.web.resolver.QuickSearchResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
@@ -61,9 +62,12 @@ class KalamiWebMvcConfigure implements WebMvcConfigurer {
 
     private final Lazy<PagerResolver> pagerResolver;
 
+    private final Lazy<QuickSearchResolver> quickSearchResolver;
+
     KalamiWebMvcConfigure(ApplicationContext context) {
         this.encryptedMessageConverter = Lazy.of(() -> context.getBean(EncryptedMessageConverter.class));
         this.pagerResolver = Lazy.of(() -> context.getBean(PagerResolver.class));
+        this.quickSearchResolver = Lazy.of(() -> context.getBean(QuickSearchResolver.class));
     }
 
     @Bean
@@ -79,12 +83,13 @@ class KalamiWebMvcConfigure implements WebMvcConfigurer {
 
     @Override
     public void configureMessageConverters(@Nonnull List<HttpMessageConverter<?>> converters) {
-        converters.add(0, encryptedMessageConverter.get());
+        converters.add(0, this.encryptedMessageConverter.get());
     }
 
     @Override
     public void addArgumentResolvers(@Nonnull List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(0, pagerResolver.get());
+        resolvers.add(0, this.pagerResolver.get());
+        resolvers.add(0, this.quickSearchResolver.get());
     }
 
     @Bean
@@ -96,6 +101,11 @@ class KalamiWebMvcConfigure implements WebMvcConfigurer {
     @Bean
     PagerResolver pageRequestResolver(InfraConfigProperties properties) {
         return new PagerResolver(properties);
+    }
+
+    @Bean
+    QuickSearchResolver quickSearchResolver(InfraConfigProperties properties) {
+        return new QuickSearchResolver(properties);
     }
 
     @Bean

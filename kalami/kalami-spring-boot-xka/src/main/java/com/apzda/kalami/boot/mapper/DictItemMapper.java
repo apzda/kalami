@@ -23,6 +23,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author ninggf (windywany@gmail.com)
@@ -92,5 +93,8 @@ public interface DictItemMapper {
 
         return getFromDictItemTableIgnoreDeleted(table, codeField, code, idField, delField, delValue, labelField);
     }
+
+    @Select("SELECT * from ${table} WHERE ${idField} = #{id}")
+    Map<String, Object> getDictRow(String table, String idField, String id);
 
 }

@@ -16,6 +16,7 @@
  */
 package com.apzda.kalami.web.resolver;
 
+import com.apzda.kalami.data.AbstractPageQuery;
 import com.apzda.kalami.data.PageRequest;
 import com.apzda.kalami.infra.config.InfraConfigProperties;
 import jakarta.annotation.Nonnull;
@@ -51,7 +52,7 @@ public class PagerResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(@Nonnull MethodParameter parameter) {
-        return PageRequest.class.isAssignableFrom(parameter.getParameter().getType());
+        return PageRequest.class.equals(parameter.getParameter().getType());
     }
 
     @Override
@@ -78,7 +79,13 @@ public class PagerResolver implements HandlerMethodArgumentResolver {
         return new DefaultPageRequest(pageNumber, pageSize, ps);
     }
 
-    record DefaultPageRequest(int pageNumber, int pageSize, String pageSorts) implements PageRequest {
+    static class DefaultPageRequest extends AbstractPageQuery {
+
+        DefaultPageRequest(int pageNumber, int pageSize, String sorts) {
+            setPageNumber(pageNumber);
+            setPageSize(pageSize);
+            setPageSorts(sorts);
+        }
 
     }
 

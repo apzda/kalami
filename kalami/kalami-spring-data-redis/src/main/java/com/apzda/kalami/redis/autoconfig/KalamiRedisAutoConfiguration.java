@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,10 @@
 package com.apzda.kalami.redis.autoconfig;
 
 import com.apzda.kalami.redis.service.RedisBasedInfraServiceImpl;
+import com.apzda.kalami.web.autoconfig.KalamiWebAutoConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -34,6 +36,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
  */
 @Configuration(proxyBeanMethods = false)
 @AutoConfigureAfter(RedisAutoConfiguration.class)
+@AutoConfigureBefore(KalamiWebAutoConfiguration.class)
 @ConditionalOnClass({ StringRedisTemplate.class })
 public class KalamiRedisAutoConfiguration {
 

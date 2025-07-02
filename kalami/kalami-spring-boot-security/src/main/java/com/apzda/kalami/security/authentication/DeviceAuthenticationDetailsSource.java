@@ -16,7 +16,7 @@
  */
 package com.apzda.kalami.security.authentication;
 
-import com.apzda.kalami.web.context.KalamiContextHolder;
+import com.apzda.kalami.context.KalamiContextHolder;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 
