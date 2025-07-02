@@ -57,10 +57,10 @@
         <guava.version>33.4.8-jre</guava.version>
         <commons-collections4.version>4.5.0</commons-collections4.version>
         <sentinel.version>1.8.8</sentinel.version>
-        <druid.version>1.2.24</druid.version>
+        <druid.version>1.2.25</druid.version>
         <seata.version>2.3.0</seata.version>
         <seata-cloud.version>2023.0.3.3</seata-cloud.version>
-        <rocketmq-client.version>5.0.7</rocketmq-client.version>
+        <rocketmq-client.version>5.0.8</rocketmq-client.version>
         <easyexcel.version>4.0.3</easyexcel.version>
         <commons-io.version>2.19.0</commons-io.version>
         <jasypt.version>3.0.5</jasypt.version>
