@@ -341,6 +341,11 @@
     </scm>
 
     <distributionManagement>
+        <snapshotRepository>
+            <id>central</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots</url>
+        </snapshotRepository>
+
         <site>
             <id>kalami</id>
             <name>Apzda Kalami Project</name>
