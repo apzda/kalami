@@ -145,10 +145,10 @@ public interface JwtToken {
         Assert.hasText(uid, "uid must not be null or empty");
         device = StringUtils.defaultIfBlank(device, "pc");
         if (StringUtils.isBlank(extra)) {
-            return "security.auth." + device + "." + uid;
+            return "security:auth:" + device + "." + uid;
         }
         else {
-            return "security.auth." + device + "." + uid + "." + extra;
+            return "security:auth:" + device + "." + uid + "." + extra;
         }
     }
 

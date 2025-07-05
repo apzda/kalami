@@ -148,8 +148,9 @@ class KalamiWebSecurityConfiguration {
     @Bean
     @ConditionalOnMissingBean
     AuthenticationHandler authenticationHandler(TokenManager tokenManager,
-            ObjectProvider<JwtTokenCustomizer> customizers, ObjectMapper objectMapper) {
-        return new DefaultAuthenticationHandler(properties, tokenManager, customizers, objectMapper);
+            ObjectProvider<JwtTokenCustomizer> customizers, ObjectMapper objectMapper,
+            ApplicationEventPublisher eventPublisher) {
+        return new DefaultAuthenticationHandler(properties, tokenManager, objectMapper, eventPublisher);
     }
 
     /**

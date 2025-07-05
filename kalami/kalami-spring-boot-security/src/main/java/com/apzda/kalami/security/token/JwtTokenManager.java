@@ -17,6 +17,7 @@
 
 package com.apzda.kalami.security.token;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.digest.MD5;
@@ -146,7 +147,7 @@ public class JwtTokenManager implements TokenManager {
         JwtToken jwtToken = DefaultToken.builder().uid(name).build();
 
         if (oldToken != null) {
-            jwtToken = oldToken;
+            BeanUtil.copyProperties(oldToken, jwtToken);
             val cs = customizers.orderedStream().toList();
             for (val c : cs) {
                 jwtToken = c.refresh(authentication, jwtToken);
@@ -272,7 +273,7 @@ public class JwtTokenManager implements TokenManager {
             val details = auth.getAuthDetails();
             if (details != null) {
                 val app = details.getApp();
-                if (app != null && properties.getApp().get(app) != null) {
+                if (app != null && properties.getApp().containsKey(app)) {
                     duration = properties.getApp().get(app).getAccessTokenTimeout();
                 }
             }
@@ -303,7 +304,7 @@ public class JwtTokenManager implements TokenManager {
                 val details = auth.getAuthDetails();
                 if (details != null) {
                     val app = details.getApp();
-                    if (app != null && properties.getApp().get(app) != null) {
+                    if (app != null && properties.getApp().containsKey(app)) {
                         expire = properties.getApp().get(app).getRefreshTokenTimeout();
                     }
                 }

@@ -120,10 +120,15 @@ public class LocalInfraServiceImpl implements CounterService, TempStorageService
     @NonNull
     @SuppressWarnings("unchecked")
     public <T extends TempData> Optional<T> load(@NonNull String id, @NonNull Class<T> tClass) {
-        val key = "storage." + id;
-        val data = storageCache.getIfPresent(key);
-        if (data != null && data.getClass().isAssignableFrom(tClass)) {
-            return Optional.of((T) data);
+        try {
+            val key = "storage." + id;
+            val data = storageCache.getIfPresent(key);
+            if (data != null && data.getClass().isAssignableFrom(tClass)) {
+                return Optional.of((T) data);
+            }
+        }
+        catch (Exception e) {
+            log.error("Cannot load TempData({}): {}", id, e.getMessage());
         }
         return Optional.empty();
     }

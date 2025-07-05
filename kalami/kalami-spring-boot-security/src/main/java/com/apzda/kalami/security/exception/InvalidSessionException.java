@@ -31,4 +31,8 @@ public class InvalidSessionException extends AccountStatusException implements I
         super(msg);
     }
 
+    public InvalidSessionException() {
+        super("");
+    }
+
 }

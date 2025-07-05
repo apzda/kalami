@@ -136,7 +136,7 @@ public class ComTool {
     /**
      * 查询当前租户ID
      */
-    public static String getTenantId() {
+    public static String currentTenantId() {
         String tenant = TenantManager.tenantId();
         return tenant != null ? tenant : "0";
     }
@@ -144,7 +144,7 @@ public class ComTool {
     /**
      * 查询当前门店ID
      */
-    public static Long getShopId() {
+    public static Long currentShopId() {
         String tenant = TenantManager.currentOrgId();
         return tenant != null ? Long.parseLong(tenant) : 0L;
     }

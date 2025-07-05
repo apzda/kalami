@@ -89,6 +89,20 @@ public class SecurityConfigProperties {
         return StringUtils.defaultIfBlank(tokenName, "Authorization");
     }
 
+    public Duration accessTokenTimeout(String app) {
+        if (StringUtils.isBlank(app) || !getApp().containsKey(app)) {
+            return accessTokenTimeout;
+        }
+        return getApp().get(app).getAccessTokenTimeout();
+    }
+
+    public Duration refreshTokenTimeout(String app) {
+        if (StringUtils.isBlank(app) || !getApp().containsKey(app)) {
+            return refreshTokenTimeout;
+        }
+        return getApp().get(app).getRefreshTokenTimeout();
+    }
+
     @Data
     public static class CookieConfig {
 
@@ -197,6 +211,11 @@ public class SecurityConfigProperties {
          * 是否强制多因素认证
          */
         private boolean mfaEnabled = false;
+
+        /**
+         * 允许同一个账号
+         */
+        private boolean multiPointEnabled = true;
 
     }
 

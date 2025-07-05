@@ -21,7 +21,7 @@ import com.apzda.kalami.data.Response;
 import com.apzda.kalami.error.ServiceError;
 import com.apzda.kalami.security.authentication.JwtTokenAuthentication;
 import com.apzda.kalami.security.config.SecurityConfigProperties;
-import com.apzda.kalami.security.token.JwtTokenCustomizer;
+import com.apzda.kalami.security.event.LoginSuccessEvent;
 import com.apzda.kalami.security.token.TokenManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -32,8 +32,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -48,16 +49,17 @@ import java.io.IOException;
  */
 @Slf4j
 @RequiredArgsConstructor
+@RefreshScope
 public class DefaultAuthenticationHandler implements AuthenticationHandler {
 
     private final SecurityConfigProperties properties;
 
     private final TokenManager tokenManager;
 
-    private final ObjectProvider<JwtTokenCustomizer> customizers;
-
     @Getter
     private final ObjectMapper objectMapper;
+
+    private final ApplicationEventPublisher eventPublisher;
 
     @Getter
     @Value("${kalami.security.login-url:}")
@@ -89,6 +91,7 @@ public class DefaultAuthenticationHandler implements AuthenticationHandler {
                     response.addCookie(cookieCfg.createCookie(jwtToken));
                 }
 
+                eventPublisher.publishEvent(new LoginSuccessEvent(authentication));
                 respond(request, response, Response.success(jwtToken));
             }
             catch (Exception e) {

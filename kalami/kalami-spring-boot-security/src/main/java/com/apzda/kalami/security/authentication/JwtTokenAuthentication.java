@@ -63,6 +63,11 @@ public class JwtTokenAuthentication extends AbstractAuthenticationToken {
         if (principal instanceof MetaUserDetails meta) {
             meta.setAuthentication(this);
         }
+        if (this.getDetails() == null) {
+            KalamiContextHolder.getRequest().ifPresent(request -> {
+                this.setDetails(new DeviceAuthenticationDetailsSource().buildDetails(request));
+            });
+        }
     }
 
     JwtTokenAuthentication(UserDetails principal, Object credentials,

@@ -66,7 +66,7 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
             public Boolean load(@NonNull String key) {
                 try {
                     val matcher = ID_PATTERN.matcher(key);
-                    if (matcher.matches()) {
+                    if (matcher.find()) {
                         val id = matcher.group(1);
                         val interval = Long.parseLong(matcher.group(2));
                         stringRedisTemplate.expire(id, interval + 1, TimeUnit.SECONDS);
@@ -117,7 +117,7 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
         val key = "storage." + id;
         val ca = objectMapper.writeValueAsString(data);
         val expired = data.getExpireTime();
-        if (expired.isZero() || expired.isNegative()) {
+        if (expired == null || expired.isZero() || expired.isNegative()) {
             stringRedisTemplate.opsForValue().set(key, ca);
         }
         else {

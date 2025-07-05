@@ -22,6 +22,7 @@ import com.apzda.kalami.data.error.IError;
 import com.apzda.kalami.error.ServiceError;
 import com.apzda.kalami.exception.BizException;
 import com.apzda.kalami.security.error.AuthenticationError;
+import com.apzda.kalami.security.error.InvalidTokenError;
 import com.apzda.kalami.security.exception.InvalidSessionException;
 import com.apzda.kalami.security.exception.UnRealAuthenticatedException;
 import com.apzda.kalami.utils.MediaTypeUtil;
@@ -86,7 +87,7 @@ public interface AuthenticationHandler
     }
 
     @Override
-    default void commence(HttpServletRequest request, HttpServletResponse response,
+    default void commence(@Nonnull HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws IOException, ServletException {
         val exception = request.getAttribute(CONTEXT_ATTR_EXCEPTION);
         if (exception != null) {
@@ -185,7 +186,13 @@ public interface AuthenticationHandler
             error = ServiceError.ACCOUNT_UN_AUTHENTICATED;
         }
         else if (exception instanceof InvalidSessionException) {
-            error = ServiceError.TOKEN_INVALID;
+            val message = exception.getMessage();
+            if (StringUtils.isNotBlank(message)) {
+                error = new InvalidTokenError(message);
+            }
+            else {
+                error = ServiceError.TOKEN_INVALID;
+            }
         }
         else {
             error = ServiceError.ACCOUNT_DISABLED;

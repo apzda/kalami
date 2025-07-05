@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 the original author or authors.
+ * Copyright 2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,19 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.apzda.kalami.data;
+package com.apzda.kalami.security.error;
 
-import java.time.Duration;
+import com.apzda.kalami.data.error.IError;
 
 /**
- * 缓存数据
- *
  * @author ninggf (windywany@gmail.com)
- * @since 2025/05/16
  * @version 1.0.0
  */
-public interface TempData {
+public record InvalidTokenError(String message) implements IError {
 
-    Duration getExpireTime();
+    @Override
+    public String message() {
+        return this.message;
+    }
+
+    @Override
+    public int code() {
+        return -811;
+    }
+
+    @Override
+    public int httpCode() {
+        return 401;
+    }
 
 }
