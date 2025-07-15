@@ -80,8 +80,9 @@ public class KalamiMyBatisPlusAutoConfiguration {
     // 增加的mybatis-plus配置
     @Bean
     ConfigurationCustomizer apzdaMybatisPlusConfigurationCustomizer(final ObjectProvider<TenantManager> tenantManager,
-            final ObjectProvider<MybatisPlusConfigureCustomizer> customizers, ObjectMapper objectMapper) {
-        JacksonTypeHandler.setObjectMapper(objectMapper);
+            final ObjectProvider<MybatisPlusConfigureCustomizer> customizers,
+            ObjectProvider<ObjectMapper> objectMapper) {
+        objectMapper.ifAvailable(JacksonTypeHandler::setObjectMapper);
 
         val ignoreTables = new HashSet<String>();
 
