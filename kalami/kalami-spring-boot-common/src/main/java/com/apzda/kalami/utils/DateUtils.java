@@ -17,6 +17,7 @@
 package com.apzda.kalami.utils;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import jakarta.annotation.Nullable;
 
 import java.time.LocalDate;
@@ -127,6 +128,18 @@ public abstract class DateUtils {
      */
     public static LocalDateTime endOfDate(long instant) {
         return endOfDate(DateUtil.date(instant).toLocalDateTime());
+    }
+
+    /**
+     * 将dateTime转换为时间戳
+     * @param dateTime 时间
+     * @return 时间戳
+     */
+    public static Long toEpochMilli(LocalDateTime dateTime) {
+        if (dateTime == null) {
+            return null;
+        }
+        return LocalDateTimeUtil.toEpochMilli(dateTime);
     }
 
 }

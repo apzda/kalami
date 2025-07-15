@@ -57,6 +57,8 @@ public class InfraConfigProperties {
 
     private String qfParameter = DEFAULT_QF_PARAMETER;
 
+    private int maxPageSize = 200;
+
     @Data
     public static final class ModemConfig {
 

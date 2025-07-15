@@ -17,6 +17,7 @@
 
 package com.apzda.kalami.security.autoconfig;
 
+import com.apzda.kalami.security.authorization.AuthorizationLogicCustomizer;
 import com.apzda.kalami.security.authorization.checker.AuthorizationChecker;
 import com.apzda.kalami.security.config.SecurityConfigProperties;
 import com.apzda.kalami.security.web.interceptor.KalamiServletSecurityInterceptor;
@@ -28,7 +29,9 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.util.Lazy;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -56,6 +59,12 @@ class KalamiWebMvcConfiguration {
 
     @Configuration
     class InitializeKalamiWebMvcConfigurer implements WebMvcConfigurer {
+
+        private final Lazy<AuthorizationLogicCustomizer> authzLoader;
+
+        InitializeKalamiWebMvcConfigurer(ApplicationContext context) {
+            this.authzLoader = Lazy.of(() -> context.getBean(AuthorizationLogicCustomizer.class));
+        }
 
         /**
          * 解析 {@link CurrentUser}参数.
@@ -120,7 +129,7 @@ class KalamiWebMvcConfiguration {
         @Override
         public void addInterceptors(@Nonnull InterceptorRegistry registry) {
             registry.addInterceptor(new KalamiServletSecurityInterceptor(KalamiWebMvcConfiguration.this.properties,
-                    KalamiWebMvcConfiguration.this.filterProvider));
+                    authzLoader, KalamiWebMvcConfiguration.this.filterProvider));
         }
 
     }

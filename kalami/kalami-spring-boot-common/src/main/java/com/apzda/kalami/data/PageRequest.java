@@ -83,11 +83,12 @@ public interface PageRequest {
         }
 
         Pageable pageable;
-        if (getPageNumber() < 0) {
+        val pageNumber = getPageNumber() - 1;
+        if (pageNumber < 0) {
             pageable = Pageable.unpaged(sort);
         }
         else {
-            pageable = org.springframework.data.domain.PageRequest.of(getPageNumber(), getPageSize(), sort);
+            pageable = org.springframework.data.domain.PageRequest.of(pageNumber, getPageSize(), sort);
         }
 
         return pageable;

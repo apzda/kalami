@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -42,15 +41,28 @@ public class DefaultBase64EncodedModem implements Modem {
 
     public DefaultBase64EncodedModem(@Nonnull InfraConfigProperties.ModemConfig modemConfig) {
         if (modemConfig.getAlgorithm() == InfraConfigProperties.Algorithm.AES) {
-            crypto = new AES(modemConfig.getMode(), modemConfig.getPadding(),
-                    modemConfig.getKey().getBytes(StandardCharsets.UTF_8),
-                    modemConfig.getIv().getBytes(StandardCharsets.UTF_8));
+            if (modemConfig.getMode().equals("ECB")) {
+                crypto = new AES(modemConfig.getMode(), modemConfig.getPadding(),
+                        modemConfig.getKey().getBytes(StandardCharsets.UTF_8), null);
+            }
+            else {
+                crypto = new AES(modemConfig.getMode(), modemConfig.getPadding(),
+                        modemConfig.getKey().getBytes(StandardCharsets.UTF_8),
+                        modemConfig.getIv().getBytes(StandardCharsets.UTF_8));
+            }
         }
         else {
-            crypto = new DES(modemConfig.getMode(), modemConfig.getPadding(),
-                    modemConfig.getKey().getBytes(StandardCharsets.UTF_8),
-                    modemConfig.getIv().getBytes(StandardCharsets.UTF_8));
+            if (modemConfig.getMode().equals("ECB")) {
+                crypto = new DES(modemConfig.getMode(), modemConfig.getPadding(),
+                        modemConfig.getKey().getBytes(StandardCharsets.UTF_8), null);
+            }
+            else {
+                crypto = new DES(modemConfig.getMode(), modemConfig.getPadding(),
+                        modemConfig.getKey().getBytes(StandardCharsets.UTF_8),
+                        modemConfig.getIv().getBytes(StandardCharsets.UTF_8));
+            }
         }
+
     }
 
     @Override
@@ -59,19 +71,8 @@ public class DefaultBase64EncodedModem implements Modem {
     }
 
     @Override
-    public byte[] encode(HttpHeaders headers, @Nonnull String plainText)
-            throws IOException, HttpMessageNotWritableException {
-        return encode(headers, plainText, StandardCharsets.UTF_8);
-    }
-
-    @Override
-    public byte[] encode(HttpHeaders headers, @Nonnull String plainText, @Nonnull Charset charset) throws IOException {
-        return encode(headers, plainText.getBytes(charset));
-    }
-
-    @Override
     public byte[] encode(HttpHeaders headers, byte[] plainText) throws IOException, HttpMessageNotWritableException {
-        return Base64.encode(crypto.encrypt(plainText)).getBytes();
+        return Base64.encode(crypto.encrypt(plainText)).getBytes(StandardCharsets.UTF_8);
     }
 
 }

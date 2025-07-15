@@ -17,6 +17,8 @@
 
 package com.apzda.kalami.security.web.interceptor;
 
+import com.apzda.kalami.security.annotation.Subscribed;
+import com.apzda.kalami.security.authorization.AuthorizationLogicCustomizer;
 import com.apzda.kalami.security.authorization.checker.AuthorizationChecker;
 import com.apzda.kalami.security.config.SecurityConfigProperties;
 import com.apzda.kalami.security.utils.SecurityUtils;
@@ -27,12 +29,16 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.data.util.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.PathMatcher;
 import org.springframework.util.StopWatch;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.HashMap;
@@ -44,19 +50,21 @@ import java.util.Map;
  * @version 1.0.0
  */
 @Slf4j
+@Order(Ordered.HIGHEST_PRECEDENCE + 1000)
 public class KalamiServletSecurityInterceptor implements HandlerInterceptor {
 
     private static final PathMatcher PATH_MATCHER = AuthorizationChecker.PATH_MATCHER;
 
     private final SecurityConfigProperties properties;
 
+    private final Lazy<AuthorizationLogicCustomizer> authz;
+
     private final Map<String, AuthorizationChecker> checkerBeans = new HashMap<>();
 
-    ;
-
     public KalamiServletSecurityInterceptor(@Nonnull SecurityConfigProperties properties,
-            ObjectProvider<AuthorizationChecker> filtersProvider) {
+            Lazy<AuthorizationLogicCustomizer> authz, ObjectProvider<AuthorizationChecker> filtersProvider) {
         this.properties = properties;
+        this.authz = authz;
         this.initialize(filtersProvider);
     }
 
@@ -96,6 +104,14 @@ public class KalamiServletSecurityInterceptor implements HandlerInterceptor {
         if (context != null && context.getAuthentication() != null && context.getAuthentication().isAuthenticated()
                 && !CollectionUtils.isEmpty(checkerBeans)
                 && AuthorizationChecker.check(requestURI, properties, checkerBeans)) {
+            if (handler instanceof HandlerMethod hm) {
+                val controllerClz = hm.getBeanType();
+                if (controllerClz.isAnnotationPresent(Subscribed.class)) {
+                    val annotation = controllerClz.getAnnotation(Subscribed.class);
+                    val value = annotation.value();
+                    return authz.get().subscribed(value);
+                }
+            }
             return true;
         }
 

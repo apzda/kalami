@@ -1,5 +1,22 @@
+/*
+ * Copyright 2025 the original author or authors.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.apzda.kalami.web.converter.modem;
 
+import cn.hutool.crypto.Padding;
 import com.apzda.kalami.http.modem.Modem;
 import com.apzda.kalami.infra.config.InfraConfigProperties;
 import lombok.val;
@@ -47,6 +64,23 @@ class DefaultBase64EncodedModemTest {
         // then
         assertThat(new String(encoded)).isEqualTo(encrypted);
         assertThat(new String(decoded, StandardCharsets.UTF_8)).isEqualTo(plainText);
+    }
+
+    @Test
+    void modem_des_ecb_should_work() throws IOException {
+        // given
+        InfraConfigProperties.ModemConfig modemConfig = new InfraConfigProperties.ModemConfig();
+        modemConfig.setAlgorithm(InfraConfigProperties.Algorithm.AES);
+        modemConfig.setMode("ECB");
+        modemConfig.setIv("0807060504030201");
+        modemConfig.setKey("0CoJUm6Qyw8W8jud0CoJUm6Qyw8W8jud");
+        modemConfig.setPadding(Padding.PKCS5Padding.name());
+        Modem modem = new DefaultBase64EncodedModem(modemConfig);
+        String encrypted = "uivcLF8SKjmShmUPIQ//jw==";
+        // when
+        val decoded = modem.decode(null, encrypted.getBytes(StandardCharsets.UTF_8));
+        // then
+        assertThat(new String(decoded, StandardCharsets.UTF_8)).isEqualTo("abcde");
     }
 
 }

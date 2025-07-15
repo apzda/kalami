@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,8 @@ import org.springframework.util.unit.DataUnit;
 @Data
 @ConfigurationProperties(prefix = "kalami.server")
 public class KalamiServerProperties {
+
+    private boolean encryptedEnabled = true;
 
     private final UndertowConfig undertow = new UndertowConfig();
 

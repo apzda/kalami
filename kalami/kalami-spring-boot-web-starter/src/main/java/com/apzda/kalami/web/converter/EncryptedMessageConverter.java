@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ import lombok.val;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
@@ -34,7 +33,6 @@ import org.springframework.http.converter.HttpMessageNotWritableException;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 /**
  * @author ninggf (windywany@gmail.com)
@@ -64,7 +62,7 @@ public class EncryptedMessageConverter extends AbstractHttpMessageConverter<Obje
 
     @Override
     @Nonnull
-    protected Object readInternal(@Nonnull Class<?> clazz, HttpInputMessage inputMessage)
+    protected Object readInternal(@Nonnull Class<?> clazz, @Nonnull HttpInputMessage inputMessage)
             throws IOException, HttpMessageNotReadableException {
         val headers = inputMessage.getHeaders();
         return objectMapper.readValue(modem.decode(headers, inputMessage.getBody()), clazz);
@@ -75,11 +73,6 @@ public class EncryptedMessageConverter extends AbstractHttpMessageConverter<Obje
             throws IOException, HttpMessageNotWritableException {
         val headers = outputMessage.getHeaders();
         outputMessage.getBody().write(modem.encode(headers, objectMapper.writeValueAsString(o)));
-    }
-
-    public String encrypt(HttpHeaders headers, String response) throws IOException, HttpMessageNotWritableException {
-        val defaultCharset = Optional.ofNullable(getDefaultCharset()).orElse(StandardCharsets.UTF_8);
-        return new String(modem.encode(headers, response), defaultCharset);
     }
 
     @Override

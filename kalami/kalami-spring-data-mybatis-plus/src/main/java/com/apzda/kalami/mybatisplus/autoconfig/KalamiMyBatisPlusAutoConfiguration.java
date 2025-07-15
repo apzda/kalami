@@ -29,10 +29,12 @@ import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusPropertiesCustomizer;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.core.handlers.StrictFill;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Joiner;
 import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
@@ -78,7 +80,9 @@ public class KalamiMyBatisPlusAutoConfiguration {
     // 增加的mybatis-plus配置
     @Bean
     ConfigurationCustomizer apzdaMybatisPlusConfigurationCustomizer(final ObjectProvider<TenantManager> tenantManager,
-            final ObjectProvider<MybatisPlusConfigureCustomizer> customizers) {
+            final ObjectProvider<MybatisPlusConfigureCustomizer> customizers, ObjectMapper objectMapper) {
+        JacksonTypeHandler.setObjectMapper(objectMapper);
+
         val ignoreTables = new HashSet<String>();
 
         customizers.orderedStream().forEach(customizer -> {

@@ -20,10 +20,12 @@ import com.apzda.kalami.http.ExceptionTransformer;
 import com.apzda.kalami.http.modem.Modem;
 import com.apzda.kalami.infra.config.InfraConfigProperties;
 import com.apzda.kalami.web.advice.KalamiControllerAdvice;
+import com.apzda.kalami.web.config.KalamiServerProperties;
 import com.apzda.kalami.web.converter.EncryptedMessageConverter;
 import com.apzda.kalami.web.converter.modem.DefaultBase64EncodedModem;
 import com.apzda.kalami.web.error.KalamiErrorController;
 import com.apzda.kalami.web.error.KalamiErrorViewResolver;
+import com.apzda.kalami.web.interceptor.EncryptedHandlerInterceptor;
 import com.apzda.kalami.web.resolver.PagerResolver;
 import com.apzda.kalami.web.resolver.QuickSearchResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,6 +46,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.util.Lazy;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -55,7 +58,6 @@ import java.util.List;
  */
 @Slf4j
 @Configuration(proxyBeanMethods = false)
-
 class KalamiWebMvcConfigure implements WebMvcConfigurer {
 
     private final Lazy<EncryptedMessageConverter> encryptedMessageConverter;
@@ -64,10 +66,13 @@ class KalamiWebMvcConfigure implements WebMvcConfigurer {
 
     private final Lazy<QuickSearchResolver> quickSearchResolver;
 
+    private final Lazy<KalamiServerProperties> serverProperties;
+
     KalamiWebMvcConfigure(ApplicationContext context) {
         this.encryptedMessageConverter = Lazy.of(() -> context.getBean(EncryptedMessageConverter.class));
         this.pagerResolver = Lazy.of(() -> context.getBean(PagerResolver.class));
         this.quickSearchResolver = Lazy.of(() -> context.getBean(QuickSearchResolver.class));
+        this.serverProperties = Lazy.of(() -> context.getBean(KalamiServerProperties.class));
     }
 
     @Bean
@@ -126,6 +131,11 @@ class KalamiWebMvcConfigure implements WebMvcConfigurer {
     @Bean
     ErrorViewResolver kalamiErrorViewResolver(ApplicationContext applicationContext, WebProperties webProperties) {
         return new KalamiErrorViewResolver(applicationContext, webProperties.getResources());
+    }
+
+    @Override
+    public void addInterceptors(@Nonnull InterceptorRegistry registry) {
+        registry.addInterceptor(new EncryptedHandlerInterceptor(this.serverProperties.get()));
     }
 
 }

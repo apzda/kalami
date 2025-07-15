@@ -17,22 +17,17 @@
 package com.apzda.kalami.security.aop;
 
 import com.apzda.kalami.security.annotation.Subscribed;
-import com.apzda.kalami.tenant.TenantManager;
+import com.apzda.kalami.security.authorization.AuthorizationLogicCustomizer;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-
-import java.time.LocalDateTime;
 
 /**
  * @author ninggf (windywany@gmail.com)
@@ -44,27 +39,16 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class SubscribedAuthorityAspect {
 
+    private final AuthorizationLogicCustomizer authorizationLogicCustomizer;
+
     @Around("@annotation(com.apzda.kalami.security.annotation.Subscribed)")
     public Object proceed(@Nonnull ProceedingJoinPoint pjp) throws Throwable {
         val signature = (MethodSignature) pjp.getSignature();
         val method = signature.getMethod();
         val ann = method.getAnnotation(Subscribed.class);
         val value = ann.value();
-        val subscriptions = TenantManager.subscriptions();
 
-        if (CollectionUtils.isEmpty(subscriptions)) {
-            throw new AccessDeniedException("未订阅任何服务");
-        }
-        if (StringUtils.isBlank(value)) {
-            return pjp.proceed();
-        }
-        val subscription = subscriptions.get(value);
-        if (subscription == null) {
-            throw new AccessDeniedException(String.format("【%s】服务未订阅", value));
-        }
-        if (subscription.getExpireTime() != null && subscription.getExpireTime().isBefore(LocalDateTime.now())) {
-            throw new AccessDeniedException(String.format("【%s】服务订阅已过期", value));
-        }
+        authorizationLogicCustomizer.subscribed(value);
 
         return pjp.proceed();
     }

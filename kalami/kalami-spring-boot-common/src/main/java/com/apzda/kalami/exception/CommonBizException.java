@@ -31,6 +31,20 @@ public class CommonBizException extends BizException implements INoStackLog {
         super(message);
     }
 
+    public CommonBizException(int code, String message) {
+        super(new IError() {
+            @Override
+            public int code() {
+                return code;
+            }
+
+            @Override
+            public String message() {
+                return message;
+            }
+        });
+    }
+
     public CommonBizException(String message, Throwable cause) {
         super(new ServiceNotAvailableError(message), cause);
     }

@@ -133,14 +133,17 @@ public class AuthorizationLogicCustomizer {
         if (!isAuthed()) {
             return false;
         }
+
+        if (StringUtils.isBlank(service)) {
+            return true;
+        }
+
         val subscriptions = TenantManager.subscriptions();
 
         if (CollectionUtils.isEmpty(subscriptions)) {
             throw new AccessDeniedException("未订阅任何服务");
         }
-        if (StringUtils.isBlank(service)) {
-            return true;
-        }
+
         val subscription = subscriptions.get(service);
         if (subscription == null) {
             throw new AccessDeniedException(String.format("【%s】服务未订阅", service));

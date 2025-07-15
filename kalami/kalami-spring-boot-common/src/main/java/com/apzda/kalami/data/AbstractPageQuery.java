@@ -16,6 +16,7 @@
  */
 package com.apzda.kalami.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,14 +28,14 @@ import lombok.Setter;
 public abstract class AbstractPageQuery implements PageRequest {
 
     /**
-     * 页码(从1开始)
+     * 页码(从1开始)，默认1
      */
-    private int pageNumber;
+    private int pageNumber = 1;
 
     /**
-     * 分页大小
+     * 分页大小,默认10
      */
-    private int pageSize;
+    private int pageSize = 10;
 
     /**
      * 排序(格式:field1|asc,field2|desc[,...])
@@ -43,6 +44,7 @@ public abstract class AbstractPageQuery implements PageRequest {
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
+    @JsonIgnore
     private boolean searchCount = true;
 
     public void searchCount(boolean searchCount) {

@@ -43,11 +43,13 @@ public class PagerResolver implements HandlerMethodArgumentResolver {
 
     private final String pageSorts;
 
+    private final int maxPageSize;
+
     public PagerResolver(@Nonnull InfraConfigProperties config) {
         this.pageNumber = org.apache.commons.lang3.StringUtils.defaultIfBlank(config.getPageParameter(), "pageNumber");
         this.pageSize = org.apache.commons.lang3.StringUtils.defaultIfBlank(config.getSizeParameter(), "pageSize");
         this.pageSorts = org.apache.commons.lang3.StringUtils.defaultIfBlank(config.getSortParameter(), "pageSorts");
-
+        this.maxPageSize = config.getMaxPageSize() <= 0 ? 200 : config.getMaxPageSize();
     }
 
     @Override
@@ -76,14 +78,14 @@ public class PagerResolver implements HandlerMethodArgumentResolver {
 
         val ps = webRequest.getParameter(this.pageSorts);
 
-        return new DefaultPageRequest(pageNumber, pageSize, ps);
+        return new DefaultPageRequest(pageNumber, pageSize, ps, this.maxPageSize);
     }
 
     static class DefaultPageRequest extends AbstractPageQuery {
 
-        DefaultPageRequest(int pageNumber, int pageSize, String sorts) {
-            setPageNumber(pageNumber);
-            setPageSize(pageSize);
+        DefaultPageRequest(int pageNumber, int pageSize, String sorts, int maxPageSize) {
+            setPageNumber(pageNumber <= 0 ? 1 : pageNumber);
+            setPageSize(pageSize <= 0 ? 10 : Math.min(maxPageSize, pageSize));
             setPageSorts(sorts);
         }
 
