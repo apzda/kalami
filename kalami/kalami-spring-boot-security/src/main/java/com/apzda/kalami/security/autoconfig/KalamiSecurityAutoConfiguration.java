@@ -28,6 +28,7 @@ import com.apzda.kalami.security.authorization.PermissionChecker;
 import com.apzda.kalami.security.authorization.checker.AuthorizationChecker;
 import com.apzda.kalami.security.authorization.checker.HasRoleChecker;
 import com.apzda.kalami.security.authorization.checker.MfaAuthorizationChecker;
+import com.apzda.kalami.security.authorization.checker.PermitChecker;
 import com.apzda.kalami.security.config.SecurityConfigProperties;
 import com.apzda.kalami.security.context.SpringSecurityAuditorAware;
 import com.apzda.kalami.security.context.SpringSecurityUserProvider;
@@ -261,6 +262,12 @@ public class KalamiSecurityAutoConfiguration {
     @ConditionalOnMissingBean(name = "hasRoleAuthorizationChecker")
     AuthorizationChecker hasRoleAuthorizationChecker() {
         return new HasRoleChecker();
+    }
+
+    @Bean("permitAuthorizationChecker")
+    @ConditionalOnMissingBean(name = "permitAuthorizationChecker")
+    AuthorizationChecker permitAuthorizationChecker() {
+        return new PermitChecker();
     }
 
     @Configuration(proxyBeanMethods = false)

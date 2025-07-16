@@ -34,4 +34,6 @@ public interface Subscription {
 
     LocalDateTime getExpireTime();
 
+    Integer getExpired();
+
 }

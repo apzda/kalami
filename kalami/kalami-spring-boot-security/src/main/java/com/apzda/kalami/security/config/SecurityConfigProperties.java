@@ -30,6 +30,7 @@ import org.springframework.validation.annotation.Validated;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * @author ninggf (windywany@gmail.com)
@@ -73,7 +74,7 @@ public class SecurityConfigProperties {
 
     private List<String> excludes = new ArrayList<>();
 
-    private List<Checker> checker = new ArrayList<>();
+    private List<Checker> acl = new ArrayList<>();
 
     private HeadersConfig headers;
 
@@ -183,12 +184,27 @@ public class SecurityConfigProperties {
     @Validated
     public static class CheckerConfig {
 
+        private final static Pattern NP = java.util.regex.Pattern
+            .compile("^([a-zA-z]+)\\s*\\(\\s*'([^']+)'\\s*\\)\\s*$");
+
         @NotBlank
         private String name;
 
         private boolean enabled = true;
 
         private Map<String, Object> args = new LinkedHashMap<>();
+
+        public void setName(String name) {
+            val matcher = NP.matcher(name);
+            if (matcher.find()) {
+                this.name = matcher.group(1);
+                val group = matcher.group(2);
+                args.put("arg", group);
+            }
+            else {
+                this.name = name;
+            }
+        }
 
     }
 

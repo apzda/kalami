@@ -52,7 +52,7 @@ public interface AuthorizationChecker {
         val currentUser = CurrentUserProvider.getCurrentUser();
         if (currentUser.isAuthenticated()) {
             val authentication = SecurityContextHolder.getContext().getAuthentication();
-            for (SecurityConfigProperties.Checker config : properties.getChecker()) {
+            for (SecurityConfigProperties.Checker config : properties.getAcl()) {
                 val path = config.getPath();
                 val checkersConfig = config.getCheckers();
                 if (StringUtils.isBlank(path) || CollectionUtils.isEmpty(checkersConfig)) {
