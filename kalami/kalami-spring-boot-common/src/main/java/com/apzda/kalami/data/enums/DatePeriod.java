@@ -14,31 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.apzda.kalami.sanitizer;
-
-import jakarta.annotation.Nonnull;
+package com.apzda.kalami.data.enums;
 
 /**
  * @author ninggf (windywany@gmail.com)
  * @version 1.0.0
  */
-public class PhoneNumberSanitizer extends RegexpSanitizer {
+public enum DatePeriod {
 
-    private static final PhoneNumberSanitizer INSTANCE = new PhoneNumberSanitizer();
-
-    private static final String[] defaultCfg = new String[] {};
-
-    @Override
-    public String sanitize(String text, @Nonnull String[] configure) {
-        if (configure.length < 2) {
-            configure = new String[] { "^((\\+\\d{2,4}\\s+)?\\d{3})\\d{4}(\\d{4})$", "$1****$3" };
-        }
-
-        return super.sanitize(text, configure);
-    }
-
-    public static String sanitize(String phone) {
-        return INSTANCE.sanitize(phone, defaultCfg);
-    }
+    DAY, WEEK, MONTH, QUARTER, HALF, YEAR;
 
 }

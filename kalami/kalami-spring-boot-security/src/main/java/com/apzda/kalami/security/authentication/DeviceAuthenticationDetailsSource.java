@@ -35,7 +35,7 @@ public class DeviceAuthenticationDetailsSource
      */
     @Override
     public AuthenticationDetails buildDetails(HttpServletRequest context) {
-        return new DeviceAuthenticationDetails(KalamiContextHolder.headers(), KalamiContextHolder.getRemoteAddr());
+        return new DeviceAuthenticationDetails(KalamiContextHolder.headers(), KalamiContextHolder.getRemoteIp());
     }
 
 }

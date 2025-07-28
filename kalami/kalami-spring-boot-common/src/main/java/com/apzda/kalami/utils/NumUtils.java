@@ -19,6 +19,10 @@ package com.apzda.kalami.utils;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+
 /**
  * @author ninggf (windywany@gmail.com)
  * @version 1.0.0
@@ -28,6 +32,10 @@ public abstract class NumUtils {
     private final static String digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     private final static char[] digitChars = digits.toCharArray();
+
+    private final static BigDecimal CURRENT_NULL_RATIO = BigDecimal.valueOf(-100);
+
+    private final static BigDecimal PREVIOUS_NULL_RATIO = BigDecimal.valueOf(100);
 
     /**
      * 将Long类型的数字转为36进制的字符串
@@ -77,6 +85,86 @@ public abstract class NumUtils {
         }
 
         return result;
+    }
+
+    /**
+     * 计算增长比例。
+     * @param current 值
+     * @param previous 基值
+     * @return 比例
+     */
+    @Nonnull
+    public static Double growthRatio(Integer current, Integer previous, int scale) {
+        if (current == null) {
+            return -100.0d;
+        }
+        if (previous == null || previous == 0) {
+            return 100.0d;
+        }
+
+        return BigDecimal.valueOf((current - previous) * 100.0 / previous)
+            .round(MathContext.UNLIMITED)
+            .setScale(scale, RoundingMode.DOWN)
+            .doubleValue();
+    }
+
+    /**
+     * 计算增长比例。
+     * @param current 值
+     * @param previous 基值
+     * @return 比例
+     */
+    @Nonnull
+    public static Double growthRatio(Long current, Long previous, int scale) {
+        if (current == null) {
+            return -100.0d;
+        }
+        if (previous == null || previous == 0) {
+            return 100.0d;
+        }
+
+        return BigDecimal.valueOf((current - previous) * 100.0 / previous)
+            .round(MathContext.UNLIMITED)
+            .setScale(scale, RoundingMode.DOWN)
+            .doubleValue();
+    }
+
+    /**
+     * 计算增长百分比。
+     * @param current 值
+     * @param previous 基值
+     * @return 百分比
+     */
+    @Nonnull
+    public static BigDecimal growthRatio(Double current, Double previous, int scale) {
+        if (current == null) {
+            return CURRENT_NULL_RATIO;
+        }
+        if (previous == null || previous == 0) {
+            return PREVIOUS_NULL_RATIO;
+        }
+
+        return BigDecimal.valueOf((current - previous) * 100.0 / previous)
+            .round(MathContext.UNLIMITED)
+            .setScale(scale, RoundingMode.DOWN);
+    }
+
+    /**
+     * 计算增长百分比。
+     * @param current 值
+     * @param previous 基值
+     * @return 百分比
+     */
+    @Nonnull
+    public static BigDecimal growthRatio(BigDecimal current, BigDecimal previous, int scale) {
+        if (current == null) {
+            return CURRENT_NULL_RATIO;
+        }
+        if (previous == null || previous.signum() == 0) {
+            return PREVIOUS_NULL_RATIO;
+        }
+
+        return current.subtract(previous).movePointRight(2).divide(previous, scale, RoundingMode.DOWN);
     }
 
 }

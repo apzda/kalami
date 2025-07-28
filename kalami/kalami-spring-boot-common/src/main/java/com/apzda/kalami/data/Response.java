@@ -28,6 +28,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.Assert;
 
@@ -74,7 +75,7 @@ public class Response<T> implements Serializable {
     private T data;
 
     void setMessage(String message) {
-        if (StringUtils.startsWith(message, "{") && StringUtils.endsWith(message, "}")) {
+        if (Strings.CS.startsWith(message, "{") && Strings.CS.endsWith(message, "}")) {
             val text = message.substring(1, message.length() - 1);
             val msg = I18n.t(text);
             if (StringUtils.isNotBlank(msg)) {
@@ -211,7 +212,7 @@ public class Response<T> implements Serializable {
         val resp = new Response<T>();
         resp.errCode = code;
         resp.errMsg = errMsg;
-        if (StringUtils.startsWith(errMsg, "{") && StringUtils.endsWith(errMsg, "}")) {
+        if (Strings.CS.startsWith(errMsg, "{") && Strings.CS.endsWith(errMsg, "}")) {
             resp.setMessage(errMsg);
         }
         else if (StringUtils.isBlank(errMsg)) {

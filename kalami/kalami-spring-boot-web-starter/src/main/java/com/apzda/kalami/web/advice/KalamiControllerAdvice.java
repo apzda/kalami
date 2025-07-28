@@ -155,6 +155,9 @@ public class KalamiControllerAdvice {
             val body = errorResponse.getBody();
             return handleHttpStatusError(errorResponse.getStatusCode(), body.getDetail());
         }
+        else if (e instanceof IllegalArgumentException || e instanceof IllegalStateException) {
+            return Response.error(ServiceError.SERVICE_ERROR).withErrMsg(e.getMessage());
+        }
 
         return Response.error(ServiceError.SERVICE_ERROR);
     }
@@ -170,15 +173,15 @@ public class KalamiControllerAdvice {
             }
         }
         ResponseWrapper responseWrapper;
-        if (error instanceof BizException gsvcException) {
-            val err = gsvcException.getError();
+        if (error instanceof BizException bizException) {
+            val err = bizException.getError();
             if (err != null) {
                 responseWrapper = ResponseWrapper.status(err.httpCode()).body(handle(error));
             }
             else {
                 responseWrapper = ResponseWrapper.status(HttpStatus.SERVICE_UNAVAILABLE).body(handle(error));
             }
-            responseWrapper.headers(gsvcException.getHeaders());
+            responseWrapper.headers(bizException.getHeaders());
         }
         else if (error instanceof TimeoutException || error instanceof AsyncRequestTimeoutException) {
             responseWrapper = ResponseWrapper.status(HttpStatus.GATEWAY_TIMEOUT).body(handle(error));
@@ -303,6 +306,11 @@ public class KalamiControllerAdvice {
     private Throwable transform(@Nonnull Throwable throwable) {
         while (throwable.getClass().equals(RuntimeException.class) && throwable.getCause() != null) {
             throwable = throwable.getCause();
+        }
+
+        if (throwable instanceof IllegalArgumentException || throwable instanceof IllegalStateException
+                || throwable instanceof BizException) {
+            return throwable;
         }
 
         val ts = transformers.getIfAvailable();

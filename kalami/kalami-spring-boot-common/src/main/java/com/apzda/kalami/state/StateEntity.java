@@ -16,40 +16,15 @@
  */
 package com.apzda.kalami.state;
 
-import java.util.Map;
-
 /**
- * 状态机
+ * 状态实体
  *
- * @author john <service@cheerel.com>
+ * @author john <service@cheerel.com> 2025-07-18 11:42
  */
-public interface StateMachine<T extends StateEntity<State>, State extends Enum<State>, Event extends Enum<Event>> {
+public interface StateEntity<S> {
 
-    /**
-     * 执行相关事件（状态机执行的主入口）
-     *
-     * @param event 事件
-     */
-    void trigger(Event event);
+    S getState();
 
-    /**
-     * 获取状态实体
-     */
-    T getStateEntity();
-
-    /**
-     * 之前的状态
-     */
-    State getOldState();
-
-    /**
-     * 当前状态
-     */
-    State getCurrentState();
-
-    /**
-     * 获取事件守卫
-     */
-    Map<Event, StateGuard<State>> getEventGuards();
+    void setState(S state);
 
 }

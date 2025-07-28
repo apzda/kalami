@@ -18,6 +18,8 @@ package com.apzda.kalami.utils;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
+import com.apzda.kalami.data.enums.DatePeriod;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.time.LocalDate;
@@ -32,6 +34,7 @@ public abstract class DateUtils {
 
     /**
      * 将时间调到<code>date</code>所在天开始时间
+     *
      * @param date 日期
      * @return 一天的开始时间
      */
@@ -40,11 +43,12 @@ public abstract class DateUtils {
         if (date == null) {
             return null;
         }
-        return date.atStartOfDay().withNano(0);
+        return date.atStartOfDay();
     }
 
     /**
      * 将时间调到<code>date</code>所在天的结束时间
+     *
      * @param date 日期
      * @return 一天的结束时间
      */
@@ -58,6 +62,7 @@ public abstract class DateUtils {
 
     /**
      * 将时间调到<code>date</code>所在天开始时间
+     *
      * @param date 日期
      * @return 一天的开始时间
      */
@@ -71,6 +76,7 @@ public abstract class DateUtils {
 
     /**
      * 将时间调到<code>date</code>所在天的结束时间
+     *
      * @param date 日期
      * @return 一天的结束时间
      */
@@ -84,6 +90,7 @@ public abstract class DateUtils {
 
     /**
      * 将时间调到<code>date</code>所在天开始时间
+     *
      * @param date 日期
      * @return 一天的开始时间
      */
@@ -98,6 +105,7 @@ public abstract class DateUtils {
 
     /**
      * 将时间调到<code>date</code>所在天的结束时间
+     *
      * @param date 日期
      * @return 一天的结束时间
      */
@@ -113,6 +121,7 @@ public abstract class DateUtils {
     /**
      * Long类型时间转为{@link LocalDateTime}<br>
      * 只支持毫秒级别时间戳，如果需要秒级别时间戳，请自行×1000
+     *
      * @param instant Long类型Date（Unix时间戳）
      * @return 一天的开始时间
      */
@@ -123,6 +132,7 @@ public abstract class DateUtils {
     /**
      * Long类型时间转为{@link LocalDateTime}<br>
      * 只支持毫秒级别时间戳，如果需要秒级别时间戳，请自行×1000
+     *
      * @param instant Long类型Date（Unix时间戳）
      * @return 一天的结束时间
      */
@@ -132,6 +142,7 @@ public abstract class DateUtils {
 
     /**
      * 将dateTime转换为时间戳
+     *
      * @param dateTime 时间
      * @return 时间戳
      */
@@ -140,6 +151,63 @@ public abstract class DateUtils {
             return null;
         }
         return LocalDateTimeUtil.toEpochMilli(dateTime);
+    }
+
+    /**
+     * 上一个周期的日期
+     */
+    @Nonnull
+    public static LocalDateTime prev(LocalDateTime date, DatePeriod period) {
+        if (period == null) {
+            return date;
+        }
+
+        return switch (period) {
+            case DAY -> date.minusDays(1);
+            case WEEK -> date.minusWeeks(1);
+            case MONTH -> date.minusMonths(1);
+            case QUARTER -> date.minusMonths(3);
+            case HALF -> date.minusMonths(6);
+            case YEAR -> date.minusYears(1);
+        };
+    }
+
+    /**
+     * 上一个周期的日期
+     */
+    @Nonnull
+    public static LocalDate prev(LocalDate date, DatePeriod period) {
+        if (period == null) {
+            return date;
+        }
+
+        return switch (period) {
+            case DAY -> date.minusDays(1);
+            case WEEK -> date.minusWeeks(1);
+            case MONTH -> date.minusMonths(1);
+            case QUARTER -> date.minusMonths(3);
+            case HALF -> date.minusMonths(6);
+            case YEAR -> date.minusYears(1);
+        };
+    }
+
+    /**
+     * 下一个周期的日期
+     */
+    @Nonnull
+    public static LocalDateTime next(LocalDateTime date, DatePeriod period) {
+        if (period == null) {
+            return date;
+        }
+
+        return switch (period) {
+            case DAY -> date.plusDays(1);
+            case WEEK -> date.plusWeeks(1);
+            case MONTH -> date.plusMonths(1);
+            case QUARTER -> date.plusMonths(3);
+            case HALF -> date.plusMonths(6);
+            case YEAR -> date.plusYears(1);
+        };
     }
 
 }

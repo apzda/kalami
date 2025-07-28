@@ -14,31 +14,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.apzda.kalami.sanitizer;
+package com.apzda.kalami.utils;
 
-import jakarta.annotation.Nonnull;
+import lombok.val;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author ninggf (windywany@gmail.com)
  * @version 1.0.0
  */
-public class PhoneNumberSanitizer extends RegexpSanitizer {
+class NumUtilsTest {
 
-    private static final PhoneNumberSanitizer INSTANCE = new PhoneNumberSanitizer();
+    @Test
+    void growthRatio() {
+        val ratio1 = NumUtils.growthRatio(49, 27, 1);
 
-    private static final String[] defaultCfg = new String[] {};
+        System.out.println("ratio1 = " + ratio1.toString());
 
-    @Override
-    public String sanitize(String text, @Nonnull String[] configure) {
-        if (configure.length < 2) {
-            configure = new String[] { "^((\\+\\d{2,4}\\s+)?\\d{3})\\d{4}(\\d{4})$", "$1****$3" };
-        }
+        val ratio2 = NumUtils.growthRatio(49, 27, 2);
 
-        return super.sanitize(text, configure);
-    }
+        System.out.println("ratio2 = " + ratio2.toString());
 
-    public static String sanitize(String phone) {
-        return INSTANCE.sanitize(phone, defaultCfg);
+        val ratio3 = NumUtils.growthRatio(49, 27, 3);
+        System.out.println("ratio3 = " + ratio3.toString());
+
+        val ratio4 = NumUtils.growthRatio(49, 27, 4);
+        System.out.println("ratio4 = " + ratio4.toString());
     }
 
 }

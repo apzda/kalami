@@ -96,8 +96,8 @@ public class ComTool {
 
     public static final String YYYY_MM_DD_HH_MM_SS_NNN = "yyyy-MM-dd HH:mm:ss.SSS";
 
-    private static final String[] USER_AGENT_ARR = { "Android", "iPhone", "iPod", "iPad", "Windows Phone",
-            "MQQBrowser" };
+    private static final String[] USER_AGENT_ARR = {"Android", "iPhone", "iPod", "iPad", "Windows Phone",
+            "MQQBrowser"};
 
     public static final String ENV = "pro.active";
 
@@ -128,8 +128,7 @@ public class ComTool {
         DTF_MAP.put(YYYY_MM_DD_HH_MM_SS_NNN, DateTimeFormatter.ofPattern(YYYY_MM_DD_HH_MM_SS_NNN));
         try {
             LOCAL_ADDR = InetAddress.getLocalHost().getHostAddress();
-        }
-        catch (UnknownHostException ignored) {
+        } catch (UnknownHostException ignored) {
         }
     }
 
@@ -151,8 +150,9 @@ public class ComTool {
 
     /**
      * 集合拆分
+     *
      * @param collection 所有集合
-     * @param size 拆分后子集的大小
+     * @param size       拆分后子集的大小
      * @return 按大小拆分后的所有子集
      */
     public static <T> List<List<T>> split(Collection<T> collection, int size) {
@@ -161,6 +161,7 @@ public class ComTool {
 
     /**
      * 异常重试处理
+     *
      * @param maxRetry 最大重试次数
      * @param interval 重试间隔(毫秒)
      */
@@ -170,8 +171,7 @@ public class ComTool {
             try {
                 runnable.run();
                 break;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 i--;
                 if (i < 0) {
                     throw new RuntimeException(format("超出最大重试次数{}", maxRetry), e);
@@ -183,7 +183,8 @@ public class ComTool {
 
     /**
      * 获取分片索引
-     * @param primaryKey 数据主键
+     *
+     * @param primaryKey       数据主键
      * @param numberOfMachines 机器数量
      * @return 分配到机器索引-从0开始
      */
@@ -193,6 +194,7 @@ public class ComTool {
 
     /**
      * fnvHash-效率高，分布均匀，适合数据分表使用
+     *
      * @param primaryKey 数据主键
      * @return 哈希值
      */
@@ -237,6 +239,7 @@ public class ComTool {
 
     /**
      * 环境判断
+     *
      * @return 是否是对应环境
      */
     public static boolean isPrd() {
@@ -245,6 +248,7 @@ public class ComTool {
 
     /**
      * 环境判断
+     *
      * @return 是否是对应环境
      */
     public static boolean isSit() {
@@ -253,6 +257,7 @@ public class ComTool {
 
     /**
      * 环境判断
+     *
      * @return 是否是对应环境
      */
     public static boolean isDev() {
@@ -269,6 +274,7 @@ public class ComTool {
 
     /**
      * 获取中文信息存储后的大约数据大小
+     *
      * @param data 字符串数据
      * @return 返回字节长度
      */
@@ -278,6 +284,7 @@ public class ComTool {
 
     /**
      * 使用EasyExcel导出EXCEL至文件
+     *
      * @param fullFilePath 文件完整路径
      */
     public static void exportExcel2File(Class<?> clazz, List<?> data, String fullFilePath) {
@@ -293,8 +300,7 @@ public class ComTool {
         response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");
         try {
             EasyExcel.write(response.getOutputStream(), clazz).sheet("sheet1").doWrite(data);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -329,6 +335,7 @@ public class ComTool {
 
     /**
      * 非空字符串
+     *
      * @param str 字符串
      * @return 与isBlank相反
      */
@@ -338,6 +345,7 @@ public class ComTool {
 
     /**
      * 是否是空字符串
+     *
      * @param str 字符串
      * @return 为null或全为空字符串返回true
      */
@@ -361,6 +369,7 @@ public class ComTool {
 
     /**
      * 创建订单号
+     *
      * @return 总长为24位=时间精准到毫秒15位+随机码9位
      */
     public static String createOrderCode() {
@@ -369,8 +378,9 @@ public class ComTool {
 
     /**
      * 判断两个Date对象是否是同年同月
+     *
      * @param startDate 开始日期
-     * @param endDate 结束日期
+     * @param endDate   结束日期
      * @return 是否是同年同月
      */
     public static boolean isSameYearAndMonth(Date startDate, Date endDate) {
@@ -386,8 +396,9 @@ public class ComTool {
 
     /**
      * 判断两个Date对象是否是同年同月
+     *
      * @param startDate 开始日期 yyyy-MM-dd
-     * @param endDate 结束日期 yyyy-MM-dd
+     * @param endDate   结束日期 yyyy-MM-dd
      * @return 是否是同年同月
      */
     public static boolean isSameYearAndMonth(String startDate, String endDate) {
@@ -399,8 +410,9 @@ public class ComTool {
 
     /**
      * 获得匹配的字符串
-     * @param regex 匹配的正则
-     * @param content 被匹配的内容
+     *
+     * @param regex      匹配的正则
+     * @param content    被匹配的内容
      * @param groupIndex 匹配正则的分组序号
      * @return 匹配后得到的字符串，未匹配返回null
      */
@@ -410,7 +422,8 @@ public class ComTool {
 
     /**
      * 内容是否匹配正则
-     * @param regex 匹配的正则
+     *
+     * @param regex   匹配的正则
      * @param content 被匹配的内容
      */
     public static boolean isMatch(String regex, CharSequence content) {
@@ -447,9 +460,10 @@ public class ComTool {
 
     /**
      * 向文件写入字节数组
-     * @param data 字节数组
+     *
+     * @param data         字节数组
      * @param fullFilePath 文件完整路径
-     * @param isAppend true覆盖原文件, false文件末尾追加
+     * @param isAppend     true覆盖原文件, false文件末尾追加
      */
     public static File fileWriteBytes(byte[] data, String fullFilePath, boolean isAppend) {
         return FileUtil.writeBytes(data, FileUtil.touch(fullFilePath), 0, data.length, isAppend);
@@ -457,9 +471,10 @@ public class ComTool {
 
     /**
      * 将输入流写入至文件
-     * @param in 输入流
+     *
+     * @param in           输入流
      * @param fullFilePath 文件完整路径
-     * @param isCloseIn 是否关闭输入流
+     * @param isCloseIn    是否关闭输入流
      */
     public static File fileWriteFromStream(InputStream in, String fullFilePath, boolean isCloseIn) {
         return FileUtil.writeFromStream(in, FileUtil.touch(fullFilePath), isCloseIn);
@@ -467,6 +482,7 @@ public class ComTool {
 
     /**
      * 获取BufferedReader
+     *
      * @param fullFilePath 文件完整路径
      */
     public static BufferedReader getUtf8Reader(String fullFilePath) {
@@ -475,8 +491,9 @@ public class ComTool {
 
     /**
      * 获取BufferedReader
+     *
      * @param fullFilePath 文件完整路径
-     * @param charset 字符集
+     * @param charset      字符集
      */
     public static BufferedReader getReader(String fullFilePath, Charset charset) {
         return FileUtil.getReader(fullFilePath, charset);
@@ -484,9 +501,10 @@ public class ComTool {
 
     /**
      * 获取BufferedWriter
+     *
      * @param fullFilePath 文件完整路径
-     * @param charset 字符集
-     * @param isAppend 是否追加内容
+     * @param charset      字符集
+     * @param isAppend     是否追加内容
      */
     public static BufferedWriter getWriter(String fullFilePath, Charset charset, boolean isAppend) {
         return FileUtil.getWriter(fullFilePath, charset, isAppend);
@@ -531,6 +549,7 @@ public class ComTool {
 
     /**
      * 格式化为月份
+     *
      * @return Integer类型的月份：yyyyMM
      */
     public static Integer formatMonthToInt(Date date) {
@@ -539,6 +558,7 @@ public class ComTool {
 
     /**
      * 格式化为月份
+     *
      * @return Integer类型的月份：yyyyMM
      */
     public static Integer formatMonthToInt(TemporalAccessor date) {
@@ -547,6 +567,7 @@ public class ComTool {
 
     /**
      * 格式化为月份
+     *
      * @return String类型的月份：yyyyMM
      */
     public static String formatMonthToStr(Date date) {
@@ -555,6 +576,7 @@ public class ComTool {
 
     /**
      * 格式化为月份
+     *
      * @return String类型的月份：yyyyMM
      */
     public static String formatMonthToStr(TemporalAccessor date) {
@@ -563,6 +585,7 @@ public class ComTool {
 
     /**
      * 格式化为月份
+     *
      * @return String类型的月份：yyyy-MM
      */
     public static String formatMonth(Date date) {
@@ -571,6 +594,7 @@ public class ComTool {
 
     /**
      * 格式化为月份
+     *
      * @return String类型的月份：yyyy-MM
      */
     public static String formatMonth(TemporalAccessor date) {
@@ -579,6 +603,7 @@ public class ComTool {
 
     /**
      * 格式化为日期
+     *
      * @return String类型的日期：yyyy-MM-dd
      */
     public static String formatDate(Date date) {
@@ -587,6 +612,7 @@ public class ComTool {
 
     /**
      * 格式化为日期
+     *
      * @return String类型的日期：yyyy-MM-dd
      */
     public static String formatDate(TemporalAccessor date) {
@@ -595,6 +621,7 @@ public class ComTool {
 
     /**
      * 格式化为日期
+     *
      * @return Integer类型的日期：yyyyMMdd
      */
     public static Integer formatDateToInt(Date date) {
@@ -603,6 +630,7 @@ public class ComTool {
 
     /**
      * 格式化为日期
+     *
      * @return Integer类型的日期：yyyyMMdd
      */
     public static Integer formatDateToInt(TemporalAccessor date) {
@@ -611,6 +639,7 @@ public class ComTool {
 
     /**
      * 格式化为日期
+     *
      * @return String类型的日期：yyyyMMdd
      */
     public static String formatDateToStr(Date date) {
@@ -619,6 +648,7 @@ public class ComTool {
 
     /**
      * 格式化为日期
+     *
      * @return String类型的日期：yyyyMMdd
      */
     public static String formatDateToStr(TemporalAccessor date) {
@@ -627,6 +657,7 @@ public class ComTool {
 
     /**
      * 格式化为时间
+     *
      * @return String类型的时间：HH:mm:ss
      */
     public static String formatTime(Date date) {
@@ -635,6 +666,7 @@ public class ComTool {
 
     /**
      * 格式化为时间
+     *
      * @return String类型的时间：HH:mm:ss
      */
     public static String formatTime(TemporalAccessor date) {
@@ -643,6 +675,7 @@ public class ComTool {
 
     /**
      * 格式化为时间
+     *
      * @return Integer类型的时间：HHmmss
      */
     public static Integer formatTimeToInt(Date date) {
@@ -651,6 +684,7 @@ public class ComTool {
 
     /**
      * 格式化为时间
+     *
      * @return Integer类型的时间：HHmmss
      */
     public static Integer formatTimeToInt(TemporalAccessor date) {
@@ -659,6 +693,7 @@ public class ComTool {
 
     /**
      * 格式化为时间
+     *
      * @return String类型的时间：HHmmss
      */
     public static String formatTimeToStr(Date date) {
@@ -667,6 +702,7 @@ public class ComTool {
 
     /**
      * 格式化为时间
+     *
      * @return String类型的时间：HHmmss
      */
     public static String formatTimeToStr(TemporalAccessor date) {
@@ -675,6 +711,7 @@ public class ComTool {
 
     /**
      * 格式化为日期时间
+     *
      * @return String类型的日期时间：yyyy-MM-dd HH:mm:ss
      */
     public static String formatDateTime(Date date) {
@@ -683,6 +720,7 @@ public class ComTool {
 
     /**
      * 格式化为日期时间
+     *
      * @return String类型的日期时间：yyyy-MM-dd HH:mm:ss
      */
     public static String formatDateTime(TemporalAccessor date) {
@@ -691,6 +729,7 @@ public class ComTool {
 
     /**
      * 格式化为日期时间
+     *
      * @return String类型的日期时间：yyyyMMddHHmmss
      */
     public static String formatDateTimeToStr(Date date) {
@@ -699,6 +738,7 @@ public class ComTool {
 
     /**
      * 格式化为日期时间
+     *
      * @return String类型的日期时间：yyyyMMddHHmmss
      */
     public static String formatDateTimeToStr(TemporalAccessor date) {
@@ -707,6 +747,7 @@ public class ComTool {
 
     /**
      * 格式化为日期
+     *
      * @return String类型的日期时间：yyyy年MM月dd日
      */
     public static String formatDateToDialect(Date date) {
@@ -715,6 +756,7 @@ public class ComTool {
 
     /**
      * 格式化为日期
+     *
      * @return String类型的日期时间：yyyy年MM月dd日
      */
     public static String formatDateToDialect(TemporalAccessor date) {
@@ -723,7 +765,8 @@ public class ComTool {
 
     /**
      * 日期时间格式化
-     * @param date 时间
+     *
+     * @param date    时间
      * @param pattern 正则
      */
     public static String formatDateTime(Date date, String pattern) {
@@ -735,7 +778,8 @@ public class ComTool {
 
     /**
      * 日期时间格式化（Instant不可格式化）
-     * @param date 时间
+     *
+     * @param date    时间
      * @param pattern 正则
      */
     public static String formatDateTime(TemporalAccessor date, String pattern) {
@@ -754,6 +798,7 @@ public class ComTool {
 
     /**
      * 限制字符串长度，如果超过指定长度，截取指定长度并在末尾加"..."
+     *
      * @param string 指定的字符串
      * @param length 指定的长度
      * @return 注意：拼接...后长度将超过指定的长度length
@@ -785,6 +830,7 @@ public class ComTool {
 
     /**
      * 截取字符串
+     *
      * @return 从位置0开始到指定长度的字符串，不会异常
      */
     public static String sub(CharSequence str, int length) {
@@ -828,7 +874,8 @@ public class ComTool {
 
     /**
      * 空白字符串的默认返回值
-     * @param str 指定字符串
+     *
+     * @param str        指定字符串
      * @param defaultStr 默认值
      * @return 如果指定字符串是空白或NULL的则返回默认值
      */
@@ -838,50 +885,51 @@ public class ComTool {
 
     /**
      * 解析成本地时间
+     *
      * @param text 时间文本 HH:mm:ss
      * @return null 解析错误异常
      */
     public static LocalTime parse2LocalTime(String text) {
         try {
             return LocalTime.parse(text, getDateTimeFormatter(HH_MM_SS));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("解析日期时间错误");
         }
     }
 
     /**
      * 解析成本地时间
-     * @param text 时间文本
+     *
+     * @param text    时间文本
      * @param pattern 正则
      * @return null 解析错误异常
      */
     public static LocalTime parse2LocalTime(String text, String pattern) {
         try {
             return LocalTime.parse(text, getDateTimeFormatter(pattern));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("解析日期时间错误");
         }
     }
 
     /**
      * 解析成本地日期
+     *
      * @param text 时间文本 yyyy-MM-dd
      * @return 解析错误异常
      */
     public static LocalDate parse2LocalDate(String text) {
         try {
             return LocalDate.parse(text, getDateTimeFormatter(YYYY_MM_DD));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("解析日期时间错误");
         }
     }
 
     /**
      * 解析成本地日期
-     * @param text 时间文本
+     *
+     * @param text    时间文本
      * @param pattern 正则
      * @return 解析错误异常
      */
@@ -896,43 +944,43 @@ public class ComTool {
                 pattern = YYYYMMDD;
             }
             return LocalDate.parse(text, getDateTimeFormatter(pattern));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("解析日期时间错误");
         }
     }
 
     /**
      * 解析成本地日期时间
-     * @param text 时间文本
+     *
+     * @param text    时间文本
      * @param pattern 正则
      * @return 解析错误异常
      */
     public static LocalDateTime parse2LocalDateTime(String text, String pattern) {
         try {
             return LocalDateTime.parse(text, getDateTimeFormatter(pattern));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("解析日期时间错误");
         }
     }
 
     /**
      * 解析成本地日期时间
+     *
      * @param text 时间文本 yyyy-MM-dd HH:mm:ss
      * @return 解析错误异常
      */
     public static LocalDateTime parse2LocalDateTime(String text) {
         try {
             return LocalDateTime.parse(text, getDateTimeFormatter(YYYY_MM_DD_HH_MM_SS));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("解析日期时间错误");
         }
     }
 
     /**
      * 获取日期时间格式器
+     *
      * @param pattern 正则
      */
     public static DateTimeFormatter getDateTimeFormatter(String pattern) {
@@ -998,6 +1046,7 @@ public class ComTool {
 
     /**
      * 地址脱敏
+     *
      * @param sensitiveSize 敏感信息长度，比如以下是4
      * @return 北京市海淀区****
      */
@@ -1098,8 +1147,9 @@ public class ComTool {
 
     /**
      * DES解码
+     *
      * @param secretText 密文
-     * @param key 密钥
+     * @param key        密钥
      * @return 原文
      */
     public static String desDecode(String secretText, String key) {
@@ -1108,8 +1158,9 @@ public class ComTool {
 
     /**
      * DES编码
+     *
      * @param planText 原文
-     * @param key 密钥
+     * @param key      密钥
      * @return 密文
      */
     public static String desEncode(String planText, String key) {
@@ -1118,6 +1169,7 @@ public class ComTool {
 
     /**
      * md5
+     *
      * @param planText 原文
      * @return 密文
      */
@@ -1127,6 +1179,7 @@ public class ComTool {
 
     /**
      * 生成RSA密钥
+     *
      * @param keySize 密钥长度 1024/2048
      */
     public static ObjectNode createRsaKeys(int keySize) {
@@ -1139,6 +1192,7 @@ public class ComTool {
 
     /**
      * 使用公钥加密
+     *
      * @param plainText 原文
      * @param publicKey 公钥
      * @return 密文
@@ -1149,7 +1203,8 @@ public class ComTool {
 
     /**
      * 使用私钥解密
-     * @param data 密文
+     *
+     * @param data       密文
      * @param privateKey 私钥
      * @return 原文
      */
@@ -1159,6 +1214,7 @@ public class ComTool {
 
     /**
      * 获取客户端IP
+     *
      * @param request 请求
      */
     public static String getIpAddr(ServerHttpRequest request) {
@@ -1194,7 +1250,8 @@ public class ComTool {
     /**
      * 获取客户端ip
      */
-    public static String getIpAddr(HttpServletRequest request) {
+    public static String getIpAddr() {
+        HttpServletRequest request = getHttpServletRequest();
         String ip = request.getHeader("x-forwarded-for");
         if (StrUtil.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-Ip");
@@ -1212,8 +1269,7 @@ public class ComTool {
                 try {
                     inetAddress = InetAddress.getLocalHost();
                     ip = inetAddress.getHostAddress();
-                }
-                catch (UnknownHostException ignored) {
+                } catch (UnknownHostException ignored) {
                 }
             }
         }
@@ -1226,6 +1282,7 @@ public class ComTool {
 
     /**
      * 判断是否是ajax请求
+     *
      * @param request 请求
      */
     public static boolean isAjax(HttpServletRequest request) {
@@ -1235,6 +1292,7 @@ public class ComTool {
 
     /**
      * 获取指定长度的随机字符串，范围0-9
+     *
      * @param n 长度
      */
     public static String randomNumbers(int n) {
@@ -1243,6 +1301,7 @@ public class ComTool {
 
     /**
      * 获取指定长度的随机字符串，范围0-9/a-z/A-Z
+     *
      * @param n 长度
      */
     public static String randomString(int n) {
@@ -1251,6 +1310,7 @@ public class ComTool {
 
     /**
      * 随机生成一个范围内的数字
+     *
      * @param minInclude 包含
      * @param maxExclude 不包含
      */
@@ -1260,6 +1320,7 @@ public class ComTool {
 
     /**
      * 抽奖
+     *
      * @param drawList 抽取的概率列表
      * @return int 抽取到的奖品索引
      */
@@ -1286,8 +1347,7 @@ public class ComTool {
             int t = (int) (multiply(m, probability));
             if (s == 0) {
                 scope[s] = t;
-            }
-            else {
+            } else {
                 scope[s] = scope[s - 1] + t;
             }
             s++;
@@ -1300,8 +1360,7 @@ public class ComTool {
             int end = scope[i];
             if (i == 0) {
                 start = 0;
-            }
-            else {
+            } else {
                 start = scope[i - 1];
             }
             if (start <= drawInt && drawInt < end) {
@@ -1314,6 +1373,7 @@ public class ComTool {
 
     /**
      * 判断是否是移动端
+     *
      * @param request 请求
      */
     public static boolean isMobile(HttpServletRequest request) {
@@ -1333,6 +1393,7 @@ public class ComTool {
 
     /**
      * 精确的加法运算
+     *
      * @param v1 被加数
      * @param v2 加数
      * @return (v1 + v2)
@@ -1345,6 +1406,7 @@ public class ComTool {
 
     /**
      * 精确的减法运算
+     *
      * @param v1 被减数
      * @param v2 减数
      * @return (v1 - v2)
@@ -1357,6 +1419,7 @@ public class ComTool {
 
     /**
      * 精确的乘法运算
+     *
      * @param v1 被乘数
      * @param v2 乘数
      * @return (v1 * v2)
@@ -1369,8 +1432,9 @@ public class ComTool {
 
     /**
      * 精确的除法运算
-     * @param v1 被除数
-     * @param v2 除数
+     *
+     * @param v1    被除数
+     * @param v2    除数
      * @param scale 当发生除不尽的情况时，由scale参数指定精度，以后的数字四舍五入(可设为10提高精度)
      * @return (v1 / v2)
      */
@@ -1385,7 +1449,8 @@ public class ComTool {
 
     /**
      * 精确的小数位四舍五入
-     * @param v 需要四舍五入的数字
+     *
+     * @param v     需要四舍五入的数字
      * @param scale 精度
      */
     public static double round(double v, int scale) {

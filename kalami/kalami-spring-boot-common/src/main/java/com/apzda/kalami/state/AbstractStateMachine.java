@@ -16,29 +16,59 @@
  */
 package com.apzda.kalami.state;
 
+import com.apzda.kalami.exception.CommonBizException;
 import com.apzda.kalami.utils.ComTool;
-import lombok.Getter;
 
 /**
  * @author john <service@cheerel.com>
  */
-@Getter
-public abstract class AbstractStateMachine<State extends Enum<State>, Event extends Enum<Event>>
-        implements StateMachine<State, Event> {
+public abstract class AbstractStateMachine<T extends StateEntity<State>, State extends Enum<State>, Event extends Enum<Event>>
+        implements StateMachine<T, State, Event> {
+
+    /**
+     * 状态实体
+     */
+    private final T stateEntity;
+
+    /**
+     * 老的状态（变更前的状态）
+     */
+    private State oldState;
+
+    public AbstractStateMachine(T stateEntity) {
+        this.stateEntity = stateEntity;
+    }
 
     @Override
-    public void handleEvent(Event event) {
-        StateGuard<State> guard = getEventGuards().get(event);
-        if (guard != null) {
-            if (guard.getPreStateList() == null || guard.getPreStateList().isEmpty()
-                    || guard.getPreStateList().contains(getCurrentState())) {
-                if (guard.getNextState() != null) {
-                    stateTransition(guard.getNextState());
+    public T getStateEntity() {
+        return stateEntity;
+    }
+
+    @Override
+    public final void trigger(Event event) {
+        StateGuard<State> stateGuard = getEventGuards().get(event);
+        if (stateGuard != null) {
+            if (stateGuard.getPreState() == null || stateGuard.getPreState() == stateEntity.getState()) {
+                // 设置变动前的状态
+                this.oldState = stateEntity.getState();
+                if (stateGuard.getNextState() != null) {
+                    // 状态变更
+                    stateEntity.setState(stateGuard.getNextState());
                 }
                 return;
             }
         }
-        throw new RuntimeException(ComTool.format("处理失败-[错误的状态变更], currentState={}, event={}", getCurrentState(), event));
+        throw new CommonBizException(ComTool.format("处理失败-[错误的状态变更], stateEntity={}, event={}", stateEntity, event));
+    }
+
+    @Override
+    public State getOldState() {
+        return oldState;
+    }
+
+    @Override
+    public State getCurrentState() {
+        return stateEntity.getState();
     }
 
 }

@@ -18,9 +18,6 @@ package com.apzda.kalami.state;
 
 import jakarta.annotation.Nullable;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 /**
  * 状态守卫
@@ -28,22 +25,25 @@ import java.util.List;
  * @author john <service@cheerel.com>
  */
 @Data
-@NoArgsConstructor
 public class StateGuard<S extends Enum<S>> {
 
     /**
-     * 前置状态列表
+     * 前置状态
      */
-    private List<S> preStateList;
+    private S preState;
 
     /**
      * 下一个状态
      */
     private S nextState;
 
-    public StateGuard(@Nullable List<S> preStateList, @Nullable S nextState) {
-        this.preStateList = preStateList;
+    public StateGuard(@Nullable S preState, @Nullable S nextState) {
+        this.preState = preState;
         this.nextState = nextState;
+    }
+
+    public static <S extends Enum<S>> StateGuard<S> of(S preState, S nextState) {
+        return new StateGuard<>(preState, nextState);
     }
 
 }
