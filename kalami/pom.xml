@@ -50,7 +50,7 @@
         <spring-cloud.version>2024.0.1</spring-cloud.version>
         <jasypt.version>3.0.5</jasypt.version>
         <mapstruct.version>1.6.3</mapstruct.version>
-        <mybatis-spring.version>3.0.4</mybatis-spring.version>
+        <mybatis-spring.version>3.0.5</mybatis-spring.version>
         <mybatis-plus.version>3.5.12</mybatis-plus.version>
         <shardingsphere.version>5.5.2</shardingsphere.version>
         <hutool.version>5.8.37</hutool.version>
