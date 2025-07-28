@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 the original author or authors.
+ * Copyright 2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,23 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.apzda.kalami.demo.store.server;
 
-import com.apzda.kalami.demo.store.EnableStoreService;
+package com.apzda.kalami.demo.order.server;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * @author ninggf (windywany@gmail.com)
- * @since 2025/05/16
+ * @since 2025/05/20
  * @version 1.0.0
  */
 @SpringBootApplication
-@EnableStoreService
-public class StoreWebServer {
+@EnableOrderService
+public class OrderWebServer {
 
     public static void main(String[] args) {
-        SpringApplication.run(StoreWebServer.class, args);
+        SpringApplication.run(OrderWebServer.class, args);
     }
 
 }

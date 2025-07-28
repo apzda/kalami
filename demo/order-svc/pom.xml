@@ -21,6 +21,11 @@
         <dependencies>
             <dependency>
                 <groupId>com.apzda.kalami.demo.order</groupId>
+                <artifactId>order-client</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.kalami.demo.order</groupId>
                 <artifactId>order-service</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>

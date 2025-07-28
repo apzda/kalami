@@ -14,23 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package com.apzda.kalami.demo.order.client.vo;
 
-package com.apzda.kalami.demo.order.server;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import java.math.BigDecimal;
 
 /**
  * @author ninggf (windywany@gmail.com)
- * @since 2025/05/20
  * @version 1.0.0
  */
-@SpringBootApplication
-@EnableOrderService
-public class OderWebServer {
+@Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class OrderVo {
 
-    public static void main(String[] args) {
-        SpringApplication.run(OderWebServer.class, args);
-    }
+    /**
+     * 订单金额
+     */
+    private BigDecimal amount;
 
 }

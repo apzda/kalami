@@ -14,42 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package com.apzda.kalami.demo.order.client.autoconfig;
 
-package com.apzda.kalami.demo.user.autoconfig;
-
-import com.apzda.kalami.demo.user.api.UserApi;
-import com.apzda.kalami.demo.user.meta.UserSvcMetaUserDetailsService;
-import com.apzda.kalami.security.autoconfig.KalamiSecurityAutoConfiguration;
-import com.apzda.kalami.security.user.MetaUserDetailsService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
+import com.apzda.kalami.demo.order.client.OrderService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FallbackFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
  * @author ninggf (windywany@gmail.com)
- * @since 2025/05/21
  * @version 1.0.0
  */
-@Slf4j
-@AutoConfiguration(before = KalamiSecurityAutoConfiguration.class)
-public class UserSvcSecurityAutoConfiguration {
-
-    @Bean
-    @ConditionalOnMissingBean
-    MetaUserDetailsService metaUserDetailsService(UserApi userApi) {
-        log.info("UserSvcSecurityAutoConfiguration 'metaUserDetailsService'");
-        return new UserSvcMetaUserDetailsService(userApi);
-    }
+@Configuration(proxyBeanMethods = false)
+public class OrderClientAutoConfiguration {
 
     @Configuration(proxyBeanMethods = false)
     @ConditionalOnClass(name = "feign.slf4j.Slf4jLogger", value = { FallbackFactory.class })
-    @EnableFeignClients(clients = { UserApi.class })
-    static class UserSvcClientConfiguration {
+    @EnableFeignClients(clients = { OrderService.class })
+    static class OrderClientConfiguration {
 
     }
 

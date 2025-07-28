@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 the original author or authors.
+ * Copyright 2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,23 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.apzda.kalami.demo.store.server;
+package com.apzda.kalami.demo.order.client.dto;
 
-import com.apzda.kalami.demo.store.EnableStoreService;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
+import java.math.BigDecimal;
 
 /**
  * @author ninggf (windywany@gmail.com)
- * @since 2025/05/16
  * @version 1.0.0
  */
-@SpringBootApplication
-@EnableStoreService
-public class StoreWebServer {
+@Data
+public class OrderDto {
 
-    public static void main(String[] args) {
-        SpringApplication.run(StoreWebServer.class, args);
-    }
+    /**
+     * 订单金额
+     */
+    @NotNull(message = "订单金额不能为空")
+    @DecimalMin(value = "0.01", message = "最小金额为0.01")
+    private BigDecimal amount;
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 the original author or authors.
+ * Copyright 2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,23 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.apzda.kalami.demo.store.server;
+package com.apzda.kalami.demo.order.controller.internal;
 
-import com.apzda.kalami.demo.store.EnableStoreService;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import com.apzda.kalami.demo.order.client.OrderService;
+import com.apzda.kalami.demo.order.client.dto.OrderDto;
+import com.apzda.kalami.demo.order.client.vo.OrderVo;
+import lombok.val;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author ninggf (windywany@gmail.com)
- * @since 2025/05/16
  * @version 1.0.0
  */
-@SpringBootApplication
-@EnableStoreService
-public class StoreWebServer {
+@RestController
+public class OrderServiceController implements OrderService {
 
-    public static void main(String[] args) {
-        SpringApplication.run(StoreWebServer.class, args);
+    @Override
+    public OrderVo createOrder(@Validated OrderDto dto) {
+        val vo = new OrderVo();
+        vo.setAmount(dto.getAmount());
+        return vo;
     }
 
 }

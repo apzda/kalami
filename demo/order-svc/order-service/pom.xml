@@ -13,8 +13,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.apzda.cloud</groupId>
-            <artifactId>kalami-spring-boot-common</artifactId>
+            <groupId>com.apzda.kalami.demo.order</groupId>
+            <artifactId>order-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
