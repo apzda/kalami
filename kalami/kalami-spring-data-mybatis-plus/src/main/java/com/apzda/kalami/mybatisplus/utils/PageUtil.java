@@ -91,7 +91,7 @@ public abstract class PageUtil {
             return new Page<>(1, 20, searchCount);
         }
         val pageNumber = pageable.getPageNumber();
-        val page = new Page<T>(pageNumber <= 0 ? 1 : pageNumber, pageable.getPageSize(), searchCount);
+        val page = new Page<T>(pageNumber <= 0 ? 1 : pageNumber + 1, pageable.getPageSize(), searchCount);
         val sort = pageable.getSort();
 
         sort.forEach(sortable -> {

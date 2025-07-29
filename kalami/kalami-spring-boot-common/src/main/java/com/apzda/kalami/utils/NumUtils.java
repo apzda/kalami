@@ -35,7 +35,7 @@ public abstract class NumUtils {
 
     private final static BigDecimal CURRENT_NULL_RATIO = BigDecimal.valueOf(-100);
 
-    private final static BigDecimal PREVIOUS_NULL_RATIO = BigDecimal.valueOf(100);
+    private final static BigDecimal PREVIOUS_NULL_RATIO = BigDecimal.valueOf(0);
 
     /**
      * 将Long类型的数字转为36进制的字符串
@@ -89,7 +89,8 @@ public abstract class NumUtils {
 
     /**
      * 计算增长比例。
-     * @param current 值
+     *
+     * @param current  值
      * @param previous 基值
      * @return 比例
      */
@@ -99,18 +100,19 @@ public abstract class NumUtils {
             return -100.0d;
         }
         if (previous == null || previous == 0) {
-            return 100.0d;
+            return 0.0d;
         }
 
         return BigDecimal.valueOf((current - previous) * 100.0 / previous)
-            .round(MathContext.UNLIMITED)
-            .setScale(scale, RoundingMode.DOWN)
-            .doubleValue();
+                .round(MathContext.UNLIMITED)
+                .setScale(scale, RoundingMode.DOWN)
+                .doubleValue();
     }
 
     /**
      * 计算增长比例。
-     * @param current 值
+     *
+     * @param current  值
      * @param previous 基值
      * @return 比例
      */
@@ -120,18 +122,19 @@ public abstract class NumUtils {
             return -100.0d;
         }
         if (previous == null || previous == 0) {
-            return 100.0d;
+            return 0.0d;
         }
 
         return BigDecimal.valueOf((current - previous) * 100.0 / previous)
-            .round(MathContext.UNLIMITED)
-            .setScale(scale, RoundingMode.DOWN)
-            .doubleValue();
+                .round(MathContext.UNLIMITED)
+                .setScale(scale, RoundingMode.DOWN)
+                .doubleValue();
     }
 
     /**
      * 计算增长百分比。
-     * @param current 值
+     *
+     * @param current  值
      * @param previous 基值
      * @return 百分比
      */
@@ -145,13 +148,14 @@ public abstract class NumUtils {
         }
 
         return BigDecimal.valueOf((current - previous) * 100.0 / previous)
-            .round(MathContext.UNLIMITED)
-            .setScale(scale, RoundingMode.DOWN);
+                .round(MathContext.UNLIMITED)
+                .setScale(scale, RoundingMode.DOWN);
     }
 
     /**
      * 计算增长百分比。
-     * @param current 值
+     *
+     * @param current  值
      * @param previous 基值
      * @return 百分比
      */
