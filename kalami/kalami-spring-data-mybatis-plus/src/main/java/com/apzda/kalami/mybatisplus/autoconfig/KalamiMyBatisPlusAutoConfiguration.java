@@ -278,31 +278,27 @@ public class KalamiMyBatisPlusAutoConfiguration {
 
             @Override
             public void updateFill(MetaObject metaObject) {
-                val fills = new ArrayList<StrictFill<?, ?>>();
                 for (String column : updatedAtColumns) {
                     if (!metaObject.hasGetter(column) || !metaObject.hasSetter(column)) {
                         continue;
                     }
                     val timeType = metaObject.getGetterType(column);
                     if (timeType != null) {
-                        fills.add(getTime(column, timeType));
+                        this.setFieldValByName(column, getTime(timeType), metaObject);
                     }
                 }
 
                 val currentAuditor = Optional.ofNullable(CurrentUserProvider.getCurrentUser().getUid()).orElse("0");
                 val auditor = org.apache.commons.lang3.StringUtils.defaultIfBlank(currentAuditor, "0");
+
                 for (String column : updatedByColumns) {
                     if (!metaObject.hasGetter(column) || !metaObject.hasSetter(column)) {
                         continue;
                     }
                     val uidType = metaObject.getGetterType(column);
                     if (uidType != null) {
-                        fills.add(getUid(column, uidType, auditor));
+                        this.setFieldValByName(column, getUid(uidType, auditor), metaObject);
                     }
-                }
-
-                if (!fills.isEmpty()) {
-                    strictUpdateFill(findTableInfo(metaObject), metaObject, fills);
                 }
             }
 
@@ -330,6 +326,27 @@ public class KalamiMyBatisPlusAutoConfiguration {
                 return uid;
             }
 
+            private Object getUid(Class<?> userIdClz, String userId) {
+                if (userIdClz == null) {
+                    return null;
+                }
+                else if (Short.class.isAssignableFrom(userIdClz)) {
+                    return Short.parseShort(userId);
+                }
+                else if (Long.class.isAssignableFrom(userIdClz)) {
+                    return Long.parseLong(userId);
+                }
+                else if (Integer.class.isAssignableFrom(userIdClz)) {
+                    return Integer.parseInt(userId);
+                }
+                else if (org.apache.commons.lang3.StringUtils.isNotBlank(userId)) {
+                    return userId;
+                }
+                else {
+                    return null;
+                }
+            }
+
             @Nonnull
             private ClonableStrictFill<?, ?> getTime(String name, Class<?> timeType) {
                 ClonableStrictFill<?, ?> current;
@@ -350,6 +367,23 @@ public class KalamiMyBatisPlusAutoConfiguration {
                             () -> DateUtil.formatLocalDateTime(LocalDateTime.now(appClock)));
                 }
                 return current;
+            }
+
+            private Object getTime(Class<?> timeType) {
+                if (timeType == null || Long.class.isAssignableFrom(timeType)) {
+                    return appClock.millis();
+                }
+                else if (Date.class.isAssignableFrom(timeType)) {
+                    return new Date();
+                }
+                else if (LocalDate.class.isAssignableFrom(timeType)) {
+                    return LocalDate.now(appClock);
+                }
+                else if (LocalDateTime.class.isAssignableFrom(timeType)) {
+                    return LocalDateTime.now(appClock);
+                }
+
+                return DateUtil.formatLocalDateTime(LocalDateTime.now(appClock));
             }
         };
     }
