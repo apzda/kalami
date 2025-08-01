@@ -21,7 +21,10 @@ import com.apzda.kalami.exception.BizException;
 import com.apzda.kalami.i18n.I18n;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.springframework.http.HttpHeaders;
+
+import java.io.Serializable;
 
 /**
  * @author ninggf (windywany@gmail.com)
@@ -34,6 +37,10 @@ public interface IError {
 
     int code();
 
+    default Serializable data() {
+        return null;
+    }
+
     default int httpCode() {
         return 500;
     }
@@ -43,16 +50,16 @@ public interface IError {
     }
 
     default String message() {
-        return "";
+        return null;
     }
 
     default String localMessage() {
         val message = message();
         val code = code();
-        if (code != 0 && StringUtils.isBlank(message)) {
+        if (code != 0 && StringUtils.isBlank(message) && message == null) {
             return I18n.t("error." + Math.abs(code), args());
         }
-        else if (StringUtils.startsWith(message, "{") && StringUtils.endsWith(message, "}")) {
+        else if (Strings.CS.startsWith(message, "{") && Strings.CS.endsWith(message, "}")) {
             val msg = message.substring(1, message.length() - 1);
             return I18n.t(msg, args());
         }

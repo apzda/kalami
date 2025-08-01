@@ -23,6 +23,8 @@ import lombok.Getter;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.http.HttpHeaders;
 
+import java.io.Serializable;
+
 /**
  * @author ninggf (windywany@gmail.com)
  * @since 2025/05/16
@@ -34,6 +36,8 @@ public class BizException extends RuntimeException {
     protected final IError error;
 
     private final HttpHeaders headers;
+
+    private Serializable data;
 
     public BizException(String message) {
         this(new ServiceNotAvailableError(message), null, null);
@@ -47,6 +51,7 @@ public class BizException extends RuntimeException {
         super(error.localMessage(), e);
         this.error = error;
         this.headers = headers == null ? HttpHeaders.EMPTY : headers;
+        this.data = error.data();
     }
 
     public BizException(@Nonnull IError error, HttpHeaders headers) {
@@ -59,6 +64,11 @@ public class BizException extends RuntimeException {
 
     public BizException(@Nonnull IError error) {
         this(error, null, null);
+    }
+
+    public BizException withData(Serializable data) {
+        this.data = data;
+        return this;
     }
 
     @Override

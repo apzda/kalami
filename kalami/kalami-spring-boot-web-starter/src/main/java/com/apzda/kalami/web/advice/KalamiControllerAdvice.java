@@ -122,7 +122,7 @@ public class KalamiControllerAdvice {
         val e = transform ? transform(throwable) : throwable;
         if (e instanceof BizException gsvcException) {
             val error = gsvcException.getError();
-            return Response.error(error);
+            return Response.error(error, gsvcException.getData());
         }
         else if (e instanceof BindException bindException) {
             val violations = new HashMap<String, String>();

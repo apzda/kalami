@@ -215,7 +215,7 @@ public class Response<T> implements Serializable {
         if (Strings.CS.startsWith(errMsg, "{") && Strings.CS.endsWith(errMsg, "}")) {
             resp.setMessage(errMsg);
         }
-        else if (StringUtils.isBlank(errMsg)) {
+        else if (StringUtils.isBlank(errMsg) && errMsg == null) {
             val msg = I18n.t("error." + Math.abs(code));
             if (StringUtils.isNotBlank(msg)) {
                 resp.errMsg = msg;
