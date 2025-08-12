@@ -20,6 +20,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * 枚举打印类
  *
@@ -40,4 +42,13 @@ public class DictEnumPrinter implements DictEnum {
      */
     private Object value;
 
+    /**
+     * 子集
+     */
+    private List<DictEnumPrinter> children;
+
+    public DictEnumPrinter(String text, Object value) {
+        this.text = text;
+        this.value = value;
+    }
 }

@@ -16,6 +16,8 @@
  */
 package com.apzda.kalami.tenant;
 
+import com.apzda.kalami.error.ServiceError;
+import com.apzda.kalami.exception.BizException;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author ninggf (windywany@gmail.com)
@@ -45,6 +45,66 @@ public abstract class TenantManager implements InitializingBean {
     protected String tenantIdColumn = "tenant_id";
 
     protected Boolean disableTenantPlugin = true;
+
+    @Nonnull
+    public static List<String> checkOrgId(String orgId, boolean throwException) {
+        if (tenantManager == null && throwException) {
+            throw new IllegalStateException("tenantManager is null");
+        }
+        else if (tenantManager == null) {
+            return List.of();
+        }
+
+        val ids = tenantManager.getOrganizationIds(TenantManager.currentTenantId());
+        if (ids.length == 0) {
+            if (throwException) {
+                throw new BizException(ServiceError.FORBIDDEN);
+            }
+            return List.of();
+        }
+
+        if (StringUtils.isBlank(orgId)) {
+            return Arrays.asList(ids);
+        }
+
+        if (Arrays.asList(ids).contains(orgId)) {
+            return List.of(orgId);
+        }
+
+        if (throwException) {
+            throw new BizException(ServiceError.FORBIDDEN);
+        }
+        return List.of();
+    }
+
+    @Nonnull
+    public static List<String> checkTenantId(String tenantId, boolean throwException) {
+        if (tenantManager == null && throwException) {
+            throw new IllegalStateException("tenantManager is null");
+        }
+        else if (tenantManager == null) {
+            return List.of();
+        }
+        val ids = TenantManager.tenantIds();
+        if (ids.length == 0) {
+            if (throwException) {
+                throw new BizException(ServiceError.FORBIDDEN);
+            }
+            return List.of();
+        }
+        if (StringUtils.isBlank(tenantId)) {
+            return Arrays.asList(ids);
+        }
+
+        if (Arrays.asList(ids).contains(tenantId)) {
+            return List.of(tenantId);
+        }
+
+        if (throwException) {
+            throw new BizException(ServiceError.FORBIDDEN);
+        }
+        return List.of();
+    }
 
     @Override
     public void afterPropertiesSet() throws Exception {

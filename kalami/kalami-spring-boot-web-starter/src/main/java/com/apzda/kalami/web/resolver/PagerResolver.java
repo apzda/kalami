@@ -54,7 +54,8 @@ public class PagerResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(@Nonnull MethodParameter parameter) {
-        return PageRequest.class.equals(parameter.getParameter().getType());
+        val type = parameter.getParameter().getType();
+        return PageRequest.class.equals(type) || AbstractPageQuery.class.equals(type);
     }
 
     @Override
@@ -85,7 +86,7 @@ public class PagerResolver implements HandlerMethodArgumentResolver {
 
         DefaultPageRequest(int pageNumber, int pageSize, String sorts, int maxPageSize) {
             setPageNumber(pageNumber <= 0 ? 1 : pageNumber);
-            setPageSize(pageSize <= 0 ? 10 : Math.min(maxPageSize, pageSize));
+            setPageSize(pageSize <= 0 ? 20 : Math.min(maxPageSize, pageSize));
             setPageSorts(sorts);
         }
 

@@ -17,6 +17,7 @@
 package com.apzda.kalami.autoconfig;
 
 import com.apzda.kalami.i18n.I18n;
+import com.apzda.kalami.properties.KalamiCommonProperties;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -37,7 +38,7 @@ import org.springframework.util.CollectionUtils;
 @Slf4j
 @Configuration(proxyBeanMethods = false)
 @AutoConfigureBefore(MessageSourceAutoConfiguration.class)
-@EnableConfigurationProperties({ MessageSourceProperties.class })
+@EnableConfigurationProperties({ MessageSourceProperties.class, KalamiCommonProperties.class })
 public class KalamiCommonAutoConfiguration {
 
     @Bean

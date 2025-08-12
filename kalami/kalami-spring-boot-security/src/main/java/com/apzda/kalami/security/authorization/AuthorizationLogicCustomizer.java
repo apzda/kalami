@@ -27,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.PermissionEvaluator;
@@ -71,7 +72,7 @@ public class AuthorizationLogicCustomizer {
         if (StringUtils.isBlank(authority)) {
             return false;
         }
-        if (StringUtils.startsWith(authority, "!")) {
+        if (Strings.CS.startsWith(authority, "!")) {
             return isAuthed() && !SecurityUtils.hasAuthority(authority.substring(1));
         }
         return isAuthed() && SecurityUtils.hasAuthority(authority);

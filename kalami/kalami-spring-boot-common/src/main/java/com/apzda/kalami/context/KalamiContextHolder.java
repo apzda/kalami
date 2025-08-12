@@ -233,6 +233,16 @@ public abstract class KalamiContextHolder implements ApplicationContextAware {
         throw new NullPointerException("applicationContext is null");
     }
 
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    public static <T> T getBean(@Nonnull T obj) {
+        if (applicationContext != null) {
+            return (T) applicationContext.getBean(obj.getClass());
+        }
+
+        throw new NullPointerException("applicationContext is null");
+    }
+
     public static void restore(@NonNull Context context) {
         CONTEXT_BOX.set(context);
         MDC.put("tid", context.requestId);

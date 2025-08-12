@@ -16,6 +16,7 @@
  */
 package com.apzda.kalami.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Splitter;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
@@ -39,6 +40,7 @@ public interface PageRequest {
 
     int getPageSize();
 
+    @JsonIgnore
     default boolean searchCount() {
         return true;
     }
@@ -48,6 +50,14 @@ public interface PageRequest {
     String getPageSorts();
 
     void setPageSorts(String pageSorts);
+
+    default PageRequest withDefaultPageSorts(String pageSorts) {
+        if (StringUtils.isBlank(this.getPageSorts())) {
+            this.setPageSorts(pageSorts);
+        }
+
+        return this;
+    }
 
     default Pageable toPageable() {
         Sort sort;
@@ -60,7 +70,7 @@ public interface PageRequest {
                 .splitToList(UriUtils.decode(sortFields, StandardCharsets.UTF_8))) {
                 val sorts = sortField.split("\\|");
                 if (sorts.length > 1) {
-                    if ("asc".equalsIgnoreCase(sorts[1])) {
+                    if ("asc".equalsIgnoreCase(sorts[1]) || "a".equalsIgnoreCase(sorts[1])) {
                         orders.add(Sort.Order.asc(sorts[0]));
                     }
                     else {

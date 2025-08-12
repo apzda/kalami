@@ -17,6 +17,7 @@
 package com.apzda.kalami.exception;
 
 import com.apzda.kalami.error.ResourceNotFoundError;
+import jakarta.annotation.Nonnull;
 
 import java.io.Serializable;
 
@@ -26,8 +27,12 @@ import java.io.Serializable;
  */
 public class NotFoundException extends BizException {
 
-    public NotFoundException(String resource, Serializable id) {
+    public NotFoundException(@Nonnull String resource, Serializable id) {
         super(new ResourceNotFoundError(resource, id));
+    }
+
+    public NotFoundException(@Nonnull String resource) {
+        super(new ResourceNotFoundError(resource, null));
     }
 
 }

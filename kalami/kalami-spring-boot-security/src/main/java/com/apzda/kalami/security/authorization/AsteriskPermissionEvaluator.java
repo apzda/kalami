@@ -63,7 +63,7 @@ public class AsteriskPermissionEvaluator implements PermissionEvaluator {
             @NonNull
             public Predicate<String> load(@NonNull String key) {
                 boolean suffix = false;
-                if (org.apache.commons.lang3.StringUtils.endsWith(key, ".*")) {
+                if (StringUtils.endsWithIgnoreCase(key, ".*")) {
                     key = key.substring(0, key.length() - 2);
                     suffix = true;
                 }

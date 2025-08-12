@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2025 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,10 +37,10 @@ public class KalamiMybatisPlusConfigProperties {
 
     private final List<String> createdAtColumns = new ArrayList<>(List.of("createdAt", "createTime"));
 
-    private final List<String> createdByColumns = new ArrayList<>(List.of("createdBy", "creatorId"));
+    private final List<String> createdByColumns = new ArrayList<>(List.of("createdBy", "creatorId", "createBy"));
 
     private final List<String> updatedAtColumns = new ArrayList<>(List.of("updatedAt", "updateTime"));
 
-    private final List<String> updatedByColumns = new ArrayList<>(List.of("updatedBy", "updaterId"));
+    private final List<String> updatedByColumns = new ArrayList<>(List.of("updatedBy", "updaterId", "updateBy"));
 
 }

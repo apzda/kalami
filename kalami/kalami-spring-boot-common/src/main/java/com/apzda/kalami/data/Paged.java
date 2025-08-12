@@ -51,11 +51,6 @@ public class Paged<T> implements PageResult<T> {
     private long total = -1;
 
     /**
-     * 总页数。-1表示未计算总页数
-     */
-    private long pages = -1;
-
-    /**
      * 数据集
      */
     private List<T> records = Collections.emptyList();
@@ -67,7 +62,6 @@ public class Paged<T> implements PageResult<T> {
         this.current = 1;
         this.size = records.size();
         this.total = records.size();
-        this.pages = 1;
         this.records = records;
     }
 
@@ -75,7 +69,6 @@ public class Paged<T> implements PageResult<T> {
         current = page.getNumber();
         size = page.getSize();
         total = page.getTotalElements();
-        pages = page.getTotalPages();
         records = page.getContent();
     }
 
@@ -94,7 +87,6 @@ public class Paged<T> implements PageResult<T> {
         paged.current = page.getNumber();
         paged.size = page.getSize();
         paged.total = page.getTotalElements();
-        paged.pages = page.getTotalPages();
 
         return paged;
     }

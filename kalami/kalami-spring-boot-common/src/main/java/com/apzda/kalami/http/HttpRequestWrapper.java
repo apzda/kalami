@@ -25,6 +25,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.springframework.data.util.Lazy;
 import org.springframework.http.HttpEntity;
 import org.springframework.util.CollectionUtils;
@@ -75,7 +76,7 @@ public class HttpRequestWrapper {
         }
         else {
             this.delegate = request;
-            this.multipart = StringUtils.startsWithIgnoreCase(httpServletRequest.getContentType(), "multipart/");
+            this.multipart = Strings.CI.startsWith(httpServletRequest.getContentType(), "multipart/");
             val cachingWrapper = request.attribute(CONTENT_CACHING_REQUEST_WRAPPER);
             if (cachingWrapper.isEmpty()) {
                 requestWrapper = new ContentCachingRequestWrapper(httpServletRequest);

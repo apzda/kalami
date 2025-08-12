@@ -51,10 +51,8 @@ public abstract class PageUtil {
     public static <T> Paged<T> from(@Nonnull IPage<?> page, @Nonnull List<T> records) {
         val result = new Paged<T>();
         result.setCurrent(page.getCurrent());
-        result.setPages(page.getPages());
         result.setTotal(page.getTotal());
         result.setSize(page.getSize());
-
         result.setRecords(records);
 
         return result;
@@ -72,7 +70,6 @@ public abstract class PageUtil {
             @Nonnull Function<? super List<E>, ? extends List<T>> converter) {
         val result = new Paged<T>();
         result.setCurrent(page.getCurrent());
-        result.setPages(page.getPages());
         result.setTotal(page.getTotal());
         result.setSize(page.getSize());
         result.setRecords(converter.apply(records));

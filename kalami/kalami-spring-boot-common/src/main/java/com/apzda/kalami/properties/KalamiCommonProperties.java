@@ -14,38 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.apzda.kalami.data;
+package com.apzda.kalami.properties;
 
-import jakarta.annotation.Nonnull;
-
-import java.util.List;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * @author ninggf (windywany@gmail.com)
  * @version 1.0.0
  */
-public interface PageResult<T> {
+@Data
+@ConfigurationProperties(prefix = "kalami.common")
+public class KalamiCommonProperties {
 
     /**
-     * 当前页码
+     * 域名
      */
-    long getCurrent();
-
-    long getSize();
-
-    /**
-     * 数据总数。-1表示未计算总数
-     */
-    long getTotal();
-
-    /**
-     * 总页数。-1表示未计算总页数
-     */
-    default long getPages() {
-        return this.getSize() == 0 ? 1 : (long) Math.ceil(this.getTotal() * 1.0 / this.getSize());
-    }
-
-    @Nonnull
-    List<T> getRecords();
+    private String baseUrl;
 
 }

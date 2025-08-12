@@ -146,7 +146,7 @@ public class Response<T> implements Serializable {
 
     public Response<T> withType(MessageType errType) {
         this.type = errType;
-        return (Response<T>) this;
+        return this;
     }
 
     @JsonIgnore

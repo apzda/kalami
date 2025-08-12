@@ -35,7 +35,7 @@ public abstract class AbstractPageQuery implements PageRequest {
     /**
      * 分页大小,默认10
      */
-    private int pageSize = 10;
+    private int pageSize = 20;
 
     /**
      * 排序(格式:field1|asc,field2|desc[,...])
@@ -62,7 +62,7 @@ public abstract class AbstractPageQuery implements PageRequest {
     }
 
     public void setPageNumber(int pageNumber) {
-        this.pageNumber = pageNumber;
+        this.pageNumber = pageNumber <= 0 ? 1 : pageNumber;
     }
 
     @Override
@@ -71,7 +71,7 @@ public abstract class AbstractPageQuery implements PageRequest {
     }
 
     public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
+        this.pageSize = pageSize <= 0 ? 20 : Math.min(100, pageSize);
     }
 
     @Override

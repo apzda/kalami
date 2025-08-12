@@ -18,6 +18,7 @@ package com.apzda.kalami.error;
 
 import com.apzda.kalami.data.error.AbstractBaseError;
 import com.apzda.kalami.i18n.I18n;
+import jakarta.annotation.Nonnull;
 
 import java.io.Serializable;
 
@@ -27,12 +28,18 @@ import java.io.Serializable;
  */
 public class ResourceNotFoundError extends AbstractBaseError {
 
-    public ResourceNotFoundError(String resource, Serializable id) {
-        if (resource != null && resource.startsWith("{") && resource.endsWith("}")) {
+    public ResourceNotFoundError(@Nonnull String resource, Serializable id) {
+        if (resource.startsWith("{") && resource.endsWith("}")) {
             resource = resource.substring(1, resource.length() - 1);
             resource = I18n.t(resource);
         }
-        this.args = new Object[] { resource, id };
+
+        if (id == null) {
+            this.args = new Object[] { resource, "" };
+        }
+        else {
+            this.args = new Object[] { resource, String.format("(%s)", id) };
+        }
     }
 
     @Override
