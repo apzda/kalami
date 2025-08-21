@@ -122,6 +122,16 @@ public class JsonTool {
     }
 
     /**
+     * 将JSON解析出来的对象转换为指定类型的对象
+     */
+    public static <T> T parseObject(Object object, Class<T> clazz) {
+        if (object == null) {
+            return null;
+        }
+        return OBJECT_MAPPER.convertValue(object, clazz);
+    }
+
+    /**
      * 将Map对象转换为JsonNode
      *
      * @param map Map对象

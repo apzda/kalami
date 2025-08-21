@@ -89,6 +89,11 @@ public class DeviceAuthenticationDetails implements AuthenticationDetails {
                 meta.put(key.toLowerCase().substring(4), value.get(0));
             }
         });
+
+        if (!meta.containsKey("APPID")) {
+            meta.put("APPID", "db");
+        }
+
         return meta;
     }
 

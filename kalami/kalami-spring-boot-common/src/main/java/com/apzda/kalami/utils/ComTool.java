@@ -1319,6 +1319,16 @@ public class ComTool {
     }
 
     /**
+     * 随机生成一个范围内的数字
+     *
+     * @param minInclude 包含
+     * @param maxExclude 不包含
+     */
+    public static BigDecimal randomBigDecimal(BigDecimal minInclude, BigDecimal maxExclude) {
+        return RandomUtil.randomBigDecimal(minInclude, maxExclude);
+    }
+
+    /**
      * 抽奖
      *
      * @param drawList 抽取的概率列表

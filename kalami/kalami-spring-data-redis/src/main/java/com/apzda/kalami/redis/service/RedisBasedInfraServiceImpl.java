@@ -157,7 +157,8 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
     public void remove(@NonNull String id) {
         val key = "storage." + id;
         try {
-            stringRedisTemplate.delete(key);
+            val deleted = stringRedisTemplate.delete(key);
+            log.debug("removed key: {} - {}", key, deleted);
         }
         catch (Exception e) {
             log.warn("Cannot delete TempData({}): {}", id, e.getMessage());
