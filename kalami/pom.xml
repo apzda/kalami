@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>3.5.4</version>
+        <version>3.5.5</version>
         <relativePath/>
     </parent>
     <groupId>com.apzda.cloud</groupId>
@@ -42,11 +42,12 @@
         <project.build.propertiesEncoding>UTF-8</project.build.propertiesEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <resource.delimiter>@</resource.delimiter>
-        <!-- deploy & install -->
+        <!-- feature gates -->
+        <ccSkip>true</ccSkip>
         <maven.deploy.skip>false</maven.deploy.skip>
         <maven.install.skip>false</maven.install.skip>
         <!-- third libraries -->
-        <spring-boot.version>3.5.4</spring-boot.version>
+        <spring-boot.version>3.5.5</spring-boot.version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
         <seata-cloud.version>2023.0.3.3</seata-cloud.version>
         <jasypt.version>3.0.5</jasypt.version>
@@ -54,20 +55,18 @@
         <mybatis-spring.version>3.0.4</mybatis-spring.version>
         <mybatis-plus.version>3.5.12</mybatis-plus.version>
         <shardingsphere.version>5.5.2</shardingsphere.version>
-        <hutool.version>5.8.37</hutool.version>
+        <hutool.version>5.8.39</hutool.version>
         <guava.version>33.4.8-jre</guava.version>
         <commons-collections4.version>4.5.0</commons-collections4.version>
         <sentinel.version>1.8.8</sentinel.version>
         <druid.version>1.2.27</druid.version>
-        <seata.version>2.4.0</seata.version>
+        <seata.version>2.5.0</seata.version>
         <rocketmq-client.version>5.0.8</rocketmq-client.version>
         <easyexcel.version>4.0.3</easyexcel.version>
-        <commons-io.version>2.19.0</commons-io.version>
+        <commons-io.version>2.20.0</commons-io.version>
         <jasypt.version>3.0.5</jasypt.version>
         <imageio.version>3.11.0</imageio.version>
         <commons-lang3.version>3.18.0</commons-lang3.version>
-        <!-- feature gates -->
-        <ccSkip>true</ccSkip>
         <!-- plugins -->
         <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
         <lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
