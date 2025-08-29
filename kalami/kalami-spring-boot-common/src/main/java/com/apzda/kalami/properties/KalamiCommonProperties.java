@@ -17,6 +17,8 @@
 package com.apzda.kalami.properties;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -31,5 +33,13 @@ public class KalamiCommonProperties {
      * 域名
      */
     private String baseUrl;
+
+    public String theFullUrl(String path) {
+        if (StringUtils.isBlank(baseUrl)) {
+            throw new IllegalStateException("baseUrl is blank");
+        }
+
+        return Strings.CS.appendIfMissing(baseUrl, "/") + Strings.CS.removeStart(path, "/");
+    }
 
 }

@@ -17,6 +17,7 @@
 package com.apzda.kalami.redis.service;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.crypto.digest.DigestUtil;
 import com.apzda.kalami.data.TempData;
 import com.apzda.kalami.service.CounterService;
 import com.apzda.kalami.service.DistributedLockService;
@@ -28,6 +29,7 @@ import com.google.common.cache.LoadingCache;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
@@ -58,7 +60,7 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
 
     private final ObjectMapper objectMapper;
 
-    private final LoadingCache<String, Boolean> idCache = CacheBuilder.newBuilder()
+    private final LoadingCache<@NotNull String, @NotNull Boolean> idCache = CacheBuilder.newBuilder()
         .expireAfterAccess(Duration.ofSeconds(10))
         .build(new CacheLoader<>() {
             @Override
@@ -90,7 +92,7 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
     public int count(@NonNull String key, long interval) {
         Assert.isTrue(interval > 0, "interval = " + interval + " <= 0");
         val a = DateUtil.currentSeconds() / interval;
-        val id = "counter." + key + "." + a;
+        val id = "counter." + DigestUtil.md5Hex(key + "." + a);
         try {
             var increment = stringRedisTemplate.opsForValue().increment(id);
             if (increment == null) {
@@ -99,7 +101,7 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
             return Math.toIntExact(increment);
         }
         catch (Exception e) {
-            log.warn("Cannot get try count for {} - {}", id, e.getMessage());
+            log.warn("Cannot get try count for {} - {}", key, e.getMessage());
             return Integer.MAX_VALUE;
         }
         finally {
@@ -107,14 +109,14 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
                 idCache.getUnchecked(id + "@" + interval);
             }
             catch (Exception e) {
-                log.warn("Cannot set TTL of the key of counter '{}': {}", id, e.getMessage());
+                log.warn("Cannot set TTL of the key of counter '{}': {}", key, e.getMessage());
             }
         }
     }
 
     @Override
     public <T extends TempData> T save(@NonNull String id, @NonNull T data) throws Exception {
-        val key = "storage." + id;
+        val key = "storage." + DigestUtil.md5Hex(id);
         val ca = objectMapper.writeValueAsString(data);
         val expired = data.getExpireTime();
         if (expired == null || expired.isZero() || expired.isNegative()) {
@@ -129,7 +131,7 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
     @Override
     @NonNull
     public <T extends TempData> Optional<T> load(@NonNull String id, @NonNull Class<T> tClass) {
-        val key = "storage." + id;
+        val key = "storage." + DigestUtil.md5Hex(id);
         try {
             val value = stringRedisTemplate.opsForValue().get(key);
             if (StringUtils.isNotBlank(value)) {
@@ -144,7 +146,7 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
 
     @Override
     public boolean exist(@NonNull String id) {
-        val key = "storage." + id;
+        val key = "storage." + DigestUtil.md5Hex(id);
         try {
             return stringRedisTemplate.hasKey(key);
         }
@@ -155,7 +157,7 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
 
     @Override
     public void remove(@NonNull String id) {
-        val key = "storage." + id;
+        val key = "storage." + DigestUtil.md5Hex(id);
         try {
             val deleted = stringRedisTemplate.delete(key);
             log.debug("removed key: {} - {}", key, deleted);
@@ -171,7 +173,7 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
             return;
         }
 
-        val key = "storage." + id;
+        val key = "storage." + DigestUtil.md5Hex(id);
         try {
             stringRedisTemplate.expire(key, duration);
         }
@@ -183,7 +185,7 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
     @Override
     @NonNull
     public Duration getTtl(@NonNull String id) {
-        val key = "storage." + id;
+        val key = "storage." + DigestUtil.md5Hex(id);
         try {
             val expire = stringRedisTemplate.getExpire(key, TimeUnit.SECONDS);
             return Duration.ofSeconds(expire);
@@ -197,14 +199,14 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
     @Override
     @NonNull
     public Lock getLock(@NonNull String id) {
-        val key = "lock." + id;
+        val key = "lock." + DigestUtil.md5Hex(id);
 
         return locks.computeIfAbsent(key, k -> new SimpleRedisLock(k, stringRedisTemplate));
     }
 
     @Override
     public void deleteLock(@NonNull String id) {
-        val key = "lock." + id;
+        val key = "lock." + DigestUtil.md5Hex(id);
         locks.remove(key);
     }
 

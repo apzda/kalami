@@ -334,6 +334,51 @@ public class ComTool {
     }
 
     /**
+     * 空集合或null集合
+     */
+    public static boolean isEmpty(Object obj) {
+        return ObjectUtil.isEmpty(obj);
+    }
+
+    /**
+     * 非空集合或非null集合
+     */
+    public static boolean isNotEmpty(Object obj) {
+        return ObjectUtil.isNotEmpty(obj);
+    }
+
+    /**
+     * 如果原对象为空则返回默认对象
+     *
+     * @param obj        原对象
+     * @param defaultObj 默认对象
+     */
+    public static <T> T defaultIfNull(T obj, T defaultObj) {
+        return ObjectUtil.defaultIfNull(obj, defaultObj);
+    }
+
+    /**
+     * 如果原字符串为空则返回默认字符串
+     *
+     * @param str          原字符串
+     * @param defaultValue 默认字符串
+     */
+    public static <T extends CharSequence> T defaultIfBlank(T str, T defaultValue) {
+        return ObjectUtil.defaultIfBlank(str, defaultValue);
+    }
+
+    /**
+     * 是否包含字符串
+     *
+     * @param str       原字符串
+     * @param searchStr 查找的字符串
+     * @return 当原字符串中包含所查找的字符串时返回true
+     */
+    public static boolean contains(CharSequence str, CharSequence searchStr) {
+        return StrUtil.contains(str, searchStr);
+    }
+
+    /**
      * 非空字符串
      *
      * @param str 字符串
