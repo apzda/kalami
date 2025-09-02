@@ -49,7 +49,7 @@
         <!-- third libraries -->
         <spring-boot.version>3.5.5</spring-boot.version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
-        <seata-cloud.version>2023.0.3.3</seata-cloud.version>
+        <seata-cloud.version>2025.0.0.0-preview</seata-cloud.version>
         <jasypt.version>3.0.5</jasypt.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <mybatis-spring.version>3.0.4</mybatis-spring.version>
