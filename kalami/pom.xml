@@ -52,7 +52,7 @@
         <seata-cloud.version>2023.0.3.3</seata-cloud.version>
         <jasypt.version>3.0.5</jasypt.version>
         <mapstruct.version>1.6.3</mapstruct.version>
-        <mybatis-spring.version>3.0.4</mybatis-spring.version>
+        <mybatis-spring.version>4.0.0</mybatis-spring.version>
         <mybatis-plus.version>3.5.14</mybatis-plus.version>
         <shardingsphere.version>5.5.2</shardingsphere.version>
         <hutool.version>5.8.41</hutool.version>
