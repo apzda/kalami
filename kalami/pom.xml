@@ -47,7 +47,7 @@
         <maven.deploy.skip>false</maven.deploy.skip>
         <maven.install.skip>false</maven.install.skip>
         <!-- third libraries -->
-        <spring-boot.version>3.5.8</spring-boot.version>
+        <spring-boot.version>4.0.0</spring-boot.version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
         <seata-cloud.version>2023.0.3.3</seata-cloud.version>
         <jasypt.version>3.0.5</jasypt.version>
