@@ -63,7 +63,7 @@
         <seata.version>2.5.0</seata.version>
         <rocketmq-client.version>5.0.8</rocketmq-client.version>
         <easyexcel.version>4.0.3</easyexcel.version>
-        <commons-io.version>2.20.0</commons-io.version>
+        <commons-io.version>2.21.0</commons-io.version>
         <jasypt.version>3.0.5</jasypt.version>
         <imageio.version>3.11.0</imageio.version>
         <commons-lang3.version>3.18.0</commons-lang3.version>
