@@ -47,9 +47,18 @@ public class CurrentUserParamResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(@NonNull MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
             @NonNull NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+        final boolean required;
+        val ann = parameter.getParameterAnnotation(CurrentUser.Required.class);
+        if (ann != null) {
+            required = ann.value();
+        }
+        else {
+            required = true;
+        }
 
         val currentUser = CurrentUserProvider.getCurrentUser();
-        if (currentUser.getUid() == null || !currentUser.isAuthenticated()) {
+
+        if (!currentUser.isAuthenticated() && required) {
             throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
         }
 

@@ -32,7 +32,7 @@ import java.util.Map;
 @Mapper
 public interface DictItemMapper {
 
-    @Select("SELECT ${labelField} from ${table} WHERE ${idField} = #{id}")
+    @Select("SELECT ${labelField} from ${table} WHERE ${idField} = #{id} LIMIT 1")
     String getDictItemLabel(String table, String idField, String id, String labelField);
 
     default String getDictLabel(String table, String idField, String labelField, String id) {
@@ -94,7 +94,7 @@ public interface DictItemMapper {
         return getFromDictItemTableIgnoreDeleted(table, codeField, code, idField, delField, delValue, labelField);
     }
 
-    @Select("SELECT * from ${table} WHERE ${idField} = #{id}")
+    @Select("SELECT * from ${table} WHERE ${idField} = #{id} LIMIT 1")
     Map<String, Object> getDictRow(String table, String idField, String id);
 
 }

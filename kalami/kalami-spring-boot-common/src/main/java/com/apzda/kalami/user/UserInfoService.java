@@ -16,6 +16,7 @@
  */
 package com.apzda.kalami.user;
 
+import com.apzda.kalami.agent.Agent;
 import com.apzda.kalami.tenant.Organization;
 import com.apzda.kalami.tenant.Tenant;
 
@@ -32,5 +33,7 @@ public interface UserInfoService {
     Tenant getTenant(Serializable tenantId);
 
     Organization getOrganization(Serializable orgId);
+
+    Agent getAgent(Serializable agentId);
 
 }

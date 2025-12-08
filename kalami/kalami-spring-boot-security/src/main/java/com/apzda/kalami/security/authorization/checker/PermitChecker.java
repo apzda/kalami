@@ -18,8 +18,8 @@
 package com.apzda.kalami.security.authorization.checker;
 
 import com.apzda.kalami.security.utils.SecurityUtils;
+import jakarta.annotation.Nonnull;
 import lombok.val;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 
@@ -32,12 +32,12 @@ import java.util.Map;
 public class PermitChecker implements AuthorizationChecker {
 
     @Override
-    public @NotNull String name() {
+    public @Nonnull String name() {
         return "Permit";
     }
 
     @Override
-    public void check(@NotNull Authentication authentication, @NotNull Map<String, Object> args) {
+    public void check(@Nonnull Authentication authentication, @Nonnull Map<String, Object> args) {
         val arg = args.get("arg");
 
         if (arg instanceof String perm && !SecurityUtils.hasPermission(perm)) {

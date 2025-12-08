@@ -21,6 +21,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
+import java.util.Map;
+
 /**
  * @author ninggf (windywany@gmail.com)
  * @since 2025/05/16
@@ -126,6 +128,14 @@ public interface JwtToken {
             flag |= ENABLED_FLAG;
         }
         return String.valueOf(flag);
+    }
+
+    default Map<String, Object> getExtra() {
+        return null;
+    }
+
+    default void setExtra(Map<String, Object> extra) {
+
     }
 
     default String authId() {

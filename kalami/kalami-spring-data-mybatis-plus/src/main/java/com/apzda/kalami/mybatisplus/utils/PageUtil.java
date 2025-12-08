@@ -17,6 +17,7 @@
 package com.apzda.kalami.mybatisplus.utils;
 
 import com.apzda.kalami.data.PageRequest;
+import com.apzda.kalami.data.PageResult;
 import com.apzda.kalami.data.Paged;
 import com.apzda.kalami.utils.StringUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -63,6 +64,14 @@ public abstract class PageUtil {
             @Nonnull Function<? super List<E>, ? extends List<T>> converter) {
 
         return from(page, page.getRecords(), converter);
+    }
+
+    @Nonnull
+    public static <T, E> Paged<T> from(@Nonnull PageResult<E> page,
+            @Nonnull Function<? super List<E>, ? extends List<T>> converter) {
+        Page<E> p = new Page<>(page.getCurrent(), page.getSize(), page.getTotal());
+
+        return from(p, page.getRecords(), converter);
     }
 
     @Nonnull

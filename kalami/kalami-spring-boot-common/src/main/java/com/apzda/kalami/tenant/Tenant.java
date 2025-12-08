@@ -16,14 +16,18 @@
  */
 package com.apzda.kalami.tenant;
 
+import cn.hutool.core.date.DatePattern;
 import com.apzda.kalami.data.ITree;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -43,11 +47,17 @@ public class Tenant implements ITree<String>, Serializable {
 
     private String pid;
 
+    private String agentId;
+
     private String code;
 
     private String name;
 
     private String shortName;
+
+    private String contact;
+
+    private String address;
 
     private String logo;
 
@@ -58,6 +68,10 @@ public class Tenant implements ITree<String>, Serializable {
     private Boolean current;
 
     private String status;
+
+    @JsonFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    private LocalDateTime createTime;
 
     private List<Tenant> children;
 

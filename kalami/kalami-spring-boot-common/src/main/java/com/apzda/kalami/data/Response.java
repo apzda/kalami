@@ -17,6 +17,7 @@
 
 package com.apzda.kalami.data;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.apzda.kalami.data.error.IError;
 import com.apzda.kalami.i18n.I18n;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -156,6 +157,26 @@ public class Response<T> implements Serializable {
         }
 
         return errCode == 0;
+    }
+
+    @JsonIgnore
+    public boolean isEmpty() {
+        return ObjectUtil.isEmpty(this.data);
+    }
+
+    @JsonIgnore
+    public boolean isNotEmpty() {
+        return ObjectUtil.isNotEmpty(this.data);
+    }
+
+    @JsonIgnore
+    public boolean isNull() {
+        return ObjectUtil.isNull(this.data);
+    }
+
+    @JsonIgnore
+    public boolean isNotNull() {
+        return ObjectUtil.isNotNull(this.data);
     }
 
     @Nonnull

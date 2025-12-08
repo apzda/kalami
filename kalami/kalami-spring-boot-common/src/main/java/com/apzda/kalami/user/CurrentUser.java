@@ -22,6 +22,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.lang.annotation.*;
 import java.util.Collections;
 import java.util.Map;
 
@@ -60,6 +61,15 @@ public class CurrentUser implements Serializable {
             return Collections.emptyMap();
         }
         return meta;
+    }
+
+    @Target(ElementType.PARAMETER)
+    @Retention(RetentionPolicy.RUNTIME)
+    @Documented
+    public @interface Required {
+
+        boolean value() default true;
+
     }
 
 }

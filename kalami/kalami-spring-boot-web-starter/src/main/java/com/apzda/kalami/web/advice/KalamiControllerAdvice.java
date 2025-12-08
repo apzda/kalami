@@ -379,7 +379,7 @@ public class KalamiControllerAdvice {
 
         @SuppressWarnings("unchecked")
         public <R> R unwrap(Class<R> rClazz, @Nullable Throwable error) {
-            if (error != null) {
+            if (error != null && log.isDebugEnabled()) {
                 log.debug("Exception Resolved[{}]: {}", error.getClass().getName(), error.getMessage());
             }
 

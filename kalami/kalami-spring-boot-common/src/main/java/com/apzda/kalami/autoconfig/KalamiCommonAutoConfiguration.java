@@ -18,6 +18,8 @@ package com.apzda.kalami.autoconfig;
 
 import com.apzda.kalami.i18n.I18n;
 import com.apzda.kalami.properties.KalamiCommonProperties;
+import com.apzda.kalami.service.ICommonService;
+import com.apzda.kalami.utils.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -25,6 +27,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.context.MessageSourceProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,6 +58,12 @@ public class KalamiCommonAutoConfiguration {
         }
 
         return I18n.messageSource;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "CommonUtils")
+    static ICommonService utils(ApplicationContext applicationContext) {
+        return new CommonUtils(applicationContext);
     }
 
 }

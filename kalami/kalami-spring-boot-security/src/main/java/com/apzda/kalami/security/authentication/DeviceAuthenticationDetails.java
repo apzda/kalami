@@ -17,10 +17,10 @@
 package com.apzda.kalami.security.authentication;
 
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.http.HttpHeaders;
 
@@ -89,10 +89,6 @@ public class DeviceAuthenticationDetails implements AuthenticationDetails {
                 meta.put(key.toLowerCase().substring(4), value.get(0));
             }
         });
-
-        if (!meta.containsKey("APPID")) {
-            meta.put("APPID", "db");
-        }
 
         return meta;
     }

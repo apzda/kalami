@@ -22,6 +22,7 @@ import com.apzda.kalami.data.domain.TenantAware;
 import com.apzda.kalami.tenant.TenantManager;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -37,16 +38,28 @@ import org.springframework.stereotype.Component;
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE + 20) // 在SubscribedAuthorityAspect之后
 @RequiredArgsConstructor
+@Slf4j
 public class TenantAwareQueryAspect {
 
-    @Around("@within(org.springframework.web.bind.annotation.RestController) && execution(public * *..controller.admin.*.*(..))")
+    @Around("@within(org.springframework.stereotype.Controller) && execution(public * *..controller..*(..))")
     public Object proceed(@Nonnull ProceedingJoinPoint pjp) throws Throwable {
+        return _proceed(pjp);
+    }
+
+    @Around("@within(org.springframework.web.bind.annotation.RestController) && execution(public * *..controller..*(..))")
+    public Object proceed2(@Nonnull ProceedingJoinPoint pjp) throws Throwable {
+        return _proceed(pjp);
+    }
+
+    private Object _proceed(@Nonnull ProceedingJoinPoint pjp) throws Throwable {
         for (Object argValue : pjp.getArgs()) {
-            if (argValue instanceof TenantAware<?>) {
+            if (argValue instanceof TenantAware<?> ta
+                    && (ta.getTenantId() == null || !TenantManager.isMyTenant(ta.getTenantId()))) {
                 BeanUtil.setFieldValue(argValue, "tenantId", TenantManager.tenantId("-1"));
             }
 
-            if (argValue instanceof OrganizationAware<?>) {
+            if (argValue instanceof OrganizationAware<?> oa
+                    && (oa.getOrgId() == null || !TenantManager.isMyOrg(oa.getOrgId()))) {
                 BeanUtil.setFieldValue(argValue, "orgId", TenantManager.orgId());
             }
         }

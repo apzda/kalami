@@ -16,6 +16,7 @@
  */
 package com.apzda.kalami.user;
 
+import com.apzda.kalami.agent.Agent;
 import com.apzda.kalami.context.KalamiContextHolder;
 import com.apzda.kalami.dictionary.Transformer;
 import com.apzda.kalami.tenant.Organization;
@@ -77,6 +78,11 @@ public class UidTransformer implements Transformer<Serializable> {
 
         @Override
         public Organization getOrganization(Serializable orgId) {
+            return null;
+        }
+
+        @Override
+        public Agent getAgent(Serializable agentId) {
             return null;
         }
 

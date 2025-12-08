@@ -16,12 +16,15 @@
  */
 package com.apzda.kalami.user;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.io.Serializable;
 
 /**
  * @author ninggf (windywany@gmail.com)
  * @version 1.0.0
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public interface UserInfo {
 
     Serializable getUid();

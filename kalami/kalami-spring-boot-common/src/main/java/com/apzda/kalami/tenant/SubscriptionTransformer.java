@@ -27,7 +27,7 @@ public class SubscriptionTransformer implements Transformer<String> {
 
     @Override
     public Object transform(String value, boolean all) {
-        val subs = TenantManager.availableSubscriptions();
+        val subs = TenantManager.availableSubscriptions(true);
 
         val obj = subs.get(value);
         if (obj == null) {

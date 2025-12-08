@@ -82,6 +82,10 @@ public class AuthorizationLogicCustomizer {
         return has("!TENANT");
     }
 
+    public boolean notTenant() {
+        return has("!TENANT");
+    }
+
     public boolean isMine(@Nullable Object owner) {
         if (!isAuthed() || owner == null) {
             return false;

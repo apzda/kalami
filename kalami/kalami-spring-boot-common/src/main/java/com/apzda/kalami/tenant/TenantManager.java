@@ -26,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -209,14 +210,85 @@ public abstract class TenantManager implements InitializingBean {
 
     @Nonnull
     public static Map<String, Subscription> availableSubscriptions() {
+        return availableSubscriptions(false);
+    }
+
+    @Nonnull
+    public static Map<String, Subscription> availableSubscriptions(boolean all) {
         if (tenantManager == null) {
             return Collections.emptyMap();
         }
-        val subscriptions = tenantManager.getAvailableSubscriptions();
+        val subscriptions = tenantManager.getAvailableSubscriptions(all);
         if (subscriptions == null) {
             return Collections.emptyMap();
         }
         return subscriptions;
+    }
+
+    public static boolean isMyTenant(String tenantId) {
+        if (tenantId == null) {
+            return false;
+        }
+        if (currentTenantId("-1").equals("0")) {
+            return true;
+        }
+
+        val ids = TenantManager.tenantIds();
+        if (ids.length == 0) {
+            return false;
+        }
+
+        return Arrays.asList(ids).contains(tenantId);
+    }
+
+    public static boolean isMyTenant(Serializable tenantId) {
+        if (tenantId == null) {
+            return false;
+        }
+        if (currentTenantId("-1").equals("0")) {
+            return true;
+        }
+
+        val ids = TenantManager.tenantIds();
+        if (ids.length == 0) {
+            return false;
+        }
+
+        return Arrays.asList(ids).contains(tenantId.toString());
+    }
+
+    public static boolean isMyOrg(String orgId) {
+        if (orgId == null) {
+            return false;
+        }
+        if (currentTenantId("-1").equals("0")) {
+            return true;
+        }
+        val ids = TenantManager.organizationIds();
+        if (ids.length == 0) {
+            return false;
+        }
+
+        return Arrays.asList(ids).contains(orgId);
+    }
+
+    public static boolean isMyOrg(Serializable orgId) {
+        if (orgId == null) {
+            return false;
+        }
+        if (currentTenantId("-1").equals("0")) {
+            return true;
+        }
+        val ids = TenantManager.organizationIds();
+        if (ids.length == 0) {
+            return false;
+        }
+
+        return Arrays.asList(ids).contains(orgId.toString());
+    }
+
+    public static boolean isMyOrg(Long orgId) {
+        return isMyOrg(String.valueOf(orgId));
     }
 
     @Nonnull
@@ -241,7 +313,7 @@ public abstract class TenantManager implements InitializingBean {
         return Collections.emptyMap();
     }
 
-    protected Map<String, Subscription> getAvailableSubscriptions() {
+    protected Map<String, Subscription> getAvailableSubscriptions(boolean all) {
         return Collections.emptyMap();
     }
 

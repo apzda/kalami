@@ -16,12 +16,23 @@
  */
 package com.apzda.kalami.data.enums;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+
 /**
  * @author ninggf (windywany@gmail.com)
  * @version 1.0.0
  */
+@Getter
 public enum DatePeriod {
 
-    DAY, WEEK, MONTH, QUARTER, HALF, YEAR;
+    DAY("日"), WEEK("周"), MONTH("月"), QUARTER("季度"), HALF("半年"), YEAR("年");
+
+    @JsonProperty
+    private final String text;
+
+    DatePeriod(String text) {
+        this.text = text;
+    }
 
 }

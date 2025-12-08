@@ -29,7 +29,6 @@ import com.google.common.cache.LoadingCache;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
@@ -60,7 +59,7 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
 
     private final ObjectMapper objectMapper;
 
-    private final LoadingCache<@NotNull String, @NotNull Boolean> idCache = CacheBuilder.newBuilder()
+    private final LoadingCache<String, Boolean> idCache = CacheBuilder.newBuilder()
         .expireAfterAccess(Duration.ofSeconds(10))
         .build(new CacheLoader<>() {
             @Override

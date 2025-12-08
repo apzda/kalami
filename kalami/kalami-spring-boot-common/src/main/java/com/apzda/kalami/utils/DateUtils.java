@@ -21,6 +21,7 @@ import cn.hutool.core.date.LocalDateTimeUtil;
 import com.apzda.kalami.data.enums.DatePeriod;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import lombok.val;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,7 +40,7 @@ public abstract class DateUtils {
      * @return 一天的开始时间
      */
     @Nullable
-    public static LocalDateTime beginOfDate(LocalDate date) {
+    public static LocalDateTime beginOfDay(LocalDate date) {
         if (date == null) {
             return null;
         }
@@ -48,12 +49,11 @@ public abstract class DateUtils {
 
     /**
      * 将时间调到<code>date</code>所在天的结束时间
-     *
      * @param date 日期
      * @return 一天的结束时间
      */
     @Nullable
-    public static LocalDateTime endOfDate(LocalDate date) {
+    public static LocalDateTime endOfDay(LocalDate date) {
         if (date == null) {
             return null;
         }
@@ -67,7 +67,7 @@ public abstract class DateUtils {
      * @return 一天的开始时间
      */
     @Nullable
-    public static LocalDateTime beginOfDate(LocalDateTime date) {
+    public static LocalDateTime beginOfDay(LocalDateTime date) {
         if (date == null) {
             return null;
         }
@@ -81,7 +81,7 @@ public abstract class DateUtils {
      * @return 一天的结束时间
      */
     @Nullable
-    public static LocalDateTime endOfDate(LocalDateTime date) {
+    public static LocalDateTime endOfDay(LocalDateTime date) {
         if (date == null) {
             return null;
         }
@@ -95,12 +95,12 @@ public abstract class DateUtils {
      * @return 一天的开始时间
      */
     @Nullable
-    public static LocalDateTime beginOfDate(Date date) {
+    public static LocalDateTime beginOfDay(Date date) {
         if (date == null) {
             return null;
         }
 
-        return DateUtils.beginOfDate(DateUtil.toLocalDateTime(date));
+        return DateUtils.beginOfDay(DateUtil.toLocalDateTime(date));
     }
 
     /**
@@ -110,12 +110,12 @@ public abstract class DateUtils {
      * @return 一天的结束时间
      */
     @Nullable
-    public static LocalDateTime endOfDate(Date date) {
+    public static LocalDateTime endOfDay(Date date) {
         if (date == null) {
             return null;
         }
 
-        return DateUtils.endOfDate(DateUtil.toLocalDateTime(date));
+        return DateUtils.endOfDay(DateUtil.toLocalDateTime(date));
     }
 
     /**
@@ -125,8 +125,8 @@ public abstract class DateUtils {
      * @param instant Long类型Date（Unix时间戳）
      * @return 一天的开始时间
      */
-    public static LocalDateTime beginOfDate(long instant) {
-        return beginOfDate(DateUtil.date(instant).toLocalDateTime());
+    public static LocalDateTime beginOfDay(long instant) {
+        return beginOfDay(DateUtil.date(instant).toLocalDateTime());
     }
 
     /**
@@ -136,8 +136,8 @@ public abstract class DateUtils {
      * @param instant Long类型Date（Unix时间戳）
      * @return 一天的结束时间
      */
-    public static LocalDateTime endOfDate(long instant) {
-        return endOfDate(DateUtil.date(instant).toLocalDateTime());
+    public static LocalDateTime endOfDay(long instant) {
+        return endOfDay(DateUtil.date(instant).toLocalDateTime());
     }
 
     /**
@@ -208,6 +208,37 @@ public abstract class DateUtils {
             case HALF -> date.plusMonths(6);
             case YEAR -> date.plusYears(1);
         };
+    }
+
+    /**
+     * date所在月的最后一天
+     */
+    public static LocalDate endOfMonth(@Nonnull LocalDate date) {
+        val m = date.getMonthValue();
+
+        val ld = switch (m) {
+            case 2 -> date.isLeapYear() ? 29 : 28;
+            case 4, 6, 9, 11 -> 30;
+            default -> 31;
+        };
+
+        return LocalDateTimeUtil.parseDate(LocalDateTimeUtil.format(date, "yyyyMM") + ld, "yyyyMMdd");
+    }
+
+    /**
+     * date所在月的最后一天
+     */
+    public static LocalDateTime endOfMonth(@Nonnull LocalDateTime date) {
+        val m = date.getMonthValue();
+
+        val ld = switch (m) {
+            case 2 -> date.toLocalDate().isLeapYear() ? 29 : 28;
+            case 4, 6, 9, 11 -> 30;
+            default -> 31;
+        };
+
+        return LocalDateTimeUtil.parse(LocalDateTimeUtil.format(date, "yyyyMM") + ld + " 23:59:59",
+                "yyyyMMdd HH:mm:ss");
     }
 
 }
