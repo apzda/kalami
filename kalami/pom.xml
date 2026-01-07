@@ -335,7 +335,7 @@
         <url>https://github.com/apzda/kalami</url>
         <connection>scm:git@github.com:apzda/kalami.git</connection>
         <developerConnection>scm:git:git@github.com:apzda/kalami.git</developerConnection>
-        <tag>v1.0.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
