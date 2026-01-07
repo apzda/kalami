@@ -19,6 +19,33 @@
         <maven.deploy.skip>true</maven.deploy.skip>
         <maven.install.skip>true</maven.install.skip>
     </properties>
+    <issueManagement>
+        <system>Github Issue</system>
+        <url>https://github.com/apzda/kalami/issues</url>
+    </issueManagement>
+
+    <ciManagement>
+        <system>Github Actions</system>
+        <url>https://github.com/apzda/kalami/actions</url>
+    </ciManagement>
+
+    <licenses>
+        <license>
+            <name>GPLv3</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Ning Guangfeng</name>
+            <email>windywany@gmail.com</email>
+            <roles>
+                <role>Maintainer</role>
+            </roles>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
 
     <scm>
         <url>https://github.com/apzda/kalami</url>
