@@ -60,7 +60,7 @@
         <sentinel.version>1.8.8</sentinel.version>
         <druid.version>1.2.27</druid.version>
         <seata.version>2.5.0</seata.version>
-        <rocketmq-client.version>5.0.8</rocketmq-client.version>
+        <rocketmq-client.version>5.1.0</rocketmq-client.version>
         <easyexcel.version>4.0.3</easyexcel.version>
         <commons-io.version>2.21.0</commons-io.version>
         <jasypt.version>3.0.5</jasypt.version>
