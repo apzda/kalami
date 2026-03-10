@@ -10,6 +10,7 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
+.flattened-pom.xml
 # local configuration files
 *-local.y*
 *-local.properties
