@@ -1,0 +1,133 @@
+hajimi:
+  ucenter:
+    security:
+      resources:
+        sys:
+          name: 平台应用
+          service: sys
+          children:
+            resource:
+              name: 资源
+              description: 用户可以使用/访问的资源
+              privileges:
+                "[*:sys.resource.*]":
+                  name: 管理资源
+                "[r:sys.resource.*]":
+                  name: 查看资源
+            oauth:
+              name: 登录认证
+              description: 通过系统支持的认证方式登录的用户
+              actions: r
+              privileges:
+                "[r:sys.oauth.*]":
+                  name: 查看登录认证
+              children:
+                session:
+                  name: 登录会话
+                  description: 用户登录登录会话
+                  actions: r,k
+                  privileges:
+                    "[r:sys.oauth.session.*]":
+                      name: 查看登录会话
+                    "[k:sys.oauth.session]":
+                      name: 踢下线
+            agent:
+              name: 代理
+              description: 系统代理商
+              actions: c,r,u,d,rt=配置费率
+              privileges:
+                "[*:sys.agent.*]":
+                  name: 管理代理商
+                "[r:sys.agent.*]":
+                  name: 查看代理商
+            account:
+              name: 资产账户
+              children:
+                trans:
+                  name: 交易
+                withdraw:
+                  name: 提现
+                  actions: r=查看,a=审核,p=打款
+        core:
+          name: 基础服务
+          service: core
+          children:
+            user:
+              name: 账号
+              description: 可以登录到系统的所有用户
+              actions: c,r,u,d
+              privileges:
+                "[*:core.user.*]":
+                  name: 管理账号
+                "[r:core.user.*]":
+                  name: 查看账号
+            tenant:
+              name: 租户/机构
+              description: 系统租户/机构
+              actions: c,r,u,d
+              privileges:
+                "[*:core.tenant.*]":
+                  name: 管理租户/机构
+                "[r:core.tenant.*]":
+                  name: 查看租户/机构
+            dept:
+              name: 部门
+              description: 租户/机构的下级单位
+              actions: c,r,u,d
+              privileges:
+                "[*:core.dept.*]":
+                  name: 管理部门
+                "[r:core.dept.*]":
+                  name: 查看部门
+            role:
+              name: 角色
+              description: 系统角色
+              privileges:
+                "[*:core.role.*]":
+                  name: 管理角色
+                "[r:core.role.*]":
+                  name: 查看角色
+            privilege:
+              name: 权限
+              description: 系统权限
+              privileges:
+                "[*:core.privilege.*]":
+                  name: 管理权限
+                "[r:core.privilege.*]":
+                  name: 查看权限
+      privileges:
+        RUNAS:
+          name: 协作者
+          description: "能够切换到他人身份并协助其进行操作"
+          type: authority
+          service: sys
+        SIMPLE_USER:
+          name: 普通用户
+          type: authority
+          service: sys
+          description: "允许协作者以协助自己进行操作"
+        TENANT:
+          name: 租户
+          type: authority
+          description: 租户的用户
+          service: sys
+      roles:
+        sa:
+          name: 超级管理员
+          description: 拥有至高权限
+        agent:
+          name: 代理商
+          description: 系统代理商
+        tsa:
+          name: 租户管理员
+          description: 租户的超级管理员
+          leasable: true
+          privileges:
+            - "*:*"
+    tenant:
+      service:
+        sys:
+          name: 平台应用
+          leasable: false
+        core:
+          name: 基础应用

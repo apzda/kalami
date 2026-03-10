@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2026 the original author or authors.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.apzda.hajimi.ucenter.infrastructure.mybatis.mapper.RbacResourceMapper">
+    <delete id="deleteResourceById">
+        DELETE
+        FROM `ucenter_rbac_resource`
+        WHERE id = #{id}
+    </delete>
+
+    <select id="listByPid" resultType="com.apzda.hajimi.ucenter.domain.entity.RbacResourceEntity">
+        SELECT UCR.*,PCR.name AS parentName,PCR.rid AS parentRid,
+        (SELECT COUNT(*)
+        FROM ucenter_rbac_resource SUCR
+        WHERE SUCR.deleted = 0
+        AND SUCR.pid = UCR.id) AS childrenCount
+        FROM ucenter_rbac_resource UCR
+        LEFT JOIN ucenter_rbac_resource PCR ON PCR.id = UCR.pid
+        WHERE UCR.pid = #{pid}
+        AND UCR.deleted = 0
+        <if test="param!=null and param.rid!=null and param.rid!=''">
+            AND UCR.rid = #{param.rid}
+        </if>
+        <if test="param!=null and param.name!=null and param.name!=''">
+            AND UCR.name LIKE #{param.name}
+        </if>
+    </select>
+    <select id="listByPidAndServices" resultType="com.apzda.hajimi.ucenter.domain.entity.RbacResourceEntity">
+        SELECT UCR.*,PCR.name AS parentName,PCR.rid AS parentRid,
+        (SELECT COUNT(*)
+        FROM ucenter_rbac_resource SUCR
+        WHERE SUCR.deleted = 0
+        AND SUCR.pid = UCR.id) AS childrenCount
+        FROM ucenter_rbac_resource UCR
+        LEFT JOIN ucenter_rbac_resource PCR ON PCR.id = UCR.pid
+        WHERE UCR.pid = #{pid}
+        AND UCR.deleted = 0
+        <foreach collection="service" item="svc" open="AND UCR.service IN (" close=")" separator="," nullable="true">
+            #{svc}
+        </foreach>
+    </select>
+</mapper>

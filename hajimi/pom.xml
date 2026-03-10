@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.apzda.cloud</groupId>
+        <artifactId>kalami-spring-boot-parent</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../kalami/kalami-spring-boot-parent</relativePath>
+    </parent>
+
+    <groupId>com.apzda.hajimi</groupId>
+    <artifactId>hajimi</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Hajimi Common Modules</name>
+    <description>聚合多个极小型通用的基础模块</description>
+
+    <modules>
+        <module>hajimi-auditor</module>
+        <module>hajimi-captcha</module>
+        <module>hajimi-configure</module>
+        <module>hajimi-douyin</module>
+        <module>hajimi-sms</module>
+        <module>hajimi-storage</module>
+        <module>hajimi-supervisor</module>
+        <module>hajimi-ucenter</module>
+        <module>hajimi-weixin</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- ### storage ### -->
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-storage-core</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-storage-client</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-storage-service</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <!-- backends -->
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-storage-backend-fs</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-storage-backend-alioss</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-storage-backend-txcos</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-storage-backend-minio</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-storage-backend-hwobs</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <!-- plugins -->
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-storage-plugin-resize</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-storage-plugin-watermark</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <!-- ### sms ### -->
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-sms-core</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-sms-client</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-sms-service</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-sms-alidayu</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <!-- ### auditor ### -->
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-auditor-client</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-auditor-service</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <!-- ### captcha ### -->
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-captcha-core</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-captcha-client</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-captcha-service</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <!-- ### configure ### -->
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-configure-core</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-configure-client</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-configure-service</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <!-- ### supervisor ### -->
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-supervisor</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <!-- ### weixin ### -->
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-weixin-common</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-weixin-ma</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-weixin-mp</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <!-- ### douyin ### -->
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-douyin</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <!-- ### ucenter ### -->
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-ucenter-common</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-ucenter-client</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-ucenter-service</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <!-- extensions -->
+            <dependency>
+                <groupId>com.apzda.hajimi.ucenter</groupId>
+                <artifactId>wx-mini-app</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi.ucenter</groupId>
+                <artifactId>hajimi-sms-auth</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

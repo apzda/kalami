@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.apzda.hajimi</groupId>
+        <artifactId>hajimi-ucenter</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>hajimi-ucenter-service</artifactId>
+    <properties>
+        <googleauth.version>1.5.0</googleauth.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.apzda.hajimi</groupId>
+            <artifactId>hajimi-ucenter-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.apzda.cloud</groupId>
+            <artifactId>kalami-spring-boot-xka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.apzda.cloud</groupId>
+            <artifactId>kalami-spring-boot-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.apzda.cloud</groupId>
+            <artifactId>kalami-spring-data-mybatis-plus</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- 基础服务: 异步任务 -->
+        <dependency>
+            <groupId>com.apzda.hajimi</groupId>
+            <artifactId>hajimi-supervisor</artifactId>
+        </dependency>
+        <!-- 微服务：验证码 -->
+        <dependency>
+            <groupId>com.apzda.hajimi</groupId>
+            <artifactId>hajimi-captcha-client</artifactId>
+        </dependency>
+        <!-- 微服务: 审计 -->
+        <dependency>
+            <groupId>com.apzda.hajimi</groupId>
+            <artifactId>hajimi-auditor-client</artifactId>
+        </dependency>
+        <!-- 配置服务 -->
+        <dependency>
+            <groupId>com.apzda.hajimi</groupId>
+            <artifactId>hajimi-configure-client</artifactId>
+        </dependency>
+        <!-- 三方 -->
+        <dependency>
+            <groupId>com.warrenstrange</groupId>
+            <artifactId>googleauth</artifactId>
+            <version>${googleauth.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- unit test -->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot3-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>mysql</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- runtime -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+</project>

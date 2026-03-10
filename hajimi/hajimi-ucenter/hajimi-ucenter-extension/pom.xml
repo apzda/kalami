@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.apzda.hajimi</groupId>
+        <artifactId>hajimi-ucenter</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.apzda.hajimi.ucenter</groupId>
+    <artifactId>hajimi-ucenter-extension</artifactId>
+    <packaging>pom</packaging>
+    <name>Ucenter Extensions</name>
+    <description>用户中心的内置扩展</description>
+    <modules>
+        <module>wx-mini-app</module>
+        <module>hajimi-sms-auth</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.apzda.hajimi.ucenter</groupId>
+                <artifactId>wx-mini-app</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.hajimi.ucenter</groupId>
+                <artifactId>hajimi-sms-auth</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

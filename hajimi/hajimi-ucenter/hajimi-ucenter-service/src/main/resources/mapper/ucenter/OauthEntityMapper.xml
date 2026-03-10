@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2026 the original author or authors.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.apzda.hajimi.ucenter.infrastructure.mybatis.mapper.OauthEntityMapper">
+
+    <select id="pageQuery" resultType="com.apzda.hajimi.ucenter.domain.vo.OAuthVo">
+        SELECT UO.*,
+        UOS.user_agent AS last_user_agent,
+        UOS.ip AS last_ip,
+        UOS.login_time AS last_login_time,
+        UOS.device AS last_device
+        FROM ucenter_oauth UO
+        LEFT JOIN LATERAL ( SELECT oauth_id, IT.login_time, IT.device, IT.ip, IT.user_agent
+        FROM ucenter_oauth_session IT
+        WHERE IT.oauth_id = UO.id
+        ORDER BY id DESC
+        LIMIT 1) UOS ON UOS.oauth_id = UO.id
+        WHERE UO.deleted = 0
+        <if test="q.uid!=null and q.uid!=''">
+            AND UO.uid = #{q.uid}
+        </if>
+        <if test="q.provider!=null and q.provider!=''">
+            AND UO.provider = #{q.provider}
+        </if>
+        <if test="q.appId!=null and q.appId!=''">
+            AND UO.app_id = #{q.appId}
+        </if>
+        <if test="q.openId!=null and q.openId!=''">
+            AND UO.open_id = #{q.openId}
+        </if>
+        <if test="q.unionId!=null and q.unionId!=''">
+            AND UO.union_id = #{q.unionId}
+        </if>
+        <if test="q.ip!=null and q.ip!=''">
+            AND UO.ip = #{q.ip}
+        </if>
+        <if test="q.device!=null and q.device!=''">
+            AND UO.device = #{q.device}
+        </if>
+        <if test="q.createStartTime!=null">
+            <![CDATA[ AND UO.created_at >= #{q.createStartTime} ]]>
+        </if>
+        <if test="q.createEndTime!=null">
+            <![CDATA[ AND UO.created_at <= #{q.createEndTime} ]]>
+        </if>
+        <if test="q.loginStartTime!=null">
+            <![CDATA[ AND UO.login_time >= #{q.loginStartTime} ]]>
+        </if>
+        <if test="q.loginEndTime!=null">
+            <![CDATA[ AND UO.login_time <= #{q.loginEndTime} ]]>
+        </if>
+        <if test="q.spm!=null and q.spm!=''">
+            AND UO.spm LIKE #{q.spm}
+        </if>
+    </select>
+    <select id="getByAppAndProviderAndOpenId" resultType="com.apzda.hajimi.ucenter.domain.entity.OauthEntity">
+        SELECT *
+        FROM ucenter_oauth
+        WHERE app_id = #{app}
+          AND provider = #{provider}
+          AND open_id = #{openId}
+    </select>
+</mapper>

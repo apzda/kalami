@@ -1,0 +1,13 @@
+kalami:
+  sms:
+    providers:
+      - id: test
+    default-provider: test
+    templates:
+      test:
+        content: "{code}"
+        template-id: TPL123
+        interval: 180s
+logging:
+  level:
+    com.apzda.hajimi: trace

@@ -1,0 +1,17 @@
+hajimi:
+  ucenter:
+    security:
+      resources:
+        core:
+          name: 基础服务
+          service: core
+          children:
+            audit:
+              name: 审计日志
+              description: 系统审计日志
+              actions: r,d
+              privileges:
+                "[*:core.audit.*]":
+                  name: 管理审计日志
+                "[r:core.audit.*]":
+                  name: 查看审计日志

@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: ucenter
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSSXXX} %highlight(%-5level) --- [%magenta(${spring.application.name})] [%15.15t] %cyan(%-40.40logger{64}):%-4L - %X{tid} - %msg%n"

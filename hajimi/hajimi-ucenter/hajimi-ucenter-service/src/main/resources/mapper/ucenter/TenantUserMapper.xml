@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2026 the original author or authors.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.apzda.hajimi.ucenter.infrastructure.mybatis.mapper.TenantUserMapper">
+
+    <select id="users" resultType="com.apzda.hajimi.ucenter.domain.vo.TenantUserVo">
+        SELECT
+        UTU.*,
+        UT.parent_id,
+        UT.agent_id,
+        UT.name,
+        UT.phone,
+        UT.contact,
+        UT.address,
+        UT.code,
+        UT.short_name,
+        UT.logo,
+        UT.status,
+        UT.uid as sa_id
+        FROM ucenter_tenant_user UTU
+        INNER JOIN ucenter_tenant UT ON UTU.tenant_id = UT.id
+        WHERE UTU.deleted = 0
+        <if test="q.tenantId!=null">
+            AND UT.parent_id = #{q.tenantId}
+        </if>
+        <if test="q.tid != null">
+            AND UTU.tenant_id = #{q.tid}
+        </if>
+        <if test="q.id != null and q.id != ''">
+            AND UT.id = #{q.id}
+        </if>
+        <if test="q.name != null and q.name != ''">
+            AND UT.name LIKE CONCAT('%',#{q.name},'%')
+        </if>
+        <if test="q.code != null and q.code != ''">
+            AND UT.code = #{q.code}
+        </if>
+        <if test="q.uid != null and q.uid != ''">
+            AND UTU.uid = #{q.uid}
+        </if>
+        <if test="q.status != null">
+            AND UT.status = #{q.status}
+        </if>
+        <if test="q.createStartTime!=null">
+            <![CDATA[ AND UTU.created_at >= #{q.createStartTime} ]]>
+        </if>
+        <if test="q.createEndTime!=null">
+            <![CDATA[ AND UTU.created_at <= #{q.createEndTime} ]]>
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2026 the original author or authors.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.apzda.hajimi.ucenter.infrastructure.mybatis.mapper.RoleChildrenMapper">
+    <delete id="deleteByRoleId">
+        DELETE
+        FROM ucenter_role_children
+        WHERE role_id = #{roleId}
+    </delete>
+    <delete id="deleteByChildId">
+        DELETE
+        FROM ucenter_role_children
+        WHERE child_id = #{childId}
+    </delete>
+    <delete id="deleteByRoleIdAndChildId">
+        DELETE
+        FROM ucenter_role_children
+        WHERE role_id = #{roleId}
+          AND child_id = #{childId}
+    </delete>
+    <select id="listChildren" resultType="com.apzda.hajimi.ucenter.domain.entity.RoleEntity">
+        SELECT R.*
+        FROM ucenter_role_children URC
+                 INNER JOIN ucenter_role R ON R.id = URC.child_id
+        WHERE URC.role_id = #{roleId}
+          AND URC.tenant_id = #{tenantId}
+          AND URC.deleted = 0
+    </select>
+    <select id="parents" resultType="com.apzda.hajimi.ucenter.domain.entity.RoleEntity">
+        SELECT UR.*
+        FROM ucenter_role_children RC
+                 LEFT JOIN ucenter_role UR ON UR.id = RC.role_id
+        WHERE child_id = #{childId}
+          AND UR.deleted = 0
+    </select>
+    <select id="existsByRoleIdAndChildId" resultType="java.lang.Boolean">
+        SELECT COUNT(*)
+        FROM ucenter_role_children
+        WHERE role_id = #{roleId}
+          AND child_id = #{childId}
+    </select>
+</mapper>

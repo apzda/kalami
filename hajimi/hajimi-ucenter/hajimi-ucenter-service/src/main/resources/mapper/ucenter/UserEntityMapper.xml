@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2026 the original author or authors.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.apzda.hajimi.ucenter.infrastructure.mybatis.mapper.UserEntityMapper">
+
+    <select id="pageQuery" resultType="com.apzda.hajimi.ucenter.domain.entity.UserEntity">
+        SELECT UU.* FROM ucenter_tenant_user UTU
+        INNER JOIN ucenter_user UU ON UU.id = UTU.uid
+        WHERE UTU.deleted = 0 AND UU.deleted = 0
+        <if test="q.id != null">
+            AND UTU.uid = #{q.id}
+        </if>
+        <if test="q.tenantId == null">
+            AND UTU.tenant_id = '-1'
+        </if>
+        <if test="q.tenantId != null">
+            AND UTU.tenant_id = #{q.tenantId}
+        </if>
+        <if test="q.phone != null and q.phone != ''">
+            AND UU.phone = #{q.phone}
+        </if>
+        <if test="q.email != null and q.email != ''">
+            AND UU.phone = #{q.email}
+        </if>
+        <if test="q.status != null">
+            AND UU.status = #{q.status}
+        </if>
+        <if test="q.username != null and q.username != ''">
+            AND UU.username LIKE CONCAT(#{q.status},'%')
+        </if>
+    </select>
+</mapper>
