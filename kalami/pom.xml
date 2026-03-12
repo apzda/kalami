@@ -17,6 +17,7 @@
     <url>https://kalami.apzda.com</url>
 
     <modules>
+        <module>kalami-common-openapi</module>
         <module>kalami-spring-boot-parent</module>
         <module>kalami-spring-boot-security</module>
         <module>kalami-spring-boot-security-core</module>
@@ -86,6 +87,11 @@
             <dependency>
                 <groupId>com.apzda.cloud</groupId>
                 <artifactId>kalami-spring-boot-common</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apzda.cloud</groupId>
+                <artifactId>kalami-common-openapi</artifactId>
                 <version>1.0.0</version>
             </dependency>
             <dependency>

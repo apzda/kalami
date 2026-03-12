@@ -10,6 +10,8 @@ kalami:
     jwt-key: 123456789
     excludes:
       - /login
+      - /open/**
+
 logging:
   level:
     web: debug

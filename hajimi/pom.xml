@@ -27,6 +27,7 @@
         <module>hajimi-supervisor</module>
         <module>hajimi-ucenter</module>
         <module>hajimi-weixin</module>
+        <module>hajimi-openapi</module>
     </modules>
 
     <dependencyManagement>
@@ -209,6 +210,13 @@
             <dependency>
                 <groupId>com.apzda.hajimi.ucenter</groupId>
                 <artifactId>hajimi-sms-auth</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <!-- ### openapi ### -->
+            <dependency>
+                <groupId>com.apzda.hajimi</groupId>
+                <artifactId>hajimi-openapi</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
         </dependencies>
