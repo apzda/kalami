@@ -18,6 +18,7 @@
     <modules>
         <module>api-gateway</module>
         <module>api-server</module>
+        <module>snailjob-server</module>
     </modules>
 
     <dependencyManagement>

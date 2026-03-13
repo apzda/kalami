@@ -67,6 +67,7 @@
         <jasypt.version>3.0.5</jasypt.version>
         <imageio.version>3.11.0</imageio.version>
         <commons-lang3.version>3.18.0</commons-lang3.version>
+        <snail-job.version>1.9.0</snail-job.version>
         <!-- plugins -->
         <flatten-maven-plugin.version>1.3.0</flatten-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
@@ -143,12 +144,6 @@
                 <groupId>com.apzda.cloud</groupId>
                 <artifactId>kalami-spring-boot-xxljob-starter</artifactId>
                 <version>1.0.0</version>
-            </dependency>
-            <!-- jetbrains -->
-            <dependency>
-                <groupId>org.jetbrains</groupId>
-                <artifactId>annotations</artifactId>
-                <version>26.0.2-1</version>
             </dependency>
             <!-- spring boot & cloud -->
             <dependency>
@@ -297,7 +292,24 @@
                 <artifactId>shardingsphere-jdbc</artifactId>
                 <version>${shardingsphere.version}</version>
             </dependency>
+            <!-- snail-job -->
+            <dependency>
+                <groupId>com.aizuda</groupId>
+                <artifactId>snail-job-client-retry-core</artifactId>
+                <version>${snail-job.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aizuda</groupId>
+                <artifactId>snail-job-client-job-core</artifactId>
+                <version>${snail-job.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aizuda</groupId>
+                <artifactId>snail-job-server-starter</artifactId>
+                <version>${snail-job.version}</version>
+            </dependency>
 
+            <!-- testcontainers -->
             <dependency>
                 <groupId>org.testcontainers</groupId>
                 <artifactId>testcontainers</artifactId>

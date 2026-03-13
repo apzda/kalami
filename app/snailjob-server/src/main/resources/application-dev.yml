@@ -1,0 +1,24 @@
+server:
+  port: 8989
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3307/snailjob_db?useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: Abc12332!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 50
+      minimum-idle: 5
+      idle-timeout: 0
+      max-lifetime: 1500000
+      pool-name: MyHikariCP
+
+logging:
+  level:
+    root: info
+    com.aizuda.snailjob: debug
+    com.aizuda.snailjob.common: info
+    com.aizuda.snailjob.template: info
+    com.aizuda.snailjob.server: info

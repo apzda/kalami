@@ -1,0 +1,49 @@
+server:
+  port: 80
+  servlet:
+    context-path: /snail-job
+
+spring:
+  application:
+    name: snailjob-server
+  web:
+    resources:
+      static-locations: classpath:admin/
+
+mybatis-plus:
+  type-aliases-package: com.aizuda.snailjob.template.datasource.persistence.po
+  global-config:
+    banner: false
+    db-config:
+      where-strategy: NOT_EMPTY
+      capital-mode: false
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  configuration:
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+
+snail-job:
+  server-port: 17888
+  server-token: SJ_H8HGGmrX3QBVTfsAAG2mcKH3SR8bCLsL
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSSXXX} %highlight(%-5level) --- [%magenta(${spring.application.name})] [%15.15t] %cyan(%-40.40logger{164}):%-4L - %X{tid} - %msg%n"
+
+### when running in a container
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+logging:
+  pattern:
+    console: |-
+      %d{"yyyy-MM-dd'T'HH:mm:ss.SSSXXX",UTC} [%thread] %level %logger{64}:%L - %X{tid} - %msg%n
+
+management:
+  server:
+    port: 8081
