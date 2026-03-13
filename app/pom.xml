@@ -6,14 +6,13 @@
     <parent>
         <groupId>com.apzda.cloud</groupId>
         <artifactId>kalami-spring-boot-parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.0-SNAPSHOT</version>
         <relativePath>../kalami/kalami-spring-boot-parent</relativePath>
     </parent>
 
     <groupId>com.apzda.app</groupId>
     <artifactId>app</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-SNAPSHOT</version>
 
     <modules>
         <module>api-gateway</module>
