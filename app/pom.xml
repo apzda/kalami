@@ -12,6 +12,7 @@
 
     <groupId>com.apzda.app</groupId>
     <artifactId>app</artifactId>
+    <name>Application Modules</name>
     <packaging>pom</packaging>
 
     <dependencyManagement>
