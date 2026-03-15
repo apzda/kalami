@@ -11,8 +11,8 @@
     <description>Kalami, a Toy based on Spring Boot and Spring Cloud.</description>
     <url>https://kalami.apzda.com</url>
     <modules>
+        <module>server</module>
         <module>app</module>
-        <module>app-modules</module>
         <module>hajimi</module>
         <module>kalami</module>
     </modules>

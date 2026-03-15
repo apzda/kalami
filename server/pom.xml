@@ -11,14 +11,22 @@
     </parent>
 
     <groupId>com.apzda.app</groupId>
-    <artifactId>app-modules</artifactId>
+    <artifactId>server</artifactId>
+    <name>Servers</name>
+
     <packaging>pom</packaging>
+
+    <modules>
+        <module>api-gateway</module>
+        <module>api-server</module>
+        <module>snailjob-server</module>
+    </modules>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.apzda.hajimi</groupId>
-                <artifactId>hajimi</artifactId>
+                <groupId>com.apzda.app</groupId>
+                <artifactId>app</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
                 <type>pom</type>
                 <scope>import</scope>
