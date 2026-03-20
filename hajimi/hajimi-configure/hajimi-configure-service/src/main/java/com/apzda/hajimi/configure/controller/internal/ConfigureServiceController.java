@@ -44,7 +44,7 @@ import java.util.List;
  * @version 1.0.0
  */
 @Slf4j
-@RestController("mashupConfigureServiceController")
+@RestController("sysConfigureServiceController")
 @RequiredArgsConstructor
 @Primary
 public class ConfigureServiceController implements ConfigureService {

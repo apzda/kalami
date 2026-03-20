@@ -28,7 +28,7 @@ public class CaptchaBaseNameResolver implements BaseNameResolver {
 
     @Override
     public List<String> getBaseNames() {
-        return List.of("mashup.captcha.messages");
+        return List.of("sys.captcha.messages");
     }
 
 }

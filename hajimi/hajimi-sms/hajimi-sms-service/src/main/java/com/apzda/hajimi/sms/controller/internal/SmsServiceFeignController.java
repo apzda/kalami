@@ -49,7 +49,7 @@ import java.time.Duration;
  * @version 1.0.0
  */
 @Slf4j
-@RestController("mashupSmsServiceFeignController")
+@RestController("sysSmsServiceFeignController")
 @RequiredArgsConstructor
 @Primary
 public class SmsServiceFeignController implements SmsService, InitializingBean {

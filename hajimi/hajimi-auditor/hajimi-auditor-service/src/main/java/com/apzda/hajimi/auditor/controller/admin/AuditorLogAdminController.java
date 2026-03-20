@@ -39,8 +39,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @author ninggf (windywany@gmail.com)
  * @version 1.0.0
  */
-@RestController("mashupAuditorLogAdminController")
-@RequestMapping("/wk/mashup/audit")
+@RestController("sysAuditorLogAdminController")
+@RequestMapping("/wk/sys/audit")
 @RequiredArgsConstructor
 public class AuditorLogAdminController {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 the original author or authors.
+ * Copyright 2025-2026 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 package com.apzda.kalami.security.context;
 
 import io.micrometer.context.ThreadLocalAccessor;
-import org.springframework.lang.NonNull;
+import jakarta.annotation.Nonnull;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -32,7 +32,7 @@ public class AuthenticationThreadLocalAccessor implements ThreadLocalAccessor<Se
     public static final String KEY = "kalami.security";
 
     @Override
-    @NonNull
+    @Nonnull
     public Object key() {
         return KEY;
     }
@@ -43,7 +43,7 @@ public class AuthenticationThreadLocalAccessor implements ThreadLocalAccessor<Se
     }
 
     @Override
-    public void setValue(@NonNull SecurityContext context) {
+    public void setValue(@Nonnull SecurityContext context) {
         SecurityContextHolder.setContext(context);
     }
 

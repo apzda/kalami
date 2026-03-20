@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 the original author or authors.
+ * Copyright 2025-2026 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -65,7 +64,7 @@ public class JwtContextRepository implements SecurityContextRepository {
 
     @Override
     @SuppressWarnings("deprecation")
-    public SecurityContext loadContext(@NonNull HttpRequestResponseHolder requestResponseHolder) {
+    public SecurityContext loadContext(@Nonnull HttpRequestResponseHolder requestResponseHolder) {
         val request = requestResponseHolder.getRequest();
         log.trace("Start loading SecurityContext");
 

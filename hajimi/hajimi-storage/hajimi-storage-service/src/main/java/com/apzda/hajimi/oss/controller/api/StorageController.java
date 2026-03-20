@@ -59,7 +59,7 @@ import java.util.concurrent.CompletableFuture;
  * @version 1.0.0
  */
 @Slf4j
-@RestController("mashupOssStorageController")
+@RestController("sysOssStorageController")
 @RequestMapping("/oss/")
 @RequiredArgsConstructor
 public class StorageController implements InitializingBean {

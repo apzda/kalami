@@ -21,13 +21,14 @@ import com.apzda.hajimi.sms.client.dto.SendSmsDTO;
 import com.apzda.hajimi.sms.core.dto.Variable;
 import com.apzda.hajimi.sms.test.TestApp;
 import com.apzda.kalami.web.autoconfig.KalamiWebAutoConfiguration;
+import com.baomidou.mybatisplus.test.autoconfigure.MybatisPlusTest;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.data.redis.AutoConfigureDataRedis;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.json.AutoConfigureJson;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -40,10 +41,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author ninggf (windywany@gmail.com)
  * @version 1.0.0
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@MybatisPlusTest
 @ContextConfiguration(classes = TestApp.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @AutoConfigureDataRedis
+@AutoConfigureJson
 @ImportAutoConfiguration(KalamiWebAutoConfiguration.class)
 @Testcontainers(parallel = true)
 @Sql(value = { "file:../../schema/mysql/1.0.0.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)

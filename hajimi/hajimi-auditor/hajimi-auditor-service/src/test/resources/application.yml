@@ -1,3 +1,7 @@
 logging:
   level:
     com.apzda.hajimi: trace
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver

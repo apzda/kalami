@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
  * @author ninggf (windywany@gmail.com)
  * @version 1.0.0
  */
-@TableName(value = "mashup_supervisor_task")
+@TableName(value = "sys_supervisor_task")
 @Data
 public class SupervisorTask {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 the original author or authors.
+ * Copyright 2023-2026 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@
 package com.apzda.kalami.web.i18n;
 
 import com.apzda.kalami.context.KalamiContextHolder;
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.val;
 import org.apache.commons.lang3.LocaleUtils;
-import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
@@ -40,7 +40,7 @@ public class LocaleResolverImpl extends CookieLocaleResolver {
 
     private final AcceptHeaderLocaleResolver acceptHeaderLocaleResolver;
 
-    public LocaleResolverImpl(@NonNull String defaultLang, @NonNull Locale defaultLocale) {
+    public LocaleResolverImpl(@Nonnull String defaultLang, @Nonnull Locale defaultLocale) {
         super(defaultLang);
         setDefaultLocale(defaultLocale);
         acceptHeaderLocaleResolver = new AcceptHeaderLocaleResolver();
@@ -50,7 +50,7 @@ public class LocaleResolverImpl extends CookieLocaleResolver {
     }
 
     @Override
-    @NonNull
+    @Nonnull
     public Locale resolveLocale(@Nullable HttpServletRequest request) {
         if (request == null) {
             return defaultLocale;

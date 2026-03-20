@@ -31,13 +31,17 @@ import org.springframework.context.annotation.PropertySources;
 @MapperScan("com.apzda.hajimi.auditor.domain.mapper")
 //@formatter:off
 @ComponentScan({
-    "com.apzda.hajimi.auditor.service",
     "com.apzda.hajimi.auditor.controller",
     "com.apzda.hajimi.auditor.domain"
 })
+@PropertySources({
+    @PropertySource(
+        name = "hji-audit-security-config",
+        value = "classpath*:hji-audit-security-config.yml",
+        factory = YamlPropertySourceFactory.class)
+    }
+)
 //@formatter:on
-@PropertySources({ @PropertySource(name = "hji-audit-security-config",
-        value = "classpath*:hji-audit-security-config.yml", factory = YamlPropertySourceFactory.class) })
 public class AuditorServiceConfiguration {
 
 }

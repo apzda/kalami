@@ -18,9 +18,9 @@ package com.apzda.hajimi.oss.controller.function;
 
 import cn.hutool.core.util.URLUtil;
 import com.apzda.hajimi.oss.config.StorageManager;
+import jakarta.annotation.Nonnull;
 import lombok.val;
 import org.springframework.http.CacheControl;
-import org.springframework.lang.NonNull;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.servlet.function.HandlerFunction;
 import org.springframework.web.servlet.function.ServerRequest;
@@ -40,9 +40,9 @@ public class DownloadHandlerFunction implements HandlerFunction<ServerResponse> 
         this.pathPrefix = pathPrefix;
     }
 
-    @NonNull
+    @Nonnull
     @Override
-    public ServerResponse handle(@NonNull ServerRequest request) throws Exception {
+    public ServerResponse handle(@Nonnull ServerRequest request) throws Exception {
         try {
             val backend = request.param("backend").orElse(null);
             val file = request.path().replaceFirst(pathPrefix, "/");

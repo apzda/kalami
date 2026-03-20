@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 the original author or authors.
+ * Copyright 2025-2026 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +19,11 @@ package com.apzda.kalami.security.web.resolver;
 
 import com.apzda.kalami.user.CurrentUser;
 import com.apzda.kalami.user.CurrentUserProvider;
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
-import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.client.HttpClientErrorException;
@@ -40,13 +40,13 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class CurrentUserParamResolver implements HandlerMethodArgumentResolver {
 
     @Override
-    public boolean supportsParameter(@NonNull MethodParameter parameter) {
+    public boolean supportsParameter(@Nonnull MethodParameter parameter) {
         return parameter.getParameter().getType().isAssignableFrom(CurrentUser.class);
     }
 
     @Override
-    public Object resolveArgument(@NonNull MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
-            @NonNull NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(@Nonnull MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
+            @Nonnull NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         final boolean required;
         val ann = parameter.getParameterAnnotation(CurrentUser.Required.class);
         if (ann != null) {

@@ -30,7 +30,6 @@ import com.apzda.kalami.data.MapConfig;
 import jakarta.annotation.Nonnull;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.NonNull;
 
 import java.io.ByteArrayOutputStream;
 import java.time.Duration;
@@ -54,7 +53,7 @@ public class ImageCaptchaProvider implements CaptchaProvider<Map<String, Object>
     private CodeGenerator codeGenerator;
 
     @Override
-    public void init(@NonNull CaptchaStorage storage, @NonNull Map<String, Object> config) throws Exception {
+    public void init(@Nonnull CaptchaStorage storage, @Nonnull Map<String, Object> config) throws Exception {
         this.captchaStorage = storage;
         this.props = new MapConfig<>(config);
         if (props.getBool("test-mode", false)) {

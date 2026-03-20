@@ -16,9 +16,9 @@
  */
 package com.apzda.kalami.common.openapi.modem;
 
-import jakarta.annotation.Nonnull;
 import com.apzda.kalami.common.openapi.Request;
 import com.apzda.kalami.common.openapi.Response;
+import jakarta.annotation.Nonnull;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 

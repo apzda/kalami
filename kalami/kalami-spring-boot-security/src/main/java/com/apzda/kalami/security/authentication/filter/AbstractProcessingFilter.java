@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 the original author or authors.
+ * Copyright 2025-2026 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.Ordered;
-import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -63,7 +62,7 @@ public abstract class AbstractProcessingFilter extends AbstractAuthenticationPro
     }
 
     @Override
-    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@Nonnull ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
         this.objectMapper = applicationContext.getBean(ObjectMapper.class);
     }
@@ -79,7 +78,7 @@ public abstract class AbstractProcessingFilter extends AbstractAuthenticationPro
         }
     }
 
-    @NonNull
+    @Nonnull
     protected <R> R readRequestBody(HttpServletRequest request, Class<R> rClass) throws IOException {
         val req = new ContentCachingRequestWrapper(request);
         try (val reader = req.getReader()) {
@@ -87,7 +86,7 @@ public abstract class AbstractProcessingFilter extends AbstractAuthenticationPro
         }
     }
 
-    @NonNull
+    @Nonnull
     protected <R> R readRequestBody(HttpServletRequest request, TypeReference<R> rClass) throws IOException {
         val req = new ContentCachingRequestWrapper(request);
         try (val reader = req.getReader()) {

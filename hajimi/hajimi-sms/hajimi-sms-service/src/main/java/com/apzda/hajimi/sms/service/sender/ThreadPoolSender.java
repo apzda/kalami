@@ -21,10 +21,10 @@ import com.apzda.hajimi.sms.core.SmsSender;
 import com.apzda.hajimi.sms.core.dto.Sms;
 import com.apzda.hajimi.sms.core.event.SmsEvent;
 import com.apzda.kalami.data.MapConfig;
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.lang.NonNull;
 
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -61,7 +61,7 @@ public class ThreadPoolSender implements SmsSender<Map<String, Object>>, ThreadF
     }
 
     @Override
-    public void send(@NonNull Sms sms, @NonNull final ApplicationEventPublisher publisher) {
+    public void send(@Nonnull Sms sms, @Nonnull final ApplicationEventPublisher publisher) {
         val phone = sms.getPhone();
         val vendor = sms.getVendor();
         val smsProvider = enabledSmsProviders.get(vendor);
@@ -112,7 +112,7 @@ public class ThreadPoolSender implements SmsSender<Map<String, Object>>, ThreadF
     }
 
     @Override
-    public Thread newThread(@NonNull Runnable r) {
+    public Thread newThread(@Nonnull Runnable r) {
         val thread = new Thread(r);
         thread.setName("sms-sender-" + counter.addAndGet(1));
         thread.setDaemon(true);

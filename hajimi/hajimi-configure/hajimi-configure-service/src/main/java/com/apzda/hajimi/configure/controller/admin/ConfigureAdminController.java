@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @author ninggf (windywany@gmail.com)
  * @version 1.0.0
  */
-@RestController("mashupConfigureAdminController")
-@RequestMapping("/wk/mashup/setting")
+@RestController("sysConfigureAdminController")
+@RequestMapping("/wk/sys/setting")
 public class ConfigureAdminController {
 
 }

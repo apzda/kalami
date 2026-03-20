@@ -26,7 +26,7 @@ import lombok.Data;
  * @since 1.0.0
  **/
 @Data
-@TableName("mashup_sms_log")
+@TableName("sys_sms_log")
 public class SmsLog {
 
     @TableId(type = IdType.AUTO)

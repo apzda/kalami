@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 the original author or authors.
+ * Copyright 2025-2026 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +18,8 @@
 package com.apzda.kalami.security.context;
 
 import com.apzda.kalami.user.CurrentUserProvider;
+import jakarta.annotation.Nonnull;
 import org.springframework.data.domain.AuditorAware;
-import org.springframework.lang.NonNull;
 
 import java.util.Optional;
 
@@ -31,7 +31,7 @@ import java.util.Optional;
 public class SpringSecurityAuditorAware implements AuditorAware<String> {
 
     @Override
-    @NonNull
+    @Nonnull
     public Optional<String> getCurrentAuditor() {
         return Optional.ofNullable(CurrentUserProvider.getCurrentUser().getUid());
     }

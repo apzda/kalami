@@ -20,12 +20,12 @@ import cn.hutool.core.date.DateUtil;
 import com.apzda.hajimi.sms.core.event.SmsEvent;
 import com.apzda.hajimi.sms.service.domain.SmsStatus;
 import com.apzda.hajimi.sms.service.domain.repository.SmsLogRepository;
+import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.ApplicationListener;
-import org.springframework.lang.NonNull;
 
 /**
  * @author fengz (windywany@gmail.com)
@@ -39,7 +39,7 @@ public class SmsEventListener implements ApplicationListener<SmsEvent> {
     private final ObjectProvider<SmsLogRepository> smsLogRepository;
 
     @Override
-    public void onApplicationEvent(@NonNull SmsEvent event) {
+    public void onApplicationEvent(@Nonnull SmsEvent event) {
         val source = event.getSms();
         val repository = smsLogRepository.getIfAvailable();
         if (repository == null) {

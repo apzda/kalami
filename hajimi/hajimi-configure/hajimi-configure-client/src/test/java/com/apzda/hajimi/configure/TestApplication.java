@@ -42,7 +42,7 @@ public class TestApplication {
         @ServiceConnection(name = "redis")
         @SuppressWarnings("all")
         GenericContainer<?> redis() {
-            return new GenericContainer<>(DockerImageName.parse("redis:7-alpine")).withExposedPorts(6379)
+            return new GenericContainer<>(DockerImageName.parse("redis:7.2.4-alpine3.19")).withExposedPorts(6379)
                 .withStartupTimeout(Duration.ofMinutes(3));
         }
 

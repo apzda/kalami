@@ -1,5 +1,5 @@
 -- 短信发送记录
-CREATE TABLE IF NOT EXISTS `mashup_sms_log`
+CREATE TABLE IF NOT EXISTS `sys_sms_log`
 (
     `id`         BIGINT UNSIGNED                            NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `created_at` BIGINT UNSIGNED                            NULL     DEFAULT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `mashup_sms_log`
 ) COMMENT 'Sms Logs';
 
 -- 审计日志
-CREATE TABLE IF NOT EXISTS `mashup_audit_log`
+CREATE TABLE IF NOT EXISTS `sys_audit_log`
 (
     `id`         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `created_at` BIGINT UNSIGNED NULL     DEFAULT NULL,
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `mashup_audit_log`
 ) COMMENT 'Audit Logs';
 
 -- 配置服务
-CREATE TABLE IF NOT EXISTS `mashup_setting`
+CREATE TABLE IF NOT EXISTS `sys_setting`
 (
     id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     created_at  BIGINT UNSIGNED NULL     DEFAULT NULL,
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `mashup_setting`
     UNIQUE INDEX `udx_setting_key` (setting_key)
 ) COMMENT 'Settings';
 
-CREATE TABLE IF NOT EXISTS `mashup_setting_revision`
+CREATE TABLE IF NOT EXISTS `sys_setting_revision`
 (
     id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     created_at  BIGINT UNSIGNED NULL     DEFAULT NULL,
@@ -89,21 +89,35 @@ CREATE TABLE IF NOT EXISTS `mashup_setting_revision`
     UNIQUE INDEX `udx_setting_key` (setting_key, revision)
 ) COMMENT 'Setting Revisions';
 
--- 监督者任务队列
-CREATE TABLE IF NOT EXISTS `mashup_supervisor_task`
+-- OPEN API 客户端
+CREATE TABLE sys_api_client
 (
-    id          BIGINT UNSIGNED                          NOT NULL PRIMARY KEY,
-    create_time datetime                                 NULL     DEFAULT NULL,
-    update_time datetime                                 NULL     DEFAULT NULL,
-    run_at      BIGINT UNSIGNED                          NOT NULL DEFAULT 0,
-    tenant_id   VARCHAR(32)                              NULL     DEFAULT '0' COMMENT 'Tenant ID',
-    uid         VARCHAR(32)                              NULL     DEFAULT '0' COMMENT 'User ID',
-    sharding    INT                                      NOT NULL DEFAULT 0 COMMENT '分片',
-    name        VARCHAR(128)                             NOT NULL COMMENT '任务名称',
-    supervisor  VARCHAR(128)                             NOT NULL COMMENT '监督者',
-    status      ENUM ('PENDING','RUNNING','DONE','FAIL') NOT NULL DEFAULT 'PENDING' COMMENT '状态',
-    content     Longtext                                 NOT NULL COMMENT '任务内容',
-    retries     INT UNSIGNED                             NOT NULL DEFAULT 0 COMMENT '重试次数',
-    remark      text                                     NULL COMMENT '说明',
-    INDEX IDX_STATUS (run_at asc, status)
-) ENGINE = InnoDB COMMENT '监督任务列表';
+    id             BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    created_at     BIGINT UNSIGNED  NULL     DEFAULT NULL,
+    created_by     VARCHAR(32),
+    updated_at     BIGINT UNSIGNED  NULL     DEFAULT NULL,
+    updated_by     VARCHAR(32),
+    deleted        BIT              NOT NULL DEFAULT FALSE COMMENT 'Soft Deleted Flag',
+    client_id      VARCHAR(32)      NOT NULL COMMENT '客户端ID',
+    client_name    VARCHAR(128)     NOT NULL COMMENT '客户名称',
+    client_secret  VARCHAR(32)      NOT NULL COMMENT '客户端密钥',
+    client_pri_key TEXT             NOT NULL COMMENT '客户端私钥',
+    client_pub_key TEXT             NOT NULL COMMENT '客户端公钥',
+    disabled       TINYINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否禁用: 0 - 启用; 1 - 禁用',
+    remark         VARCHAR(500)     NULL COMMENT '备注',
+    CONSTRAINT UDX_CLIENT_ID UNIQUE (client_id)
+) ENGINE = InnoDB COMMENT '开放平台应用客户端';
+
+create table sys_api_client_perm
+(
+    id         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    created_at BIGINT UNSIGNED NULL     DEFAULT NULL,
+    created_by VARCHAR(32),
+    updated_at BIGINT UNSIGNED NULL     DEFAULT NULL,
+    updated_by VARCHAR(32),
+    deleted    BIT             NOT NULL DEFAULT FALSE COMMENT 'Soft Deleted Flag',
+    client_id  VARCHAR(32)     NOT NULL COMMENT '客户端ID',
+    perm       JSON            NULL COMMENT '授权',
+    CONSTRAINT UDX_CLIENT_ID UNIQUE (client_id)
+) ENGINE = InnoDB COMMENT '开放平台应用客户端授权';
+

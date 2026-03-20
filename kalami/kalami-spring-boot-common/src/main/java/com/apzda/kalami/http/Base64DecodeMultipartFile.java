@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2026 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@ package com.apzda.kalami.http;
 import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -83,7 +82,7 @@ public class Base64DecodeMultipartFile implements MultipartFile {
     }
 
     @Override
-    public void transferTo(@NonNull File dest) throws IOException {
+    public void transferTo(@Nonnull File dest) throws IOException {
         try (val stream = new FileOutputStream(dest)) {
             stream.write(imgContent);
         }
@@ -115,7 +114,7 @@ public class Base64DecodeMultipartFile implements MultipartFile {
         return null;
     }
 
-    @NonNull
+    @Nonnull
     public static String inputStreamToStream(InputStream in) throws IOException {
         byte[] data;
         try (val swapStream = new ByteArrayOutputStream(); val stream = new BufferedInputStream(in)) {

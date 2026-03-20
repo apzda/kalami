@@ -23,7 +23,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import jakarta.annotation.Nonnull;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.context.ApplicationContext;
@@ -46,7 +45,7 @@ import java.util.concurrent.ExecutionException;
 @Slf4j
 public class UCenterMetaUserDetailsService implements MetaUserDetailsService {
 
-    private final LoadingCache<@NonNull String, @NonNull List<SimpleGrantedAuthority>> cache = CacheBuilder.newBuilder()
+    private final LoadingCache<String, List<SimpleGrantedAuthority>> cache = CacheBuilder.newBuilder()
         .expireAfterWrite(Duration.ofSeconds(3600))
         .build(new CacheLoader<>() {
             @Override
@@ -69,7 +68,7 @@ public class UCenterMetaUserDetailsService implements MetaUserDetailsService {
     }
 
     @Override
-    public @NonNull Collection<? extends GrantedAuthority> getAuthorities(@Nonnull UserDetails userDetails,
+    public @Nonnull Collection<? extends GrantedAuthority> getAuthorities(@Nonnull UserDetails userDetails,
             Authentication authentication) {
         val key = genKey(userDetails);
         try {
@@ -105,7 +104,7 @@ public class UCenterMetaUserDetailsService implements MetaUserDetailsService {
     }
 
     @Nonnull
-    private String genKey(@NonNull UserDetails userDetails) {
+    private String genKey(@Nonnull UserDetails userDetails) {
         val userId = userDetails.getUsername();
         val tenantId = TenantManager.tenantId("0");
         val orgId = Optional.ofNullable(TenantManager.orgId()).orElse("");

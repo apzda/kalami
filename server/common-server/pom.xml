@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.apzda.app</groupId>
+        <artifactId>server</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>common-server</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.apzda.cloud</groupId>
+            <artifactId>kalami-spring-boot-web-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.apzda.cloud</groupId>
+            <artifactId>kalami-spring-boot-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!-- application modules -->
+
+        <!-- end application modules -->
+
+        <!-- #common modules# -->
+        <!-- 验证码 -->
+        <dependency>
+            <groupId>com.apzda.hajimi</groupId>
+            <artifactId>hajimi-captcha-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.apzda.hajimi</groupId>
+            <artifactId>hajimi-auditor-service</artifactId>
+        </dependency>
+        <!-- #end common modules# -->
+
+        <!-- runtime -->
+        <!-- jasypt -->
+        <dependency>
+            <groupId>com.github.ulisesbocchio</groupId>
+            <artifactId>jasypt-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- 运行时: mysql driver -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.lettuce</groupId>
+            <artifactId>lettuce-core</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- test -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webflux</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

@@ -27,7 +27,7 @@ import lombok.experimental.Accessors;
  **/
 @Data
 @Accessors(chain = true)
-@TableName("mashup_setting_revision")
+@TableName("sys_setting_revision")
 public class RevisionEntity {
 
     @TableId(type = IdType.AUTO)

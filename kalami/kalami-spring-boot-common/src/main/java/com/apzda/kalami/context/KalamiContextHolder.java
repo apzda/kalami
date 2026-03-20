@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 the original author or authors.
+ * Copyright 2023-2026 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
-import org.springframework.lang.NonNull;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 import org.springframework.util.MultiValueMap;
@@ -134,7 +133,7 @@ public abstract class KalamiContextHolder implements ApplicationContextAware {
         return org.apache.commons.lang3.StringUtils.defaultIfBlank(header(name), defaultValue);
     }
 
-    @NonNull
+    @Nonnull
     public static Map<String, String> headers(String prefix) {
         val headers = new HashMap<String, String>();
         val filtered = headers();
@@ -158,7 +157,7 @@ public abstract class KalamiContextHolder implements ApplicationContextAware {
     }
 
     @SuppressWarnings("unchecked")
-    @NonNull
+    @Nonnull
     public static Map<String, HttpCookie> cookies() {
         val context = getContext();
         val cachedCookie = context.cookies;
@@ -204,7 +203,7 @@ public abstract class KalamiContextHolder implements ApplicationContextAware {
         return cookies;
     }
 
-    @NonNull
+    @Nonnull
     public static Context getContext() {
         var context = CONTEXT_BOX.get();
         if (context == null) {
@@ -243,7 +242,7 @@ public abstract class KalamiContextHolder implements ApplicationContextAware {
         throw new NullPointerException("applicationContext is null");
     }
 
-    public static void restore(@NonNull Context context) {
+    public static void restore(@Nonnull Context context) {
         CONTEXT_BOX.set(context);
         MDC.put("tid", context.requestId);
     }
@@ -419,7 +418,7 @@ public abstract class KalamiContextHolder implements ApplicationContextAware {
             return KalamiContextHolder.getSchema();
         }
 
-        @NonNull
+        @Nonnull
         public static Context current() {
             return KalamiContextHolder.getContext();
         }

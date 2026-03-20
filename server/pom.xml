@@ -19,6 +19,7 @@
     <modules>
         <module>api-gateway</module>
         <module>api-server</module>
+        <module>common-server</module>
         <module>snailjob-server</module>
     </modules>
 

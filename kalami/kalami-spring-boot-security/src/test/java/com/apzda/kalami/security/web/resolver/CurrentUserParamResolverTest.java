@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 the original author or authors.
+ * Copyright 2025-2026 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ import com.apzda.kalami.tenant.TenantManager;
 import com.apzda.kalami.user.CurrentUserProvider;
 import com.apzda.kalami.web.autoconfig.KalamiWebAutoConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.Nonnull;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
@@ -40,7 +41,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.lang.NonNull;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -202,7 +202,7 @@ class CurrentUserParamResolverTest {
     static class WebMvcConfigure implements WebMvcConfigurer {
 
         @Override
-        public void addArgumentResolvers(@NonNull List<HandlerMethodArgumentResolver> resolvers) {
+        public void addArgumentResolvers(@Nonnull List<HandlerMethodArgumentResolver> resolvers) {
             resolvers.add(new CurrentUserParamResolver());
         }
 
@@ -220,7 +220,7 @@ class CurrentUserParamResolverTest {
         TenantManager tenantManager() {
             return new TenantManager() {
                 @Override
-                @NonNull
+                @Nonnull
                 protected String[] getTenantIds() {
                     return new String[] { "1", "2", "3" };
                 }

@@ -27,7 +27,7 @@ import lombok.experimental.Accessors;
  **/
 @Data
 @Accessors(chain = true)
-@TableName("mashup_setting")
+@TableName("sys_setting")
 public class SettingEntity {
 
     @TableId(type = IdType.AUTO)

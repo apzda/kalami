@@ -31,7 +31,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Nonnull;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -80,13 +79,13 @@ public class EncryptedMessageConverter extends AbstractHttpMessageConverter<Obje
     private String defaultAlg;
 
     @Override
-    protected boolean supports(@NonNull Class<?> clazz) {
+    protected boolean supports(@Nonnull Class<?> clazz) {
         return Request.class.isAssignableFrom(clazz) || Response.class.equals(clazz);
     }
 
     @Override
     @Nonnull
-    protected Object readInternal(@NonNull Class<?> clazz, @NonNull HttpInputMessage inputMessage)
+    protected Object readInternal(@Nonnull Class<?> clazz, @Nonnull HttpInputMessage inputMessage)
             throws IOException, HttpMessageNotReadableException {
         val headers = inputMessage.getHeaders();
         Locale locale = LocaleUtils.toLocale("en-US");
@@ -141,7 +140,7 @@ public class EncryptedMessageConverter extends AbstractHttpMessageConverter<Obje
     }
 
     @Override
-    protected void writeInternal(@NonNull Object o, @NonNull HttpOutputMessage outputMessage)
+    protected void writeInternal(@Nonnull Object o, @Nonnull HttpOutputMessage outputMessage)
             throws IOException, HttpMessageNotWritableException {
         val headers = outputMessage.getHeaders();
         headers.set("Content-Type", "application/json");

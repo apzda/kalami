@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 the original author or authors.
+ * Copyright 2023-2026 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 package com.apzda.kalami.service;
 
 import com.apzda.kalami.data.TempData;
-import org.springframework.lang.NonNull;
+import jakarta.annotation.Nonnull;
 import org.springframework.lang.Nullable;
 
 import java.time.Duration;
@@ -31,24 +31,24 @@ import java.util.Optional;
 public interface TempStorageService {
 
     @Nullable
-    <T extends TempData> T save(@NonNull String id, @NonNull T data) throws Exception;
+    <T extends TempData> T save(@Nonnull String id, @Nonnull T data) throws Exception;
 
-    @NonNull
-    <T extends TempData> Optional<T> load(@NonNull String id, @NonNull Class<T> tClass);
+    @Nonnull
+    <T extends TempData> Optional<T> load(@Nonnull String id, @Nonnull Class<T> tClass);
 
-    @NonNull
+    @Nonnull
     @SuppressWarnings("unchecked")
-    default <T extends TempData> T load(@NonNull String id, @NonNull T defaultValue) {
+    default <T extends TempData> T load(@Nonnull String id, @Nonnull T defaultValue) {
         return load(id, defaultValue.getClass()).map(expiredData -> (T) expiredData).orElse(defaultValue);
     }
 
-    boolean exist(@NonNull String id);
+    boolean exist(@Nonnull String id);
 
-    void remove(@NonNull String id);
+    void remove(@Nonnull String id);
 
-    void expire(@NonNull String id, Duration duration);
+    void expire(@Nonnull String id, Duration duration);
 
-    @NonNull
-    Duration getTtl(@NonNull String id);
+    @Nonnull
+    Duration getTtl(@Nonnull String id);
 
 }

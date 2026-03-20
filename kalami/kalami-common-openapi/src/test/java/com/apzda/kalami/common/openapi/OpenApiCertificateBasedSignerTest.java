@@ -16,9 +16,9 @@
  */
 package com.apzda.kalami.common.openapi;
 
-import lombok.val;
 import com.apzda.kalami.common.openapi.exception.OpenApiException;
 import com.apzda.kalami.common.openapi.sign.ClientBasedSha256Signer;
+import lombok.val;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 

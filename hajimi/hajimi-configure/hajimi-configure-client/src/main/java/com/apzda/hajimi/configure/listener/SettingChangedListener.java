@@ -18,11 +18,11 @@ package com.apzda.hajimi.configure.listener;
 
 import com.apzda.hajimi.configure.event.SettingChangedEvent;
 import com.apzda.hajimi.configure.service.SettingService;
+import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.context.ApplicationListener;
-import org.springframework.lang.NonNull;
 
 /**
  * @author fengz (windywany@gmail.com)
@@ -38,7 +38,7 @@ public class SettingChangedListener implements ApplicationListener<SettingChange
     private final SettingService settingService;
 
     @Override
-    public void onApplicationEvent(@NonNull SettingChangedEvent event) {
+    public void onApplicationEvent(@Nonnull SettingChangedEvent event) {
         val source = event.getSource();
         val settingKey = source.toString();
         settingService.refresh(settingKey);

@@ -16,8 +16,8 @@
  */
 package com.apzda.hajimi.weixin.ma.utils;
 
-import com.apzda.hajimi.weixin.ma.WxMaConfiguration;
 import com.apzda.hajimi.weixin.ma.WxMaConfigRegistration;
+import com.apzda.hajimi.weixin.ma.WxMaConfiguration;
 import jakarta.annotation.Nonnull;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.ApplicationContext;

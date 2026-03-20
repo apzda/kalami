@@ -42,7 +42,7 @@ import java.util.Optional;
  * @author ninggf (windywany@gmail.com)
  * @version 1.0.0
  */
-@Service("mashupSettingManager")
+@Service("sysSettingManager")
 @RequiredArgsConstructor
 @Slf4j
 public class SettingManager {

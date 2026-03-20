@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 the original author or authors.
+ * Copyright 2023-2026 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,11 +26,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 
 import java.time.Duration;
@@ -63,8 +63,8 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
         .expireAfterAccess(Duration.ofSeconds(10))
         .build(new CacheLoader<>() {
             @Override
-            @NonNull
-            public Boolean load(@NonNull String key) {
+            @Nonnull
+            public Boolean load(@Nonnull String key) {
                 try {
                     val matcher = ID_PATTERN.matcher(key);
                     if (matcher.find()) {
@@ -88,7 +88,7 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
     }
 
     @Override
-    public int count(@NonNull String key, long interval) {
+    public int count(@Nonnull String key, long interval) {
         Assert.isTrue(interval > 0, "interval = " + interval + " <= 0");
         val a = DateUtil.currentSeconds() / interval;
         val id = "counter." + DigestUtil.md5Hex(key + "." + a);
@@ -114,7 +114,7 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
     }
 
     @Override
-    public <T extends TempData> T save(@NonNull String id, @NonNull T data) throws Exception {
+    public <T extends TempData> T save(@Nonnull String id, @Nonnull T data) throws Exception {
         val key = "storage." + DigestUtil.md5Hex(id);
         val ca = objectMapper.writeValueAsString(data);
         val expired = data.getExpireTime();
@@ -128,8 +128,8 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
     }
 
     @Override
-    @NonNull
-    public <T extends TempData> Optional<T> load(@NonNull String id, @NonNull Class<T> tClass) {
+    @Nonnull
+    public <T extends TempData> Optional<T> load(@Nonnull String id, @Nonnull Class<T> tClass) {
         val key = "storage." + DigestUtil.md5Hex(id);
         try {
             val value = stringRedisTemplate.opsForValue().get(key);
@@ -144,7 +144,7 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
     }
 
     @Override
-    public boolean exist(@NonNull String id) {
+    public boolean exist(@Nonnull String id) {
         val key = "storage." + DigestUtil.md5Hex(id);
         try {
             return stringRedisTemplate.hasKey(key);
@@ -155,7 +155,7 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
     }
 
     @Override
-    public void remove(@NonNull String id) {
+    public void remove(@Nonnull String id) {
         val key = "storage." + DigestUtil.md5Hex(id);
         try {
             val deleted = stringRedisTemplate.delete(key);
@@ -167,7 +167,7 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
     }
 
     @Override
-    public void expire(@NonNull String id, @NonNull Duration duration) {
+    public void expire(@Nonnull String id, @Nonnull Duration duration) {
         if (duration.isZero() || duration.isNegative()) {
             return;
         }
@@ -182,8 +182,8 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
     }
 
     @Override
-    @NonNull
-    public Duration getTtl(@NonNull String id) {
+    @Nonnull
+    public Duration getTtl(@Nonnull String id) {
         val key = "storage." + DigestUtil.md5Hex(id);
         try {
             val expire = stringRedisTemplate.getExpire(key, TimeUnit.SECONDS);
@@ -196,15 +196,15 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
     }
 
     @Override
-    @NonNull
-    public Lock getLock(@NonNull String id) {
+    @Nonnull
+    public Lock getLock(@Nonnull String id) {
         val key = "lock." + DigestUtil.md5Hex(id);
 
         return locks.computeIfAbsent(key, k -> new SimpleRedisLock(k, stringRedisTemplate));
     }
 
     @Override
-    public void deleteLock(@NonNull String id) {
+    public void deleteLock(@Nonnull String id) {
         val key = "lock." + DigestUtil.md5Hex(id);
         locks.remove(key);
     }
@@ -278,7 +278,7 @@ public class RedisBasedInfraServiceImpl implements CounterService, TempStorageSe
         }
 
         @Override
-        public boolean tryLock(long timeout, @NonNull TimeUnit unit) throws InterruptedException {
+        public boolean tryLock(long timeout, @Nonnull TimeUnit unit) throws InterruptedException {
             val start = System.currentTimeMillis();
             if (Objects.equals(Thread.currentThread().getName(), holder.get()) && isHeldByCurrentThread()) {
                 return true;

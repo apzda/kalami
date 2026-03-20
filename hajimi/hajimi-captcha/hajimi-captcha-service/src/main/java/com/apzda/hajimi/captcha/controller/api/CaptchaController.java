@@ -48,7 +48,7 @@ import static com.apzda.kalami.context.KalamiContextHolder.header;
  * @since 1.0.0
  **/
 @Slf4j
-@RestController("mashupCaptchaController")
+@RestController("sysCaptchaController")
 @RequestMapping("/mashup/captcha")
 @RequiredArgsConstructor
 public class CaptchaController {

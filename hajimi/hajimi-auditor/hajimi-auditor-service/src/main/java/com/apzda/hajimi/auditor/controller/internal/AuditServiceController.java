@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 1.0.0
  */
 @Slf4j
-@RestController("mashupAuditServiceController")
+@RestController("sysAuditServiceController")
 @RequiredArgsConstructor
 @Primary
 public class AuditServiceController implements AuditService {

@@ -27,7 +27,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import jakarta.annotation.Nonnull;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.BeanUtils;
@@ -42,13 +41,13 @@ import java.util.concurrent.ExecutionException;
  * @since 1.0.0
  **/
 @Slf4j
-public class SettingServiceImpl extends CacheLoader<@NonNull String, @NonNull Setting> implements SettingService {
+public class SettingServiceImpl extends CacheLoader<String, Setting> implements SettingService {
 
     private final ObjectMapper objectMapper;
 
     private final Lazy<ConfigureService> configServiceLoader;
 
-    private final LoadingCache<@NonNull String, @NonNull Setting> cache;
+    private final LoadingCache<String, Setting> cache;
 
     public SettingServiceImpl(ObjectMapper objectMapper, ApplicationContext context) {
         this.objectMapper = objectMapper;

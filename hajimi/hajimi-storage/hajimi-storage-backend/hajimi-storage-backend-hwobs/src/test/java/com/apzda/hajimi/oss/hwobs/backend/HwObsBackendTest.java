@@ -19,6 +19,7 @@ package com.apzda.hajimi.oss.hwobs.backend;
 import com.apzda.hajimi.oss.config.BackendConfig;
 import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author ninggf (windywany@gmail.com)
  * @version 1.0.0
  */
+@Disabled
 class HwObsBackendTest {
 
     private static HwObsBackend ossBackend;

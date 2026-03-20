@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 the original author or authors.
+ * Copyright 2025-2026 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.lang.NonNull;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -60,8 +59,8 @@ public class AsteriskPermissionEvaluator implements PermissionEvaluator {
         .maximumSize(500)
         .build(new CacheLoader<>() {
             @Override
-            @NonNull
-            public Predicate<String> load(@NonNull String key) {
+            @Nonnull
+            public Predicate<String> load(@Nonnull String key) {
                 boolean suffix = false;
                 if (StringUtils.endsWithIgnoreCase(key, ".*")) {
                     key = key.substring(0, key.length() - 2);

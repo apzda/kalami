@@ -1,9 +1,9 @@
 delete
-from mashup_setting
+from sys_setting
 where setting_key <> 'a';
 
 delete
-from mashup_setting_revision
+from sys_setting_revision
 where setting_key <> 'a';
 
 

@@ -28,7 +28,7 @@ public class SmsBaseNameResolver implements BaseNameResolver {
 
     @Override
     public List<String> getBaseNames() {
-        return List.of("mashup.sms.messages");
+        return List.of("sys.sms.messages");
     }
 
 }

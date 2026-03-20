@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 the original author or authors.
+ * Copyright 2023-2026 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,10 +25,10 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import jakarta.annotation.Nonnull;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 
 import java.time.Duration;
@@ -66,8 +66,8 @@ public class LocalInfraServiceImpl implements CounterService, TempStorageService
         storageCache = CacheBuilder.newBuilder().expireAfterAccess(tempMaxExpiredTime).build();
         counterCache = CacheBuilder.newBuilder().expireAfterAccess(tempMaxExpiredTime).build(new CacheLoader<>() {
             @Override
-            @NonNull
-            public AtomicInteger load(@NonNull String key) {
+            @Nonnull
+            public AtomicInteger load(@Nonnull String key) {
                 return new AtomicInteger(0);
             }
         });
@@ -93,7 +93,7 @@ public class LocalInfraServiceImpl implements CounterService, TempStorageService
     }
 
     @Override
-    public int count(@NonNull String key, long interval) {
+    public int count(@Nonnull String key, long interval) {
         Assert.isTrue(interval > 0, "interval = " + interval + " <= 0");
         val a = DateUtil.currentSeconds() / interval;
         val id = "counter." + key + a;
@@ -109,7 +109,7 @@ public class LocalInfraServiceImpl implements CounterService, TempStorageService
     }
 
     @Override
-    public <T extends TempData> T save(@NonNull String id, @NonNull T data) throws Exception {
+    public <T extends TempData> T save(@Nonnull String id, @Nonnull T data) throws Exception {
         val key = "storage." + id;
         storageCache.put(key, data);
         setExpired(key, data.getExpireTime());
@@ -117,9 +117,9 @@ public class LocalInfraServiceImpl implements CounterService, TempStorageService
     }
 
     @Override
-    @NonNull
+    @Nonnull
     @SuppressWarnings("unchecked")
-    public <T extends TempData> Optional<T> load(@NonNull String id, @NonNull Class<T> tClass) {
+    public <T extends TempData> Optional<T> load(@Nonnull String id, @Nonnull Class<T> tClass) {
         try {
             val key = "storage." + id;
             val data = storageCache.getIfPresent(key);
@@ -134,26 +134,26 @@ public class LocalInfraServiceImpl implements CounterService, TempStorageService
     }
 
     @Override
-    public boolean exist(@NonNull String id) {
+    public boolean exist(@Nonnull String id) {
         val key = "storage." + id;
         return pointers.containsKey(key);
     }
 
     @Override
-    public void remove(@NonNull String id) {
+    public void remove(@Nonnull String id) {
         val key = "storage." + id;
         storageCache.invalidate(key);
     }
 
     @Override
-    public void expire(@NonNull String id, Duration duration) {
+    public void expire(@Nonnull String id, Duration duration) {
         val key = "storage." + id;
         setExpired(key, duration);
     }
 
     @Override
-    @NonNull
-    public Duration getTtl(@NonNull String id) {
+    @Nonnull
+    public Duration getTtl(@Nonnull String id) {
         val key = "storage." + id;
         val ep = pointers.get(key);
         if (ep == null) {
@@ -167,14 +167,14 @@ public class LocalInfraServiceImpl implements CounterService, TempStorageService
     }
 
     @Override
-    @NonNull
-    public Lock getLock(@NonNull String id) {
+    @Nonnull
+    public Lock getLock(@Nonnull String id) {
         val key = "lock." + id;
         return locks.computeIfAbsent(key, k -> new ReentrantLock());
     }
 
     @Override
-    public void deleteLock(@NonNull String id) {
+    public void deleteLock(@Nonnull String id) {
         val key = "lock." + id;
         locks.remove(key);
     }
@@ -187,7 +187,7 @@ public class LocalInfraServiceImpl implements CounterService, TempStorageService
         cleaner.shutdown();
     }
 
-    private void setExpired(String id, @NonNull Duration expired) {
+    private void setExpired(String id, @Nonnull Duration expired) {
         if (expired.isZero() || expired.isNegative()) {
             return;
         }

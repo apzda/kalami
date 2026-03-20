@@ -34,7 +34,6 @@ import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.NonNull;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StreamUtils;
 
@@ -82,7 +81,7 @@ public class SliderCaptchaProvider implements CaptchaProvider<Map<String, Object
     private boolean testMode;
 
     @Override
-    public void init(@NonNull CaptchaStorage storage, @NonNull Map<String, Object> config) throws Exception {
+    public void init(@Nonnull CaptchaStorage storage, @Nonnull Map<String, Object> config) throws Exception {
         this.captchaStorage = storage;
         MapConfig<Map<String, Object>> props = new MapConfig<>(config);
         this.watermark = props.getString("watermark", "");

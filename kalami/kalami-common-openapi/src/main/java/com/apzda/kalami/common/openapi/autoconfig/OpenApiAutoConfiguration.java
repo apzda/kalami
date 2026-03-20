@@ -16,11 +16,6 @@
  */
 package com.apzda.kalami.common.openapi.autoconfig;
 
-import com.apzda.kalami.i18n.I18n;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.Nonnull;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import com.apzda.kalami.common.openapi.ClientInfoProvider;
 import com.apzda.kalami.common.openapi.config.OpenApiProperties;
 import com.apzda.kalami.common.openapi.interceptor.OpenapiHandlerInterceptor;
@@ -32,6 +27,11 @@ import com.apzda.kalami.common.openapi.modem.PlainModem;
 import com.apzda.kalami.common.openapi.sign.ClientBasedSha256Signer;
 import com.apzda.kalami.common.openapi.sign.OpenApiSigner;
 import com.apzda.kalami.common.openapi.token.TokenManager;
+import com.apzda.kalami.i18n.I18n;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.Nonnull;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

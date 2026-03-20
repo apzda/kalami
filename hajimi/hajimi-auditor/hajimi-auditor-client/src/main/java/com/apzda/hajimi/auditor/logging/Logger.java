@@ -30,7 +30,6 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
-import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Objects;
@@ -55,7 +54,7 @@ public class Logger {
 
     private final ObservationRegistry observationRegistry;
 
-    public Logger(@NonNull String activity, AuditService auditService, ObjectMapper objectMapper,
+    public Logger(@Nonnull String activity, AuditService auditService, ObjectMapper objectMapper,
             ObservationRegistry observationRegistry) {
         this.auditService = auditService;
         this.objectMapper = objectMapper;

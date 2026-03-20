@@ -1,0 +1,28 @@
+server:
+  port: 28081
+
+spring:
+  application:
+    name: common-server
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3307/hajimi_db_dev?useSSL=false&serverTimezone=Asia/Shanghai
+    username: dba
+    password: ${mysql.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 0
+      max-lifetime: 1500000
+      pool-name: MyHikariCP
+kalami:
+  security:
+    jwt-key: 123456789
+    excludes:
+      - /login
+      - /open/**
+
+logging:
+  level:
+    web: info

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 the original author or authors.
+ * Copyright 2023-2026 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,8 @@
 package com.apzda.kalami.redis.service;
 
 import com.apzda.kalami.data.TempData;
+import jakarta.annotation.Nonnull;
 import lombok.Data;
-import org.springframework.lang.NonNull;
 
 import java.time.Duration;
 
@@ -35,7 +35,7 @@ public class TestData implements TempData {
     private Integer age;
 
     @Override
-    @NonNull
+    @Nonnull
     public Duration getExpireTime() {
         return Duration.ofSeconds(5);
     }

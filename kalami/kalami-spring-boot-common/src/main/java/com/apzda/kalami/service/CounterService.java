@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2026 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  */
 package com.apzda.kalami.service;
 
-import org.springframework.lang.NonNull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author ninggf (windywany@gmail.com)
@@ -25,7 +25,7 @@ import org.springframework.lang.NonNull;
  */
 public interface CounterService {
 
-    int count(@NonNull String key, long interval);
+    int count(@Nonnull String key, long interval);
 
     default void shutdown() {
     }

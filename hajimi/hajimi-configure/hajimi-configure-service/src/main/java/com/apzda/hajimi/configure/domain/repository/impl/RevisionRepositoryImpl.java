@@ -33,7 +33,7 @@ import java.util.Optional;
  * @author ninggf (windywany@gmail.com)
  * @version 1.0.0
  */
-@Service("mashupRevisionRepositoryImpl")
+@Service("sysRevisionRepositoryImpl")
 public class RevisionRepositoryImpl extends ServiceImpl<RevisionMapper, RevisionEntity> implements RevisionRepository {
 
     @Override

@@ -22,9 +22,9 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.lang.NonNull;
 
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -45,8 +45,8 @@ public class LocalCaptchaStorage implements CaptchaStorage {
         this.cache = CacheBuilder.newBuilder().expireAfterWrite(expired).build();
         counterCache = CacheBuilder.newBuilder().expireAfterWrite(expired).build(new CacheLoader<>() {
             @Override
-            @NonNull
-            public AtomicInteger load(@NonNull String key) throws Exception {
+            @Nonnull
+            public AtomicInteger load(@Nonnull String key) throws Exception {
                 return new AtomicInteger(0);
             }
         });

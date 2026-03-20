@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @author ninggf (windywany@gmail.com)
  * @version 1.0.0
  */
-@RestController("mashupSmsServiceAdminController")
-@RequestMapping("/wk/mashup/sms/")
+@RestController("sysSmsServiceAdminController")
+@RequestMapping("/wk/sys/sms/")
 public class SmsServiceAdminController {
 
 }

@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
  * @author ninggf (windywany@gmail.com)
  * @version 1.0.0
  */
-@Service("mashupSettingRepositoryImpl")
+@Service("sysSettingRepositoryImpl")
 public class SettingRepositoryImpl extends ServiceImpl<SettingMapper, SettingEntity> implements SettingRepository {
 
     @Override

@@ -18,22 +18,21 @@ package com.apzda.kalami.common.openapi.sign;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.digest.DigestUtil;
-import jakarta.annotation.Nonnull;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import com.apzda.kalami.common.openapi.ClientInfoProvider;
 import com.apzda.kalami.common.openapi.Request;
 import com.apzda.kalami.common.openapi.Response;
 import com.apzda.kalami.common.openapi.exception.*;
+import jakarta.annotation.Nonnull;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 
 /**
- * 默认签名器。签名算法如下:  hex(sha256(content+pubkey+timestamp))
+ * 默认签名器。签名算法如下: hex(sha256(content+pubkey+timestamp))
  *
  * @author ninggf (windywany@gmail.com)
  * @version 1.0.0
@@ -41,6 +40,7 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 @Data
 public class ClientBasedSha256Signer implements OpenApiSigner {
+
     private final ClientInfoProvider provider;
 
     @Value("${kalami.openapi.leeway:30}")
@@ -80,7 +80,7 @@ public class ClientBasedSha256Signer implements OpenApiSigner {
 
     @Override
     @Nonnull
-    public String sign(Response.@NonNull Head head, byte[] content) throws OpenApiException {
+    public String sign(@Nonnull Response.Head head, byte[] content) throws OpenApiException {
         val resp = new String(content, StandardCharsets.UTF_8);
         val timestamp = head.getTimestamp();
         val clientId = head.getClientId();
@@ -90,8 +90,8 @@ public class ClientBasedSha256Signer implements OpenApiSigner {
         return sign(resp, serverPublicKey, String.valueOf(timestamp));
     }
 
-    public static boolean verify(String signature, String content, String key, String timestamp) throws
-                                                                                                 OpenApiException {
+    public static boolean verify(String signature, String content, String key, String timestamp)
+            throws OpenApiException {
         key = StringUtils.replace(key, "\n", "");
         val sign1 = DigestUtil.sha256Hex(String.format("%s%s%s", content, key, timestamp));
 
@@ -102,4 +102,5 @@ public class ClientBasedSha256Signer implements OpenApiSigner {
         key = StringUtils.replace(key, "\n", "");
         return DigestUtil.sha256Hex(String.format("%s%s%s", content, key, timestamp).getBytes(StandardCharsets.UTF_8));
     }
+
 }

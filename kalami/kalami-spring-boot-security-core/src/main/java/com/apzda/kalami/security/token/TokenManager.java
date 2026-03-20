@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 the original author or authors.
+ * Copyright 2025-2026 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
 package com.apzda.kalami.security.token;
 
 import jakarta.annotation.Nonnull;
-import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -49,7 +48,7 @@ public interface TokenManager {
     /**
      * 刷新原JwtToken
      */
-    JwtToken refresh(@NonNull JwtToken jwtToken, UserDetails userDetails);
+    JwtToken refresh(@Nonnull JwtToken jwtToken, UserDetails userDetails);
 
     /**
      * 保证认证信息

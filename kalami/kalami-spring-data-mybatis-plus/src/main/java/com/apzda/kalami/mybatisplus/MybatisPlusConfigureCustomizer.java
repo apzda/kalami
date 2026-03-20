@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2026 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  */
 package com.apzda.kalami.mybatisplus;
 
-import org.springframework.lang.NonNull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -27,13 +27,13 @@ import java.util.Set;
  */
 public interface MybatisPlusConfigureCustomizer {
 
-    default void addLocation(@NonNull Set<String> locations) {
+    default void addLocation(@Nonnull Set<String> locations) {
     }
 
-    default void addTypeHandlersPackage(@NonNull Set<String> packages) {
+    default void addTypeHandlersPackage(@Nonnull Set<String> packages) {
     }
 
-    default void addTenantIgnoreTable(@NonNull Set<String> tables) {
+    default void addTenantIgnoreTable(@Nonnull Set<String> tables) {
     }
 
 }

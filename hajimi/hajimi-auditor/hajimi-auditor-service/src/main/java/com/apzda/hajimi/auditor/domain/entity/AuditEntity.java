@@ -28,7 +28,7 @@ import java.util.List;
  * @since 1.0.0
  **/
 @Data
-@TableName(value = "mashup_audit_log", autoResultMap = true)
+@TableName(value = "sys_audit_log", autoResultMap = true)
 public class AuditEntity {
 
     @TableId(type = IdType.AUTO)

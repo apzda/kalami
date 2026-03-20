@@ -27,7 +27,6 @@ import com.apzda.hajimi.ucenter.service.dto.SubscribeDto;
 import com.apzda.hajimi.ucenter.service.dto.TenantDto;
 import com.apzda.hajimi.ucenter.tenant.DefaultSubscription;
 import com.apzda.kalami.data.QuickSearch;
-import com.apzda.kalami.service.SerialNumberGenerator;
 import com.apzda.kalami.tenant.Tenant;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.repository.IRepository;

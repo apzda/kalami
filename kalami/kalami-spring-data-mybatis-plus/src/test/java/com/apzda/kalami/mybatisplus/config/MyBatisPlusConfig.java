@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 Fengz Ning (windywany@gmail.com)
+ * Copyright 2023-2026 the original author or authors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +17,9 @@
 package com.apzda.kalami.mybatisplus.config;
 
 import com.apzda.kalami.mybatisplus.MybatisPlusConfigureCustomizer;
+import jakarta.annotation.Nonnull;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.lang.NonNull;
 
 import java.util.Set;
 
@@ -35,17 +35,17 @@ public class MyBatisPlusConfig {
     MybatisPlusConfigureCustomizer mybatisCustomizer() {
         return new MybatisPlusConfigureCustomizer() {
             @Override
-            public void addLocation(@NonNull Set<String> locations) {
+            public void addLocation(@Nonnull Set<String> locations) {
                 locations.add("classpath*:/com/apzda/**/*Mapper.xml");
             }
 
             @Override
-            public void addTypeHandlersPackage(@NonNull Set<String> packages) {
+            public void addTypeHandlersPackage(@Nonnull Set<String> packages) {
                 packages.add("com.apzda.kalami.mybatisplus.handler");
             }
 
             @Override
-            public void addTenantIgnoreTable(@NonNull Set<String> tables) {
+            public void addTenantIgnoreTable(@Nonnull Set<String> tables) {
                 tables.add("t_roles");
             }
         };
@@ -56,7 +56,7 @@ public class MyBatisPlusConfig {
         return new MybatisPlusConfigureCustomizer() {
 
             @Override
-            public void addTypeHandlersPackage(@NonNull Set<String> packages) {
+            public void addTypeHandlersPackage(@Nonnull Set<String> packages) {
                 packages.add("com.apzda.kalami.mybatisplus.handler1");
             }
         };

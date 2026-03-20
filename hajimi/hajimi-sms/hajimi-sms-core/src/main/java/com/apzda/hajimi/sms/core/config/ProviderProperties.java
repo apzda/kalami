@@ -17,6 +17,7 @@
 package com.apzda.hajimi.sms.core.config;
 
 import com.apzda.hajimi.sms.core.SmsTemplate;
+import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NonNull;
@@ -63,7 +64,7 @@ public class ProviderProperties {
 
     private final Map<String, String> props = new HashMap<>();
 
-    @NonNull
+    @Nonnull
     public synchronized Map<String, SmsTemplate> templates(Map<String, TemplateProperties> globalProperties) {
         if (TEMPLATES.isEmpty()) {
             val templateIds = new HashSet<String>();
