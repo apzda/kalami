@@ -18,6 +18,8 @@
     </modules>
     <properties>
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
+        <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
+        <central-publishing-maven-plugin.version>0.8.0</central-publishing-maven-plugin.version>
         <spring-javaformat.version>0.0.45</spring-javaformat.version>
         <maven.deploy.skip>true</maven.deploy.skip>
         <maven.install.skip>true</maven.install.skip>
@@ -52,12 +54,16 @@
 
     <scm>
         <url>https://github.com/apzda/kalami</url>
-        <connection>scm:git@github.com:apzda/kalami.git</connection>
+        <connection>scm:git:git@github.com:apzda/kalami.git</connection>
         <developerConnection>scm:git:git@github.com:apzda/kalami.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
+        <repository>
+            <id>central</id>
+            <url>https://central.sonatype.com/repository/maven-releases</url>
+        </repository>
         <snapshotRepository>
             <id>central</id>
             <url>https://central.sonatype.com/repository/maven-snapshots</url>
@@ -86,6 +92,64 @@
                         <arguments>-Dmaven.site.skip=true</arguments>
                         <releaseProfiles>release</releaseProfiles>
                         <goals>clean verify</goals>
+                    </configuration>
+                </plugin>
+                <!-- maven-source-plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- maven-javadoc-plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <configuration>
+                        <quiet>true</quiet>
+                        <nohelp>true</nohelp>
+                    </configuration>
+                </plugin>
+                <!-- maven-gpg-plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${maven-gpg-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                            <configuration>
+                                <gpgArguments>
+                                    <arg>--pinentry-mode</arg>
+                                    <arg>loopback</arg>
+                                    <arg>--no-tty</arg>
+                                </gpgArguments>
+                                <passphraseEnvName>GPG_SECURITY_PWD</passphraseEnvName>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- central-publishing-maven-plugin -->
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>${central-publishing-maven-plugin.version}</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <publishingServerId>central</publishingServerId>
+                        <autoPublish>true</autoPublish>
+                        <waitUntil>published</waitUntil>
                     </configuration>
                 </plugin>
                 <!-- spring-javaformat-maven-plugin -->

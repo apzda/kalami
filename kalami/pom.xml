@@ -64,7 +64,6 @@
         <rocketmq-client.version>5.1.0</rocketmq-client.version>
         <easyexcel.version>4.0.3</easyexcel.version>
         <commons-io.version>2.21.0</commons-io.version>
-        <jasypt.version>3.0.5</jasypt.version>
         <imageio.version>3.11.0</imageio.version>
         <commons-lang3.version>3.18.0</commons-lang3.version>
         <snail-job.version>1.9.0</snail-job.version>
@@ -341,12 +340,16 @@
 
     <scm>
         <url>https://github.com/apzda/kalami</url>
-        <connection>scm:git@github.com:apzda/kalami.git</connection>
+        <connection>scm:git:git@github.com:apzda/kalami.git</connection>
         <developerConnection>scm:git:git@github.com:apzda/kalami.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
+        <repository>
+            <id>central</id>
+            <url>https://central.sonatype.com/repository/maven-releases</url>
+        </repository>
         <snapshotRepository>
             <id>central</id>
             <url>https://central.sonatype.com/repository/maven-snapshots</url>
@@ -646,6 +649,51 @@
                     <plugin>
                         <groupId>org.projectlombok</groupId>
                         <artifactId>lombok-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- release -->
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- deploy -->
+        <profile>
+            <id>deploy</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>javadoc-jar</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
             </build>
