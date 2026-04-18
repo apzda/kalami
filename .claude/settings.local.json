@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cmd.exe //c release.bat)",
+      "Bash(mvn -T 1 -B -P+release release:clean)",
+      "Bash(mvn -T 1 -B -P+release release:prepare-with-pom)",
+      "Bash(mvn help:effective-pom -pl kalami-parent)",
+      "Bash(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)",
+      "Bash(gh run *)",
+      "Bash(mvn process-resources *)",
+      "Bash(mvn versions:set -DnewVersion=1.0.0 -DgenerateBackupPoms=false)",
+      "Bash(mvn versions:set -DnewVersion=1.0.0 -DgenerateBackupPoms=false -pl com.apzda.cloud:kalami)"
+    ]
+  }
+}
