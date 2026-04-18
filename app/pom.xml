@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.apzda.cloud</groupId>
         <artifactId>kalami-spring-boot-parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1-SNAPSHOT</version>
         <relativePath>../kalami/kalami-spring-boot-parent</relativePath>
     </parent>
 
@@ -20,7 +20,7 @@
             <dependency>
                 <groupId>com.apzda.hajimi</groupId>
                 <artifactId>hajimi</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.1-SNAPSHOT</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

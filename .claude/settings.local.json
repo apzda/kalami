@@ -9,7 +9,9 @@
       "Bash(gh run *)",
       "Bash(mvn process-resources *)",
       "Bash(mvn versions:set -DnewVersion=1.0.0 -DgenerateBackupPoms=false)",
-      "Bash(mvn versions:set -DnewVersion=1.0.0 -DgenerateBackupPoms=false -pl com.apzda.cloud:kalami)"
+      "Bash(mvn versions:set -DnewVersion=1.0.0 -DgenerateBackupPoms=false -pl com.apzda.cloud:kalami)",
+      "Bash(mvn versions:set -DnewVersion=1.0.1-SNAPSHOT -DgenerateBackupPoms=false)",
+      "Bash(mvn versions:set -DnewVersion=1.0.1-SNAPSHOT -DgenerateBackupPoms=false -pl com.apzda.cloud:kalami)"
     ]
   }
 }
